@@ -1,0 +1,131 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "alauncher.cn.measuringtablet"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "v1.0_Bate"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    buildToolsVersion '28.0.3'
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/androidx.localbroadcastmanager_localbroadcastmanager.version'
+        exclude 'META-INF/androidx.swiperefreshlayout_swiperefreshlayout.version'
+        exclude 'META-INF/androidx.print_print.version'
+        exclude 'META-INF/androidx.customview_customview.version'
+        exclude 'META-INF/androidx.cursoradapter_cursoradapter.version'
+        exclude 'META-INF/androidx.drawerlayout_drawerlayout.version'
+        exclude 'META-INF/androidx.versionedparcelable_versionedparcelable.version'
+        exclude 'META-INF/androidx.interpolator_interpolator.version'
+        exclude 'META-INF/androidx.fragment_fragment.version'
+        exclude 'META-INF/androidx.vectordrawable_vectordrawable.version'
+        exclude 'META-INF/androidx.core_core.version'
+        exclude 'META-INF/androidx.legacy_legacy-support-core-ui.version'
+        exclude 'META-INF/androidx.legacy_legacy-support-core-utils.version'
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+        exclude 'META-INF/androidx.slidingpanelayout_slidingpanelayout.version'
+        exclude 'META-INF/androidx.print_print.version'
+        exclude 'META-INF/androidx.documentfile_documentfile.version'
+        exclude 'META-INF/androidx.versionedparcelable_versionedparcelable.version'
+        exclude 'META-INF/androidx.asynclayoutinflater_asynclayoutinflater.version'
+        exclude 'META-INF/androidx.drawerlayout_drawerlayout.version'
+        exclude 'META-INF/androidx.interpolator_interpolator.version'
+        exclude 'META-INF/androidx.appcompat_appcompat.version'
+        exclude 'META-INF/androidx.swiperefreshlayout_swiperefreshlayout.version'
+        exclude 'META-INF/androidx.loader_loader.version'
+        exclude 'META-INF/androidx.viewpager_viewpager.version'
+        exclude 'META-INF/androidx.coordinatorlayout_coordinatorlayout.version'
+        exclude 'META-INF/androidx.cursoradapter_cursoradapter.version'
+        exclude 'META-INF/androidx.vectordrawable_vectordrawable-animated.version'
+    }
+}
+
+greendao {
+    schemaVersion 1 //数据库版本号
+    daoPackage 'alauncher.cn.measuringtablet.database.greenDao.db'
+// 设置DaoMaster、DaoSession、Dao 包名
+    targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
+    generateTests false //设置为true以自动生成单元测试。
+    // targetGenDirTests 'src.main.java' //应存储生成的单元测试的基本目录。默认为 src / androidTest / java.
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+//    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'org.greenrobot:greendao:3.2.2'
+    // add library
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'org.jetbrains:annotations:15.0'
+    implementation project(':serialport')
+    implementation project(':basemvplib')
+    implementation 'com.yanzhenjie.recyclerview:x:1.3.2'
+    // implementation 'tp.xmaihh:serialport:2.0'
+    implementation files('libs/jxl-2.6.12.jar')
+    // implementation files('libs/bugly_crash_release.jar')
+    implementation files('libs/commons-math3-3.6.1.jar')
+    implementation files('libs/postgresql-42.2.6.jre7.jar')
+    // implementation files('libs/postgresql-42.2.8.jre6')
+    // implementation files('libs/bugly_crashreport_upgrade-1.4.1.aar')
+    // implementation 'com.github.huangyanbin:SmartTable:2.2.0'
+    implementation 'com.android.support:multidex:1.0.1'
+
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
+
+    // implementation('libs/bugly_crashreport_upgrade-1.4.1.aar')
+
+    // implementation files('libs/bugly_crashreport_upgrade-1.4.1.aar')
+    // implementation 'com.tencent.tinker:tinker-android-lib:1.9.9'
+    // compile(name: 'bugly_crashreport_upgrade-1.4.1', ext: 'aar')
+
+    implementation 'com.tencent.bugly:crashreport_upgrade:1.4.1'
+    // implementation 'com.tencent.bugly:crashreport:3.0.0'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:3.7.1'
+    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+//    implementation 'com.android.support:support-v4:+'
+}
+
+android.applicationVariants.all {
+    variant ->
+        variant.outputs.all {
+            //这里修改apk文件名
+            def today = new Date().format('yyyy-MM-dd');
+            outputFileName = "Measuring" + "_${today}" + "_${android.defaultConfig.versionName}.apk"
+        }
+}

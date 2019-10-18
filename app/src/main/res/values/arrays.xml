@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="resolution_values" translatable="false">
+        <item>0.1</item>
+        <item>0.2</item>
+        <item>0.5</item>
+        <item>1.0</item>
+        <item>2.0</item>
+        <item>5.0</item>
+        <item>Auto</item>
+    </string-array>
+
+    <string-array name="calibration_method_values" translatable="false">
+        <item>单件校准</item>
+        <item>双件校准</item>
+    </string-array>
+
+    <string-array name="m_values" translatable="false">
+        <item>M1</item>
+        <item>M2</item>
+        <item>M3</item>
+        <item>M4</item>
+    </string-array>
+
+    <string-array name="workids" translatable="false">
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+    </string-array>
+
+    <string-array name="eventid_items" translatable="false">
+        <item>换刀</item>
+        <item>首检</item>
+        <item>抽检</item>
+        <item>调试</item>
+        <item>其他</item>
+    </string-array>
+
+    <string-array name="position" translatable="false">
+        <item>在职</item>
+        <item>离职</item>
+    </string-array>
+
+    <string-array name="limit_array">
+        <item code="0">管理员</item>
+        <item code="4">操作员</item>
+    </string-array>
+
+    <string-array name="result" translatable="false">
+        <item></item>
+        <item>合格</item>
+        <item>不合格</item>
+    </string-array>
+
+    <string-array name="force_calibration_item" translatable="false">
+        <item>无</item>
+        <item>周期数量</item>
+        <item>周期时间</item>
+    </string-array>
+
+    <string-array name="code_array" translatable="false">
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+
+    <string-array name="group_size_array" translatable="false">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="group_num_array" translatable="false">
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+    </string-array>
+
+</resources>
