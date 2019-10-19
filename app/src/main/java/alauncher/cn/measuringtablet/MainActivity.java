@@ -18,17 +18,7 @@ import java.util.List;
 
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
-import alauncher.cn.measuringtablet.view.AccoutManagementActivity;
-import alauncher.cn.measuringtablet.view.CalibrationActivity;
-import alauncher.cn.measuringtablet.view.CodeActivity;
-import alauncher.cn.measuringtablet.view.DataActivity;
 import alauncher.cn.measuringtablet.view.LoginActivity;
-import alauncher.cn.measuringtablet.view.MeasuringActivity;
-import alauncher.cn.measuringtablet.view.ParameterManagementActivity;
-import alauncher.cn.measuringtablet.view.SPCStatisticalActivity;
-import alauncher.cn.measuringtablet.view.StatisticalActivity;
-import alauncher.cn.measuringtablet.view.StoreActivity;
-import alauncher.cn.measuringtablet.view.SystemManagementActivity;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -54,19 +44,19 @@ public class MainActivity extends BaseOActivity {
     @Override
     protected void initView() {
         List<MainInfo> _datas = new ArrayList();
-        _datas.add(new MainInfo(R.string.measuring, R.drawable.equalizer));
+        _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.MeasuringActivity", R.string.measuring, R.drawable.equalizer));
         try {
             if (App.getDaoSession().getUserDao().load(App.handlerAccout).getLimit() < 2) {
-                _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page));
-                _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions));
-                _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten));
-                _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box));
-                _datas.add(new MainInfo(R.string.program_management, R.drawable.code));
-                _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup));
-                _datas.add(new MainInfo(R.string.store, R.drawable.archive));
-                _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
-                _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
-                _datas.add(new MainInfo(R.string.logout, R.drawable.logout_96));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.DataActivity", R.string.data_query, R.drawable.find_in_page));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.ParameterManagementActivity", R.string.parameter_management, R.drawable.functions));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.CalibrationActivity", R.string.calibration, R.drawable.straighten));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.AccoutManagementActivity", R.string.user_management, R.drawable.account_box));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.CodeActivity", R.string.program_management, R.drawable.code));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.SystemManagementActivity", R.string.system_management, R.drawable.phonelink_setup));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.StoreActivity", R.string.store, R.drawable.archive));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.SPCStatisticalActivity", R.string.spc_analysis, R.drawable.show_chart));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.StatisticalActivity", R.string.statistical_report, R.drawable.assignment));
+                _datas.add(new MainInfo("", R.string.logout, R.drawable.logout_96));
             }
         } catch (NullPointerException e) {
 
@@ -141,10 +131,13 @@ public class MainActivity extends BaseOActivity {
     }
 
     class MainInfo {
+
+        public String className;
         public int strID;
         public int drawableID;
 
-        public MainInfo(int strID, int drawableID) {
+        public MainInfo(String className, int strID, int drawableID) {
+            this.className = className;
             this.strID = strID;
             this.drawableID = drawableID;
         }
@@ -171,44 +164,12 @@ public class MainActivity extends BaseOActivity {
             holder.setOnClickListener(R.id.main_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    switch (position) {
-                        case 0:
-                            openActivty(MeasuringActivity.class, datas.get(position).strID);
-                            break;
-                        case 1:
-                            openActivty(DataActivity.class, datas.get(position).strID);
-                            break;
-                        case 2:
-                            openActivty(ParameterManagementActivity.class, datas.get(position).strID);
-                            break;
-                        case 3:
-                            openActivty(CalibrationActivity.class, datas.get(position).strID);
-                            break;
-                        case 4:
-                            openActivty(AccoutManagementActivity.class, datas.get(position).strID);
-                            break;
-                        case 5:
-                            openActivty(CodeActivity.class, datas.get(position).strID);
-                            break;
-                        case 6:
-                            openActivty(SystemManagementActivity.class, datas.get(position).strID);
-                            break;
-                        case 7:
-                            openActivty(StoreActivity.class, datas.get(position).strID);
-                            break;
-                        case 8:
-                            openActivty(SPCStatisticalActivity.class, datas.get(position).strID);
-                            break;
-                        case 9:
-                            openActivty(StatisticalActivity.class, datas.get(position).strID);
-                            break;
-                        case 10:
-//                            logout();
-                            exitDialog();
-                        default:
-                            break;
+                    try {
+                        openActivty(Class.forName(datas.get(position).className), datas.get(position).strID);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                        exitDialog();
                     }
-
                 }
             });
         }

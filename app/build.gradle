@@ -126,6 +126,6 @@ android.applicationVariants.all {
         variant.outputs.all {
             //这里修改apk文件名
             def today = new Date().format('yyyy-MM-dd');
-            outputFileName = "Measuring" + "_${today}" + "_${android.defaultConfig.versionName}.apk"
+            outputFileName = "MeasuringTablet" + "_${today}" + "_${android.defaultConfig.versionName}.apk"
         }
 }
