@@ -1,26 +1,11 @@
 package alauncher.cn.measuringtablet.view;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.renderscript.ScriptGroup;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
@@ -28,35 +13,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import alauncher.cn.measuringtablet.App;
-import alauncher.cn.measuringtablet.MainActivity;
 import alauncher.cn.measuringtablet.R;
-import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.BaseOLandscapeActivity;
-import alauncher.cn.measuringtablet.base.ViewHolder;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
-import alauncher.cn.measuringtablet.bean.ParameterBean;
-import alauncher.cn.measuringtablet.bean.RememberPasswordBean;
-import alauncher.cn.measuringtablet.bean.ResultBean;
-import alauncher.cn.measuringtablet.bean.ResultBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
-import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
-import alauncher.cn.measuringtablet.database.greenDao.db.ResultBeanDao;
-import alauncher.cn.measuringtablet.database.greenDao.db.UserDao;
-import alauncher.cn.measuringtablet.view.adapter.DataAdapter;
 import alauncher.cn.measuringtablet.view.adapter.EnterAdapter;
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 
@@ -93,6 +63,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                 InputBean _inputBean = new InputBean();
                 _inputBean.describeStr = _bean.getDescribe();
                 _inputBean.measuringStr = "M" + _bean.getIndex();
+                _inputBean.isEnable = _bean.getEnable();
                 datas.add(_inputBean);
             }
         }
@@ -221,16 +192,32 @@ public class InputActivity extends BaseOLandscapeActivity {
         _workpiece1Bean.setMPicPaths(new ArrayList<String>());
         _workpiece1Bean.setHandlerAccout(App.handlerAccout);
         _workpiece1Bean.setCodeID(App.getSetupBean().getCodeID());
-        for (InputBean _bean : datas) {
-            _workpiece1Bean.getMValues().add(_bean.workspace1Value);
-            _workpiece1Bean.getMPicPaths().add(_bean.workspace1PicPath);
+//        for (InputBean _bean : datas) {
+//            _workpiece1Bean.getMValues().add(_bean.workspace1Value);
+//            _workpiece1Bean.getMPicPaths().add(_bean.workspace1PicPath);
+//        }
+        for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
+            if (mParameter2Beans.get(i).getEnable()) {
+                _workpiece1Bean.getMValues().add(datas.get(j).workspace1Value);
+                _workpiece1Bean.getMPicPaths().add(datas.get(j).workspace1PicPath);
+                j++;
+            } else {
+                _workpiece1Bean.getMValues().add("- -");
+                _workpiece1Bean.getMPicPaths().add("");
+            }
         }
+
+        for (int i = 0; i < _workpiece1Bean.getMValues().size(); i++) {
+            android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece1Bean.getMValues().get(i));
+        }
+
         App.getDaoSession().getResultBean3Dao().insert(_workpiece1Bean);
         Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
     }
 
 
     public class InputBean {
+        public boolean isEnable;
         public String measuringStr;
         public String describeStr;
         public String maxValue;

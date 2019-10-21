@@ -29,6 +29,7 @@ import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ResultBean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.ResultData;
+import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringtablet.utils.CommonUtil;
@@ -97,7 +98,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
 
-        mDataAdapter = new DataAdapter2(Data2Activity.this, App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean3Dao.Properties.Id).list(), mParameterBean);
+        mDataAdapter = new DataAdapter2(Data2Activity.this, App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean3Dao.Properties.Id).list(),
+                App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Data2Activity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mDataAdapter);
