@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height" />
+
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/m_item_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/m_3part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:background="@android:color/holo_green_light"
+                    android:text="@string/comprehensive" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+
+                <TextView
+                    android:layout_width="@dimen/m_3part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/comprehensive" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <TextView
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/comprehensive" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <TextView
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/comprehensive" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <TextView
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/comprehensive" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <TextView
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/comprehensive" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <TextView
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/comprehensive" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:src="@android:color/black"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/m_item_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/m_part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/measure_item" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <TextView
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/measure_info" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <TextView
+                    android:id="@+id/workpiece_count"
+                    android:layout_width="@dimen/m_part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/max" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <!-- Mix -->
+                <TextView
+                    android:layout_width="@dimen/m_part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/min" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+
+                <!-- 判定 -->
+                <TextView
+                    android:layout_width="@dimen/m_part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    style="@style/BaseTabletTextStyle"
+                    android:text="@string/judge" />
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+
+                <!-- 一号工件 -->
+                <LinearLayout
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        style="@style/BaseTabletTextStyle"
+                        android:text="@string/workspace_1" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:src="@android:color/black"
+                        />
+                    <LinearLayout
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/measure_value" />
+                        <ImageView
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:src="@android:color/black"
+                            />
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/picture" />
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <!-- 二号工件 -->
+                <LinearLayout
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        style="@style/BaseTabletTextStyle"
+                        android:text="@string/workspace_2" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:src="@android:color/black"
+                        />
+                    <LinearLayout
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/measure_value" />
+                        <ImageView
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:src="@android:color/black"
+                            />
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/picture" />
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <!-- 三号工件 -->
+                <LinearLayout
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        style="@style/BaseTabletTextStyle"
+                        android:text="@string/workspace_3" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:src="@android:color/black"
+                        />
+                    <LinearLayout
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/measure_value" />
+                        <ImageView
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:src="@android:color/black"
+                            />
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/picture" />
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <!-- 四号工件 -->
+                <LinearLayout
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        style="@style/BaseTabletTextStyle"
+                        android:text="@string/workspace_4" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:src="@android:color/black"
+                        />
+                    <LinearLayout
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/measure_value" />
+                        <ImageView
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:src="@android:color/black"
+                            />
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/picture" />
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+                <!-- 五号工件 -->
+                <LinearLayout
+                    android:layout_width="@dimen/m_2part_width"
+                    android:layout_height="@dimen/m_item_height"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        style="@style/BaseTabletTextStyle"
+                        android:text="@string/workspace_5" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:src="@android:color/black"
+                        />
+                    <LinearLayout
+                        android:layout_width="@dimen/m_2part_width"
+                        android:layout_height="@dimen/m_half_item_height"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/measure_value" />
+                        <ImageView
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:src="@android:color/black"
+                            />
+                        <TextView
+                            android:layout_width="@dimen/m_part_width"
+                            android:layout_height="@dimen/m_half_item_height"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/picture" />
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:src="@android:color/black"
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:src="@android:color/black"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/archive_24px"
+                android:text="@string/save"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

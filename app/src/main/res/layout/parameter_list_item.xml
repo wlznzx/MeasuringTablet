@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/data_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/m_item_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <CheckBox
+            android:id="@+id/m_enable"
+            style="@style/BaseTabletTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/m_index_tv"
+        style="@style/BaseTabletTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/m1"/>
+
+    <EditText
+        android:id="@+id/parameter_name_edt"
+        style="@style/BaseTabletTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:hint="@string/parameter_name" />
+
+    <EditText
+        android:id="@+id/nominal_value_edt"
+        style="@style/BaseTabletTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:inputType="numberSigned|numberDecimal"
+        android:hint="@string/nominal_value" />
+
+    <EditText
+        android:id="@+id/upper_tolerance_edt"
+        style="@style/BaseTabletTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:inputType="numberSigned|numberDecimal"
+        android:hint="@string/upper_tolerance_value" />
+
+    <EditText
+        android:id="@+id/lower_tolerance_edt"
+        style="@style/BaseTabletTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:inputType="numberSigned|numberDecimal"
+        android:hint="@string/lower_tolerance_value" />
+
+</LinearLayout>

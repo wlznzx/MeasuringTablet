@@ -24,6 +24,8 @@ android {
     }
 
     repositories {
+        mavenCentral()
+        google()
         flatDir {
             dirs 'libs'
         }
@@ -106,7 +108,8 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
 
     implementation 'com.google.android.material:material:1.1.0-alpha09'
-
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     // implementation('libs/bugly_crashreport_upgrade-1.4.1.aar')
 
     // implementation files('libs/bugly_crashreport_upgrade-1.4.1.aar')

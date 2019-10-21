@@ -20,6 +20,7 @@ import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.ForceCalibrationBean;
 import alauncher.cn.measuringtablet.bean.GroupBean;
+import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.RememberPasswordBean;
 import alauncher.cn.measuringtablet.bean.ResultBean;
@@ -28,6 +29,8 @@ import alauncher.cn.measuringtablet.bean.StoreBean;
 import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoSession;
+import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringtablet.utils.Constants;
 import alauncher.cn.measuringtablet.utils.DeviceUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
@@ -92,7 +95,7 @@ public class App extends MultiDexApplication {
                 }
             }
         };
-        Bugly.init(getApplicationContext(), "e4d9621d74", true);
+        // Bugly.init(getApplicationContext(), "e4d9621d74", true);
     }
 
     public static DaoSession getDaoSession() {
@@ -126,7 +129,7 @@ public class App extends MultiDexApplication {
 
     public void initDefaultDate() {
 
-        JdbcUtil.IP = String.valueOf(SPUtils.get(this, Constants.IP_KEY,"47.98.58.40"));
+        JdbcUtil.IP = String.valueOf(SPUtils.get(this, Constants.IP_KEY, "47.98.58.40"));
 
         if (getDaoSession().getSetupBeanDao().load(SETTING_ID) == null) {
             SetupBean _bean = new SetupBean();
@@ -197,10 +200,10 @@ public class App extends MultiDexApplication {
             _bean.setFactoryCode(getResources().getString(R.string.default_factory_code));
             _bean.setFactoryName(getResources().getString(R.string.default_factory_name));
             _bean.setManufacturer(getResources().getString(R.string.manufacturer));
-            _bean.setDeviceCode(SystemPropertiesProxy.getString(this,"ro.serialno"));
+            _bean.setDeviceCode(SystemPropertiesProxy.getString(this, "ro.serialno"));
             _bean.setDeviceName(getResources().getString(R.string.default_device_name));
             _bean.setRmk("rmk");
-            android.util.Log.d("wlDebug","info = " + _bean.toString());
+            android.util.Log.d("wlDebug", "info = " + _bean.toString());
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }
 
@@ -343,6 +346,20 @@ public class App extends MultiDexApplication {
                 _bean.setM4_offect(0.0);
                 _bean.setM4_code("ch4");
                 getDaoSession().getParameterBeanDao().insert(_bean);
+            }
+
+            if (getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) i)).list().size() <= 0) {
+                for (int j = 1; j <= 22; j++) {
+                    Parameter2Bean _bean = new Parameter2Bean();
+                    _bean.setCode_id(i);
+                    _bean.setIndex(j);
+                    _bean.setEnable(true);
+                    _bean.setDescribe("内径" + j);
+                    _bean.setNominal_value(24.0);
+                    _bean.setUpper_tolerance_value(0.04);
+                    _bean.setLower_tolerance_value(0.0);
+                    getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                }
             }
 
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {

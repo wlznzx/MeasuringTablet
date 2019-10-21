@@ -13,6 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,25 +27,23 @@ import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.FilterBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ResultBean;
+import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.ResultData;
+import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringtablet.utils.CommonUtil;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.utils.ExcelUtil;
 import alauncher.cn.measuringtablet.view.adapter.DataAdapter;
+import alauncher.cn.measuringtablet.view.adapter.DataAdapter2;
 import alauncher.cn.measuringtablet.widget.FilterDialog;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import butterknife.BindView;
 import butterknife.BindViews;
 
 import static alauncher.cn.measuringtablet.view.adapter.DataAdapter.MYLIVE_MODE_CHECK;
 import static alauncher.cn.measuringtablet.view.adapter.DataAdapter.MYLIVE_MODE_EDIT;
 
-public class DataActivity extends BaseOActivity implements View.OnClickListener, DataAdapter.OnItemClickListener, FilterDialog.FilterInterface {
+public class Data2Activity extends BaseOActivity implements View.OnClickListener, DataAdapter2.OnItemClickListener, FilterDialog.FilterInterface {
 
     @BindView(R.id.rv)
     RecyclerView rv;
@@ -67,9 +69,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
     @BindViews({R.id.m1_group_title, R.id.m2_group_title, R.id.m3_group_title, R.id.m4_group_title})
     TextView[] mTitleGroupViews;
 
-    public ResultBeanDao mResultBeanDao;
-
-    public DataAdapter mDataAdapter;
+    public DataAdapter2 mDataAdapter;
 
     private int mEditMode = MYLIVE_MODE_CHECK;
     private boolean isSelectAll = false;
@@ -95,15 +95,19 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         List<ResultData> _datas = new ArrayList();
         _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
 
-        mResultBeanDao = App.getDaoSession().getResultBeanDao();
-
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
 
-        mDataAdapter = new DataAdapter(DataActivity.this, mResultBeanDao.queryBuilder()
-                .where(ResultBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBeanDao.Properties.Id).list(), mParameterBean);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DataActivity.this);
+        mDataAdapter = new DataAdapter2(Data2Activity.this, App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean3Dao.Properties.Id).list(), mParameterBean);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Data2Activity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mDataAdapter);
+
+//        List<ResultBean3> _results = ;
+//
+//        for(ResultBean3 _bean : _results){
+//            android.util.Log.d("wlDebug","" + _bean.getMValues().get(0));
+//            android.util.Log.d("wlDebug","pic = " + _bean.getMPicPaths().get(0));
+//        }
 
         mDataAdapter.setOnItemClickListener(this);
         mBtnDelete.setOnClickListener(this);
@@ -263,7 +267,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
     private void clearAll() {
         // 清除选中状态
         for (int i = mDataAdapter.getMyLiveList().size(), j = 0; i > j; i--) {
-            ResultBean _baen = mDataAdapter.getMyLiveList().get(i - 1);
+            ResultBean3 _baen = mDataAdapter.getMyLiveList().get(i - 1);
             if (_baen.isSelect()) {
                 _baen.setSelect(false);
             }
@@ -294,10 +298,10 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
 
 
     @Override
-    public void onItemClickListener(int pos, List<ResultBean> myLiveList) {
+    public void onItemClickListener(int pos, List<ResultBean3> myLiveList) {
         android.util.Log.d("wlDebug", "pos = " + pos);
         if (editorStatus) {
-            ResultBean _bean = myLiveList.get(pos);
+            ResultBean3 _bean = myLiveList.get(pos);
             boolean isSelect = _bean.isSelect();
             if (!isSelect) {
                 index++;
@@ -319,7 +323,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onItemLongClickListener(int pos, List<ResultBean> myLiveList) {
+    public void onItemLongClickListener(int pos, List<ResultBean3> myLiveList) {
         updataEditMode();
     }
 
@@ -355,7 +359,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override
         protected void onPreExecute() {
-            dialog = new ProgressDialog(DataActivity.this);
+            dialog = new ProgressDialog(Data2Activity.this);
             dialog.setTitle("删除");
             dialog.setMessage("正在删除数据 , 请稍等.");
             dialog.setCanceledOnTouchOutside(false);
@@ -368,10 +372,10 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         protected String doInBackground(String... params) {
             //处理耗时操作
             for (int i = mDataAdapter.getMyLiveList().size(), j = 0; i > j; i--) {
-                ResultBean _baen = mDataAdapter.getMyLiveList().get(i - 1);
+                ResultBean3 _baen = mDataAdapter.getMyLiveList().get(i - 1);
                 if (_baen.isSelect()) {
                     mDataAdapter.getMyLiveList().remove(_baen);
-                    mResultBeanDao.delete(_baen);
+                    App.getDaoSession().getResultBean3Dao().delete(_baen);
                     index--;
                 }
             }
@@ -422,7 +426,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override
         protected void onPreExecute() {
-            dialog = new ProgressDialog(DataActivity.this);
+            dialog = new ProgressDialog(Data2Activity.this);
             dialog.setTitle("导出Excel");
             dialog.setMessage("正在将数据导出Excel中 , 请稍等.");
             dialog.setCanceledOnTouchOutside(false);
@@ -440,9 +444,9 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
                 destDir.mkdirs();
             }
 
-            List<ResultBean> selectedList = new ArrayList<>();
+            List<ResultBean3> selectedList = new ArrayList<>();
             for (int i = mDataAdapter.getMyLiveList().size(), j = 0; i > j; i--) {
-                ResultBean _baen = mDataAdapter.getMyLiveList().get(i - 1);
+                ResultBean3 _baen = mDataAdapter.getMyLiveList().get(i - 1);
                 if (_baen.isSelect()) {
                     selectedList.add(_baen);
                     index--;
@@ -451,7 +455,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
 
             path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
             ExcelUtil.initExcel(path, "data", title);
-            ExcelUtil.writeObjListToExcel(selectedList, path, DataActivity.this);
+            ExcelUtil.writeObjListToExcel(selectedList, path, Data2Activity.this);
             return "后台任务执行完毕";
         }
 
@@ -476,7 +480,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
             mDataAdapter.notifyDataSetChanged();
             dialog.dismiss();
             updataEditMode();
-            Toast.makeText(DataActivity.this, "导出至 : " + path, Toast.LENGTH_LONG).show();
+            Toast.makeText(Data2Activity.this, "导出至 : " + path, Toast.LENGTH_LONG).show();
         }
 
         //onCancelled方法用于在取消执行中的任务时更改UI
@@ -542,7 +546,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         }
 
 //        Cursor cursor = mResultBeanDao.getDatabase().rawQuery("SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '工'", null);
-        Cursor cursor = mResultBeanDao.getDatabase().rawQuery(queryString, strs);
+        Cursor cursor = App.getDaoSession().getResultBean3Dao().getDatabase().rawQuery(queryString, strs);
 
 
         int HandlerAccout = cursor.getColumnIndex(ResultBeanDao.Properties.HandlerAccout.columnName);
@@ -559,23 +563,23 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         int M3_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M3_group.columnName);
         int M4_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M4_group.columnName);
 
-        List<ResultBean> _datas = new ArrayList<>();
+        List<ResultBean3> _datas = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            ResultBean rBean = new ResultBean();
+            ResultBean3 rBean = new ResultBean3();
             rBean.setHandlerAccout(cursor.getString(HandlerAccout));
             rBean.setWorkid(cursor.getString(Workid));
             rBean.setTimeStamp(cursor.getLong(TimeStamp));
             rBean.setEvent(cursor.getString(Event));
             rBean.setResult(cursor.getString(Result));
-            rBean.setM1(cursor.getDouble(M1));
-            rBean.setM2(cursor.getDouble(M2));
-            rBean.setM3(cursor.getDouble(M3));
-            rBean.setM4(cursor.getDouble(M4));
-            rBean.setM1_group(cursor.getString(M1_Group));
-            rBean.setM2_group(cursor.getString(M2_Group));
-            rBean.setM3_group(cursor.getString(M3_Group));
-            rBean.setM4_group(cursor.getString(M4_Group));
+//            rBean.setM1(cursor.getDouble(M1));
+//            rBean.setM2(cursor.getDouble(M2));
+//            rBean.setM3(cursor.getDouble(M3));
+//            rBean.setM4(cursor.getDouble(M4));
+//            rBean.setM1_group(cursor.getString(M1_Group));
+//            rBean.setM2_group(cursor.getString(M2_Group));
+//            rBean.setM3_group(cursor.getString(M3_Group));
+//            rBean.setM4_group(cursor.getString(M4_Group));
             _datas.add(rBean);
         }
         mDataAdapter.notifyAdapter(_datas, false);
