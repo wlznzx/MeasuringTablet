@@ -5,8 +5,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +43,10 @@ public class InputActivity extends BaseOLandscapeActivity {
     @BindView(R.id.rv)
     public RecyclerView rv;
 
+
+    @BindView(R.id.workpiece_num_sp)
+    public Spinner workpieceSP;
+
     public EnterAdapter mEnterAdapter;
 
     private List<Parameter2Bean> mParameter2Beans;
@@ -52,6 +61,25 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     private String[] judges = {"- -", "- -", "- -", "- -", "- -", "- -"};
 
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    doUpdate(currentPos, currentIndex, updateValue);
+                    break;
+            }
+        }
+    };
+
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // mHandler.sendEmptyMessage(EDIT_OK);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +88,12 @@ public class InputActivity extends BaseOLandscapeActivity {
     @Override
     protected void initLayout() {
         setContentView(R.layout.activity_input);
-
     }
+
+    private int currentPos;
+    private int currentIndex;
+    private String updateValue;
+
 
     @Override
     protected void initView() {
@@ -84,7 +116,6 @@ public class InputActivity extends BaseOLandscapeActivity {
         rv.setAdapter(mEnterAdapter);
 
         mEnterAdapter.setOnItemClickListener(new EnterAdapter.OnItemClickListener() {
-
             @Override
             public void onItemClickListener(int pos, List<InputActivity.InputBean> myLiveList, int workpiece_num) {
                 dispatchTakePictureIntent();
@@ -100,109 +131,157 @@ public class InputActivity extends BaseOLandscapeActivity {
             @Override
             public void onTextWatch(int pos, int index, String s) {
                 android.util.Log.d("wlDebug", "pos = " + pos + " index = " + index + " s = " + s);
-                switch (index) {
-                    case 1:
-                        datas.get(pos).workspace1Value = s;
-                        break;
-                    case 2:
-                        datas.get(pos).workspace2Value = s;
-                        break;
-                    case 3:
-                        datas.get(pos).workspace3Value = s;
-                        break;
-                    case 4:
-                        datas.get(pos).workspace4Value = s;
-                        break;
-                    case 5:
-                        datas.get(pos).workspace5Value = s;
-                        break;
-                }
+                currentPos = pos;
+                currentIndex = index;
+                updateValue = s;
+                mHandler.removeMessages(1);
+                mHandler.sendEmptyMessageDelayed(1, 800);
 
-
-                boolean isModify = false;
-                // 设定最大值;
-                if (datas.get(pos).maxValue == null) {
-                    datas.get(pos).maxValue = s;
-                    isModify = true;
-                } else {
-                    try {
-                        double _max = Double.valueOf(datas.get(pos).maxValue);
-                        double _curValue = Double.valueOf(s);
-                        if (_curValue > _max) {
-                            datas.get(pos).maxValue = s;
-                            isModify = true;
-                        }
-                    } catch (NumberFormatException e) {
-
-                    }
-                }
-                if (datas.get(pos).minValue == null) {
-                    datas.get(pos).minValue = s;
-                    isModify = true;
-                } else {
-                    try {
-                        double _min = Double.valueOf(datas.get(pos).minValue);
-                        double _curValue = Double.valueOf(s);
-                        if (_curValue < _min) {
-                            datas.get(pos).minValue = s;
-                            isModify = true;
-                        }
-                    } catch (NumberFormatException e) {
-
-                    }
-                }
-
-                String judge = "NG";
-                try {
-                    double _curValue = Double.valueOf(s);
-                    if (_curValue > datas.get(pos).upperValue || _curValue < datas.get(pos).lowerValue) {
-                        judge = "NG";
-                    } else {
-                        judge = "OK";
-                    }
-//                    if (datas.get(pos).judge == null) {
-//                        datas.get(pos).judge = judge;
-//                        isModify = true;
-//                    } else {
-//                        if (!datas.get(pos).judge.equals(judge)) {
-//                            datas.get(pos).judge = judge;
-//                            isModify = true;
-//                        }
-//                    }
-                    datas.get(pos).workspaceJudges[index] = judge;
-
-                    String _tempJudge = "- -";
-                    for (int i = 1; i < datas.get(pos).workspaceJudges.length; i++) {
-                        String _s = datas.get(pos).workspaceJudges[i];
-                        if (_s.equals("NG")) {
-                            _tempJudge = "NG";
-                            break;
-                        } else if (_s.equals("OK")) {
-                            _tempJudge = "OK";
-                        }
-                    }
-                    if (!_tempJudge.equals(datas.get(pos).judge)) {
-                        datas.get(pos).judge = _tempJudge;
-                        isModify = true;
-                    }
-
-                    for (InputBean _bean : datas) {
-                        if (_bean.judge.equals("NG")) {
-                            judges[index] = "NG";
-                            break;
-                        } else if (_bean.judge.equals("OK")) {
-                            judges[index] = "OK";
-                        }
-                    }
-                    judgeTVs[index].setText(judges[index]);
-                    judgeTVs[index].setTextColor(judges[index].equals("OK") ? Color.GREEN : Color.RED);
-                } catch (NumberFormatException e) {
-
-                }
-
-                if (isModify) mEnterAdapter.notifyDataSetChanged();
             }
         });
+        workpieceSP.setSelection(4);
+    }
+
+    private void doUpdate(int pos, int index, String s) {
+        switch (index) {
+            case 1:
+                datas.get(pos).workspace1Value = s;
+                break;
+            case 2:
+                datas.get(pos).workspace2Value = s;
+                break;
+            case 3:
+                datas.get(pos).workspace3Value = s;
+                break;
+            case 4:
+                datas.get(pos).workspace4Value = s;
+                break;
+            case 5:
+                datas.get(pos).workspace5Value = s;
+                break;
+        }
+
+
+        boolean isModify = false;
+        // 设定最大值;
+
+        List<Double> _tempList = new ArrayList<>();
+        if (datas.get(pos).workspace1Value != null) {
+            try {
+                _tempList.add(Double.valueOf(datas.get(pos).workspace1Value));
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        if (datas.get(pos).workspace2Value != null) {
+            try {
+                _tempList.add(Double.valueOf(datas.get(pos).workspace2Value));
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        if (datas.get(pos).workspace3Value != null) {
+            try {
+                _tempList.add(Double.valueOf(datas.get(pos).workspace3Value));
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        if (datas.get(pos).workspace4Value != null) {
+            try {
+                _tempList.add(Double.valueOf(datas.get(pos).workspace4Value));
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        if (datas.get(pos).workspace5Value != null) {
+            try {
+                _tempList.add(Double.valueOf(datas.get(pos).workspace5Value));
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        Collections.sort(_tempList);
+        if (_tempList.size() > 0) {
+            android.util.Log.d("wlDebug", "max = " + _tempList.get(_tempList.size() - 1));
+            android.util.Log.d("wlDebug", "min = " + _tempList.get(0));
+            datas.get(pos).maxValue = _tempList.get(_tempList.size() - 1).toString().trim();
+            datas.get(pos).minValue = _tempList.get(0).toString().trim();
+            isModify = true;
+        }
+
+        /*
+        if (datas.get(pos).maxValue == null) {
+            datas.get(pos).maxValue = s;
+            isModify = true;
+        } else {
+            try {
+                double _max = Double.valueOf(datas.get(pos).maxValue);
+                double _curValue = Double.valueOf(s);
+                if (_curValue > _max) {
+                    datas.get(pos).maxValue = s;
+                    isModify = true;
+                }
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        if (datas.get(pos).minValue == null) {
+            datas.get(pos).minValue = s;
+            isModify = true;
+        } else {
+            try {
+                double _min = Double.valueOf(datas.get(pos).minValue);
+                double _curValue = Double.valueOf(s);
+                if (_curValue < _min) {
+                    datas.get(pos).minValue = s;
+                    isModify = true;
+                }
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        */
+
+        String judge = "NG";
+        try {
+            double _curValue = Double.valueOf(s);
+            if (_curValue > datas.get(pos).upperValue || _curValue < datas.get(pos).lowerValue) {
+                judge = "NG";
+            } else {
+                judge = "OK";
+            }
+            datas.get(pos).workspaceJudges[index] = judge;
+
+            String _tempJudge = "- -";
+            for (int i = 1; i < datas.get(pos).workspaceJudges.length; i++) {
+                String _s = datas.get(pos).workspaceJudges[i];
+                if (_s.equals("NG")) {
+                    _tempJudge = "NG";
+                    break;
+                } else if (_s.equals("OK")) {
+                    _tempJudge = "OK";
+                }
+            }
+            if (!_tempJudge.equals(datas.get(pos).judge)) {
+                datas.get(pos).judge = _tempJudge;
+                isModify = true;
+            }
+
+            for (InputBean _bean : datas) {
+                if (_bean.judge.equals("NG")) {
+                    judges[index] = "NG";
+                    break;
+                } else if (_bean.judge.equals("OK")) {
+                    judges[index] = "OK";
+                }
+            }
+            judgeTVs[index].setText(judges[index]);
+            judgeTVs[index].setTextColor(judges[index].equals("OK") ? Color.GREEN : Color.RED);
+        } catch (NumberFormatException e) {
+
+        }
+        if (isModify) mEnterAdapter.notifyDataSetChanged();
     }
 
     static final int REQUEST_TAKE_PHOTO = 2;
@@ -281,6 +360,9 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     @OnClick(R.id.btn_save)
     public void onSave(View v) {
+
+        int saveNum = workpieceSP.getSelectedItemPosition() + 1;
+
         // 1
         ResultBean3 _workpiece1Bean = new ResultBean3();
         _workpiece1Bean.setMValues(new ArrayList<String>());
@@ -288,6 +370,7 @@ public class InputActivity extends BaseOLandscapeActivity {
         _workpiece1Bean.setHandlerAccout(App.handlerAccout);
         _workpiece1Bean.setCodeID(App.getSetupBean().getCodeID());
         _workpiece1Bean.setResult(judges[1]);
+        _workpiece1Bean.setTimeStamp(System.currentTimeMillis());
         for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
             if (mParameter2Beans.get(i).getEnable()) {
                 _workpiece1Bean.getMValues().add(datas.get(j).workspace1Value);
@@ -305,98 +388,113 @@ public class InputActivity extends BaseOLandscapeActivity {
         App.getDaoSession().getResultBean3Dao().insert(_workpiece1Bean);
 
         // 2
-        ResultBean3 _workpiece2Bean = new ResultBean3();
-        _workpiece2Bean.setMValues(new ArrayList<String>());
-        _workpiece2Bean.setMPicPaths(new ArrayList<String>());
-        _workpiece2Bean.setHandlerAccout(App.handlerAccout);
-        _workpiece2Bean.setCodeID(App.getSetupBean().getCodeID());
-        _workpiece2Bean.setResult(judges[2]);
-        for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
-            if (mParameter2Beans.get(i).getEnable()) {
-                _workpiece2Bean.getMValues().add(datas.get(j).workspace2Value);
-                _workpiece2Bean.getMPicPaths().add(datas.get(j).workspace2PicPath);
-                j++;
-            } else {
-                _workpiece2Bean.getMValues().add("- -");
-                _workpiece2Bean.getMPicPaths().add("");
+        if (saveNum > 1) {
+            ResultBean3 _workpiece2Bean = new ResultBean3();
+            _workpiece2Bean.setMValues(new ArrayList<String>());
+            _workpiece2Bean.setMPicPaths(new ArrayList<String>());
+            _workpiece2Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece2Bean.setCodeID(App.getSetupBean().getCodeID());
+            _workpiece2Bean.setTimeStamp(System.currentTimeMillis());
+            _workpiece2Bean.setResult(judges[2]);
+            for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
+                if (mParameter2Beans.get(i).getEnable()) {
+                    _workpiece2Bean.getMValues().add(datas.get(j).workspace2Value);
+                    _workpiece2Bean.getMPicPaths().add(datas.get(j).workspace2PicPath);
+                    j++;
+                } else {
+                    _workpiece2Bean.getMValues().add("- -");
+                    _workpiece2Bean.getMPicPaths().add("");
+                }
             }
+
+            for (int i = 0; i < _workpiece2Bean.getMValues().size(); i++) {
+                android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece2Bean.getMValues().get(i));
+            }
+            App.getDaoSession().getResultBean3Dao().insert(_workpiece2Bean);
         }
 
-        for (int i = 0; i < _workpiece2Bean.getMValues().size(); i++) {
-            android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece2Bean.getMValues().get(i));
-        }
-        App.getDaoSession().getResultBean3Dao().insert(_workpiece2Bean);
 
         // 3
-        ResultBean3 _workpiece3Bean = new ResultBean3();
-        _workpiece3Bean.setMValues(new ArrayList<String>());
-        _workpiece3Bean.setMPicPaths(new ArrayList<String>());
-        _workpiece3Bean.setHandlerAccout(App.handlerAccout);
-        _workpiece3Bean.setCodeID(App.getSetupBean().getCodeID());
-        _workpiece3Bean.setResult(judges[3]);
-        for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
-            if (mParameter2Beans.get(i).getEnable()) {
-                _workpiece3Bean.getMValues().add(datas.get(j).workspace3Value);
-                _workpiece3Bean.getMPicPaths().add(datas.get(j).workspace3PicPath);
-                j++;
-            } else {
-                _workpiece3Bean.getMValues().add("- -");
-                _workpiece3Bean.getMPicPaths().add("");
+        if (saveNum > 2) {
+            ResultBean3 _workpiece3Bean = new ResultBean3();
+            _workpiece3Bean.setMValues(new ArrayList<String>());
+            _workpiece3Bean.setMPicPaths(new ArrayList<String>());
+            _workpiece3Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece3Bean.setCodeID(App.getSetupBean().getCodeID());
+            _workpiece3Bean.setResult(judges[3]);
+            _workpiece3Bean.setTimeStamp(System.currentTimeMillis());
+            for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
+                if (mParameter2Beans.get(i).getEnable()) {
+                    _workpiece3Bean.getMValues().add(datas.get(j).workspace3Value);
+                    _workpiece3Bean.getMPicPaths().add(datas.get(j).workspace3PicPath);
+                    j++;
+                } else {
+                    _workpiece3Bean.getMValues().add("- -");
+                    _workpiece3Bean.getMPicPaths().add("");
+                }
             }
-        }
 
-        for (int i = 0; i < _workpiece3Bean.getMValues().size(); i++) {
-            android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece3Bean.getMValues().get(i));
-        }
-        App.getDaoSession().getResultBean3Dao().insert(_workpiece3Bean);
-
-        // 1
-        ResultBean3 _workpiece4Bean = new ResultBean3();
-        _workpiece4Bean.setMValues(new ArrayList<String>());
-        _workpiece4Bean.setMPicPaths(new ArrayList<String>());
-        _workpiece4Bean.setHandlerAccout(App.handlerAccout);
-        _workpiece4Bean.setCodeID(App.getSetupBean().getCodeID());
-        _workpiece4Bean.setResult(judges[4]);
-        for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
-            if (mParameter2Beans.get(i).getEnable()) {
-                _workpiece4Bean.getMValues().add(datas.get(j).workspace4Value);
-                _workpiece4Bean.getMPicPaths().add(datas.get(j).workspace4PicPath);
-                j++;
-            } else {
-                _workpiece4Bean.getMValues().add("- -");
-                _workpiece4Bean.getMPicPaths().add("");
+            for (int i = 0; i < _workpiece3Bean.getMValues().size(); i++) {
+                android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece3Bean.getMValues().get(i));
             }
+            App.getDaoSession().getResultBean3Dao().insert(_workpiece3Bean);
         }
 
-        for (int i = 0; i < _workpiece4Bean.getMValues().size(); i++) {
-            android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece4Bean.getMValues().get(i));
-        }
-        App.getDaoSession().getResultBean3Dao().insert(_workpiece4Bean);
 
-        // 1
-        ResultBean3 _workpiece5Bean = new ResultBean3();
-        _workpiece5Bean.setMValues(new ArrayList<String>());
-        _workpiece5Bean.setMPicPaths(new ArrayList<String>());
-        _workpiece5Bean.setHandlerAccout(App.handlerAccout);
-        _workpiece5Bean.setCodeID(App.getSetupBean().getCodeID());
-        _workpiece5Bean.setResult(judges[5]);
-        for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
-            if (mParameter2Beans.get(i).getEnable()) {
-                _workpiece5Bean.getMValues().add(datas.get(j).workspace5Value);
-                _workpiece5Bean.getMPicPaths().add(datas.get(j).workspace5PicPath);
-                j++;
-            } else {
-                _workpiece5Bean.getMValues().add("- -");
-                _workpiece5Bean.getMPicPaths().add("");
+        // 4
+        if (saveNum > 3) {
+            ResultBean3 _workpiece4Bean = new ResultBean3();
+            _workpiece4Bean.setMValues(new ArrayList<String>());
+            _workpiece4Bean.setMPicPaths(new ArrayList<String>());
+            _workpiece4Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece4Bean.setCodeID(App.getSetupBean().getCodeID());
+            _workpiece4Bean.setResult(judges[4]);
+            _workpiece4Bean.setTimeStamp(System.currentTimeMillis());
+            for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
+                if (mParameter2Beans.get(i).getEnable()) {
+                    _workpiece4Bean.getMValues().add(datas.get(j).workspace4Value);
+                    _workpiece4Bean.getMPicPaths().add(datas.get(j).workspace4PicPath);
+                    j++;
+                } else {
+                    _workpiece4Bean.getMValues().add("- -");
+                    _workpiece4Bean.getMPicPaths().add("");
+                }
             }
+
+            for (int i = 0; i < _workpiece4Bean.getMValues().size(); i++) {
+                android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece4Bean.getMValues().get(i));
+            }
+            App.getDaoSession().getResultBean3Dao().insert(_workpiece4Bean);
         }
 
-        for (int i = 0; i < _workpiece5Bean.getMValues().size(); i++) {
-            android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece5Bean.getMValues().get(i));
-        }
-        App.getDaoSession().getResultBean3Dao().insert(_workpiece5Bean);
 
-        Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+        // 5
+        if (saveNum > 4) {
+            ResultBean3 _workpiece5Bean = new ResultBean3();
+            _workpiece5Bean.setMValues(new ArrayList<String>());
+            _workpiece5Bean.setMPicPaths(new ArrayList<String>());
+            _workpiece5Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece5Bean.setCodeID(App.getSetupBean().getCodeID());
+            _workpiece5Bean.setTimeStamp(System.currentTimeMillis());
+            _workpiece5Bean.setResult(judges[5]);
+            for (int i = 0, j = 0; i < mParameter2Beans.size(); i++) {
+                if (mParameter2Beans.get(i).getEnable()) {
+                    _workpiece5Bean.getMValues().add(datas.get(j).workspace5Value);
+                    _workpiece5Bean.getMPicPaths().add(datas.get(j).workspace5PicPath);
+                    j++;
+                } else {
+                    _workpiece5Bean.getMValues().add("- -");
+                    _workpiece5Bean.getMPicPaths().add("");
+                }
+            }
+
+            for (int i = 0; i < _workpiece5Bean.getMValues().size(); i++) {
+                android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece5Bean.getMValues().get(i));
+            }
+            App.getDaoSession().getResultBean3Dao().insert(_workpiece5Bean);
+        }
+
+        Toast.makeText(this, "保存了" + saveNum + "件工件", Toast.LENGTH_SHORT).show();
     }
 
 

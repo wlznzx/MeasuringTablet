@@ -95,7 +95,7 @@ public class App extends MultiDexApplication {
                 }
             }
         };
-        // Bugly.init(getApplicationContext(), "e4d9621d74", true);
+        Bugly.init(getApplicationContext(), "be2b337540", true);
     }
 
     public static DaoSession getDaoSession() {

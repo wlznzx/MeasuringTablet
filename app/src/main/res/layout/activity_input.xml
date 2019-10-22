@@ -41,11 +41,31 @@
                     android:src="@android:color/black"
                     />
 
-                <TextView
+
+                <RelativeLayout
                     android:layout_width="@dimen/m_3part_width"
-                    android:layout_height="@dimen/m_item_height"
-                    style="@style/BaseTabletTextStyle"
-                     />
+                    android:layout_height="@dimen/m_item_height">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/BaseTabletTextStyle"
+                            android:text="@string/workpiece_num"
+                            />
+                        <Spinner
+                            android:id="@+id/workpiece_num_sp"
+                            android:layout_marginLeft="10px"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:entries="@array/enter_workspece"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
                 <ImageView
                     android:layout_width="1px"
                     android:layout_height="match_parent"

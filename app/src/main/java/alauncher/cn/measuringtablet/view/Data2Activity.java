@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
@@ -31,7 +32,7 @@ import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.ResultData;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
-import alauncher.cn.measuringtablet.database.greenDao.db.ResultBeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.utils.CommonUtil;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.utils.ExcelUtil;
@@ -495,7 +496,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
     @Override
     public void dataFilterUpdate(FilterBean bean) {
         /*
-        Query query = mResultBeanDao.queryBuilder().where(
+        Query query = mResultBean3Dao.queryBuilder().where(
                 new WhereCondition.StringCondition(
                         "SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '吴工'")).build();
         List<ResultBean> _datas = query.list();
@@ -507,36 +508,36 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         String queryString = "";
         if (bean.getStartTime() == 0 && bean.getEndTime() == 0) {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where 1==1 ";
+            queryString = "SELECT * FROM " + ResultBean3Dao.TABLENAME + " where 1==1 ";
         } else {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + bean.getStartTime() + " and " + bean.getEndTime();
+            queryString = "SELECT * FROM " + ResultBean3Dao.TABLENAME + " where " + ResultBean3Dao.Properties.TimeStamp.columnName + " between " + bean.getStartTime() + " and " + bean.getEndTime();
         }
 
         //用户
         if (!CommonUtil.isNull(bean.getHandler())) {
             queryString = queryString + " and "
-                    + ResultBeanDao.Properties.HandlerAccout.columnName + " =  ?";
+                    + ResultBean3Dao.Properties.HandlerAccout.columnName + " =  ?";
             strParamLt.add(bean.getHandler());
         }
 
         // Event
         if (!CommonUtil.isNull(bean.getEvent())) {
             queryString = queryString + " and "
-                    + ResultBeanDao.Properties.Event.columnName + " =  ?";
+                    + ResultBean3Dao.Properties.Event.columnName + " =  ?";
             strParamLt.add(bean.getEvent());
         }
 
         // 工件号
         if (!CommonUtil.isNull(bean.getWorkid())) {
             queryString = queryString + " and "
-                    + ResultBeanDao.Properties.Workid.columnName + " =  ?";
+                    + ResultBean3Dao.Properties.Workid.columnName + " =  ?";
             strParamLt.add(bean.getWorkid());
         }
 
         //
         if (!CommonUtil.isNull(bean.getResult())) {
             queryString = queryString + " and "
-                    + ResultBeanDao.Properties.Result.columnName + " =  ?";
+                    + ResultBean3Dao.Properties.Result.columnName + " =  ?";
             strParamLt.add(bean.getResult());
         }
 
@@ -547,23 +548,17 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             strs[i] = objs[i].toString();
         }
 
-//        Cursor cursor = mResultBeanDao.getDatabase().rawQuery("SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '工'", null);
+//        Cursor cursor = mResultBean3Dao.getDatabase().rawQuery("SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '工'", null);
         Cursor cursor = App.getDaoSession().getResultBean3Dao().getDatabase().rawQuery(queryString, strs);
 
 
-        int HandlerAccout = cursor.getColumnIndex(ResultBeanDao.Properties.HandlerAccout.columnName);
-        int TimeStamp = cursor.getColumnIndex(ResultBeanDao.Properties.TimeStamp.columnName);
-        int Workid = cursor.getColumnIndex(ResultBeanDao.Properties.Workid.columnName);
-        int Event = cursor.getColumnIndex(ResultBeanDao.Properties.Event.columnName);
-        int Result = cursor.getColumnIndex(ResultBeanDao.Properties.Result.columnName);
-        int M1 = cursor.getColumnIndex(ResultBeanDao.Properties.M1.columnName);
-        int M2 = cursor.getColumnIndex(ResultBeanDao.Properties.M2.columnName);
-        int M3 = cursor.getColumnIndex(ResultBeanDao.Properties.M3.columnName);
-        int M4 = cursor.getColumnIndex(ResultBeanDao.Properties.M4.columnName);
-        int M1_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M1_group.columnName);
-        int M2_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M2_group.columnName);
-        int M3_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M3_group.columnName);
-        int M4_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M4_group.columnName);
+        int HandlerAccout = cursor.getColumnIndex(ResultBean3Dao.Properties.HandlerAccout.columnName);
+        int TimeStamp = cursor.getColumnIndex(ResultBean3Dao.Properties.TimeStamp.columnName);
+        int Workid = cursor.getColumnIndex(ResultBean3Dao.Properties.Workid.columnName);
+        int Event = cursor.getColumnIndex(ResultBean3Dao.Properties.Event.columnName);
+        int Result = cursor.getColumnIndex(ResultBean3Dao.Properties.Result.columnName);
+        int MValues = cursor.getColumnIndex(ResultBean3Dao.Properties.MValues.columnName);
+        int MPicPaths = cursor.getColumnIndex(ResultBean3Dao.Properties.MPicPaths.columnName);
 
         List<ResultBean3> _datas = new ArrayList<>();
 
@@ -574,17 +569,20 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             rBean.setTimeStamp(cursor.getLong(TimeStamp));
             rBean.setEvent(cursor.getString(Event));
             rBean.setResult(cursor.getString(Result));
-//            rBean.setM1(cursor.getDouble(M1));
-//            rBean.setM2(cursor.getDouble(M2));
-//            rBean.setM3(cursor.getDouble(M3));
-//            rBean.setM4(cursor.getDouble(M4));
-//            rBean.setM1_group(cursor.getString(M1_Group));
-//            rBean.setM2_group(cursor.getString(M2_Group));
-//            rBean.setM3_group(cursor.getString(M3_Group));
-//            rBean.setM4_group(cursor.getString(M4_Group));
+            rBean.setMValues(convertToEntityProperty(cursor.getString(MValues)));
+            rBean.setMPicPaths(convertToEntityProperty(cursor.getString(MPicPaths)));
             _datas.add(rBean);
         }
         mDataAdapter.notifyAdapter(_datas, false);
+    }
+
+    public List<String> convertToEntityProperty(String databaseValue) {
+        if (databaseValue == null) {
+            return null;
+        } else {
+            List<String> list = Arrays.asList(databaseValue.split(","));
+            return list;
+        }
     }
 
 }

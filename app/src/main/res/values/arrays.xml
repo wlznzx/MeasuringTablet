@@ -89,6 +89,14 @@
         <item>11</item>
     </string-array>
 
+    <string-array name="enter_workspece" translatable="false">
+        <item>1件</item>
+        <item>2件</item>
+        <item>3件</item>
+        <item>4件</item>
+        <item>5件</item>
+    </string-array>
+
     <string-array name="group_size_array" translatable="false">
         <item>2</item>
         <item>3</item>
