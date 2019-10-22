@@ -109,8 +109,9 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         });
 
         holder.setText(R.id.data_handler, "" + datas.get(position).getHandlerAccout());
-        holder.setText(R.id.data_workpiece_id, "" + datas.get(position).getWorkid());
-        holder.setText(R.id.data_event, datas.get(position).getEvent());
+        holder.setText(R.id.data_workpiece_id, "- -");
+        holder.setText(R.id.data_event, "- -");
+        holder.setText(R.id.data_result, datas.get(position).getResult());
          /*
         holder.setText(R.id.data_m1, "" + datas.get(position).getMValues().get(0));
 
@@ -131,7 +132,7 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
 
         for (int i = 0; i < mValueIDs.size(); i++) {
 //            if (mParameterBean.get(i).getEnable()) {
-            holder.setText(mValueIDs.get(i), "" + datas.get(position).getMValues().get(i));
+            holder.setText(mValueIDs.get(i), datas.get(position).getMValues().get(i).equals("null") ? "- -" : datas.get(position).getMValues().get(i));
             if (datas.get(position).getMPicPaths().get(i) != null && !datas.get(position).getMPicPaths().get(i).equals("")) {
                 Glide.with(mContext).load("file://" + datas.get(position).getMPicPaths().get(i))
                         .into((ImageView) holder.getConvertView().findViewById(mPicIDs.get(i)));

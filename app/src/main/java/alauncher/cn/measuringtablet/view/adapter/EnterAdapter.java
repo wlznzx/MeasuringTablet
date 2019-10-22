@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -222,6 +223,14 @@ public class EnterAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         });
 
+        holder.setText(R.id.m_max_tv, _bean.maxValue == null ? "- -" : _bean.maxValue);
+        holder.setText(R.id.m_min_tv, _bean.maxValue == null ? "- -" : _bean.minValue);
+
+        holder.setText(R.id.m_judge_tv, _bean.judge == null ? "- -" : _bean.judge);
+        TextView judgeTv = holder.getConvertView().findViewById(R.id.m_judge_tv);
+        if (_bean.judge != null) {
+            holder.setTextColor(R.id.m_judge_tv, _bean.judge.equals("OK") ? Color.GREEN : Color.RED);
+        }
         holder.setIsRecyclable(false);
     }
 

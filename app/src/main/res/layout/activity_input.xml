@@ -29,11 +29,12 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/judge_all"
                     android:layout_width="@dimen/m_3part_width"
                     android:layout_height="@dimen/m_item_height"
                     style="@style/BaseTabletTextStyle"
-                    android:background="@android:color/holo_green_light"
-                    android:text="@string/comprehensive" />
+                    android:text="@string/comprehensive"
+                     />
                 <ImageView
                     android:layout_width="1px"
                     android:layout_height="match_parent"
@@ -44,57 +45,62 @@
                     android:layout_width="@dimen/m_3part_width"
                     android:layout_height="@dimen/m_item_height"
                     style="@style/BaseTabletTextStyle"
-                    android:text="@string/comprehensive" />
+                     />
                 <ImageView
                     android:layout_width="1px"
                     android:layout_height="match_parent"
                     android:src="@android:color/black"
                     />
                 <TextView
+                    android:id="@+id/judge_1"
                     android:layout_width="@dimen/m_2part_width"
                     android:layout_height="@dimen/m_item_height"
                     style="@style/BaseTabletTextStyle"
-                    android:text="@string/comprehensive" />
+                     />
                 <ImageView
                     android:layout_width="1px"
                     android:layout_height="match_parent"
                     android:src="@android:color/black"
                     />
                 <TextView
+                    android:id="@+id/judge_2"
                     android:layout_width="@dimen/m_2part_width"
                     android:layout_height="@dimen/m_item_height"
                     style="@style/BaseTabletTextStyle"
-                    android:text="@string/comprehensive" />
+                     />
                 <ImageView
                     android:layout_width="1px"
                     android:layout_height="match_parent"
                     android:src="@android:color/black"
                     />
                 <TextView
+                    android:id="@+id/judge_3"
                     android:layout_width="@dimen/m_2part_width"
                     android:layout_height="@dimen/m_item_height"
                     style="@style/BaseTabletTextStyle"
-                    android:text="@string/comprehensive" />
+                     />
                 <ImageView
                     android:layout_width="1px"
                     android:layout_height="match_parent"
                     android:src="@android:color/black"
                     />
                 <TextView
+                    android:id="@+id/judge_4"
                     android:layout_width="@dimen/m_2part_width"
                     android:layout_height="@dimen/m_item_height"
                     style="@style/BaseTabletTextStyle"
-                    android:text="@string/comprehensive" />
+                     />
                 <ImageView
                     android:layout_width="1px"
                     android:layout_height="match_parent"
                     android:src="@android:color/black"
                     />
                 <TextView
+                    android:id="@+id/judge_5"
                     android:layout_width="@dimen/m_2part_width"
                     android:layout_height="@dimen/m_item_height"
                     style="@style/BaseTabletTextStyle"
-                    android:text="@string/comprehensive" />
+                     />
             </LinearLayout>
 
             <ImageView
