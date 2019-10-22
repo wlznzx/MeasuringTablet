@@ -269,10 +269,10 @@ public class InputActivity extends BaseOLandscapeActivity {
             }
 
             for (InputBean _bean : datas) {
-                if (_bean.judge.equals("NG")) {
+                if (datas.get(pos).workspaceJudges[index].equals("NG")) {
                     judges[index] = "NG";
                     break;
-                } else if (_bean.judge.equals("OK")) {
+                } else if (datas.get(pos).workspaceJudges[index].equals("OK")) {
                     judges[index] = "OK";
                 }
             }
@@ -281,6 +281,19 @@ public class InputActivity extends BaseOLandscapeActivity {
         } catch (NumberFormatException e) {
 
         }
+
+        for (int i = 1; i < judges.length; i++) {
+            if (judges[i].equals("NG")) {
+                judges[0] = "NG";
+                break;
+            } else if (judges[i].equals("OK")) {
+                judges[0] = "OK";
+            }
+        }
+        judgeTVs[0].setText("综合判定 " + judges[0]);
+        judgeTVs[0].setTextColor(judges[0].equals("OK") ? Color.GREEN : Color.RED);
+
+
         if (isModify) mEnterAdapter.notifyDataSetChanged();
     }
 
