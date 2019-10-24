@@ -10,6 +10,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -295,6 +296,8 @@ public class InputActivity extends BaseOLandscapeActivity {
 
 
         if (isModify) mEnterAdapter.notifyDataSetChanged();
+        InputMethodManager m = (InputMethodManager) getSystemService(getBaseContext().INPUT_METHOD_SERVICE);
+        m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     static final int REQUEST_TAKE_PHOTO = 2;

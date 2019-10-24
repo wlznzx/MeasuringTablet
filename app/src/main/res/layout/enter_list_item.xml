@@ -37,6 +37,7 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
+        android:focusable="false"
         android:text="" />
     <ImageView
         android:layout_width="1px"
@@ -50,6 +51,7 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
+        android:focusable="false"
         android:text="" />
     <ImageView
         android:layout_width="1px"
@@ -63,6 +65,7 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
+        android:focusable="false"
         android:text="" />
     <ImageView
         android:layout_width="1px"

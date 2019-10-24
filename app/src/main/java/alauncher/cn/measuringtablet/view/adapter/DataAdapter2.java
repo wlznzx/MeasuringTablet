@@ -136,23 +136,23 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         for (int i = 0; i < mValueIDs.size(); i++) {
 //            if (mParameterBean.get(i).getEnable()) {
             holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
-            if (datas.get(position).getMPicPaths().get(i) != null && !datas.get(position).getMPicPaths().get(i).equals("")) {
-                Glide.with(mContext).load("file://" + datas.get(position).getMPicPaths().get(i))
-                        .into((ImageView) holder.getConvertView().findViewById(mPicIDs.get(i)));
-                final int _i = i;
-                holder.setOnClickListener(mPicIDs.get(i), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openImage(datas.get(position).getMPicPaths().get(_i));
-                    }
-                });
-            } else {
+            try {
+                if (datas.get(position).getMPicPaths().get(i) != null && !datas.get(position).getMPicPaths().get(i).equals("")) {
+                    Glide.with(mContext).load("file://" + datas.get(position).getMPicPaths().get(i))
+                            .into((ImageView) holder.getConvertView().findViewById(mPicIDs.get(i)));
+                    final int _i = i;
+                    holder.setOnClickListener(mPicIDs.get(i), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openImage(datas.get(position).getMPicPaths().get(_i));
+                        }
+                    });
+                } else {
+
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
 
             }
-//            } else {
-//                holder.setVisible(mValueIDs.get(i), false);
-//                holder.setVisible(mPicIDs.get(i), false);
-//            }
         }
         /*
         ;
