@@ -31,6 +31,10 @@ public class DeviceInfoBeanDao extends AbstractDao<DeviceInfoBean, Long> {
         public final static Property DeviceName = new Property(4, String.class, "deviceName", false, "DEVICE_NAME");
         public final static Property Manufacturer = new Property(5, String.class, "manufacturer", false, "MANUFACTURER");
         public final static Property Rmk = new Property(6, String.class, "rmk", false, "RMK");
+        public final static Property StartHour = new Property(7, int.class, "startHour", false, "START_HOUR");
+        public final static Property StopHour = new Property(8, int.class, "stopHour", false, "STOP_HOUR");
+        public final static Property StartMin = new Property(9, int.class, "startMin", false, "START_MIN");
+        public final static Property StopMin = new Property(10, int.class, "stopMin", false, "STOP_MIN");
     }
 
 
@@ -52,7 +56,11 @@ public class DeviceInfoBeanDao extends AbstractDao<DeviceInfoBean, Long> {
                 "\"DEVICE_CODE\" TEXT," + // 3: deviceCode
                 "\"DEVICE_NAME\" TEXT," + // 4: deviceName
                 "\"MANUFACTURER\" TEXT," + // 5: manufacturer
-                "\"RMK\" TEXT);"); // 6: rmk
+                "\"RMK\" TEXT," + // 6: rmk
+                "\"START_HOUR\" INTEGER NOT NULL ," + // 7: startHour
+                "\"STOP_HOUR\" INTEGER NOT NULL ," + // 8: stopHour
+                "\"START_MIN\" INTEGER NOT NULL ," + // 9: startMin
+                "\"STOP_MIN\" INTEGER NOT NULL );"); // 10: stopMin
     }
 
     /** Drops the underlying database table. */
@@ -99,6 +107,10 @@ public class DeviceInfoBeanDao extends AbstractDao<DeviceInfoBean, Long> {
         if (rmk != null) {
             stmt.bindString(7, rmk);
         }
+        stmt.bindLong(8, entity.getStartHour());
+        stmt.bindLong(9, entity.getStopHour());
+        stmt.bindLong(10, entity.getStartMin());
+        stmt.bindLong(11, entity.getStopMin());
     }
 
     @Override
@@ -139,6 +151,10 @@ public class DeviceInfoBeanDao extends AbstractDao<DeviceInfoBean, Long> {
         if (rmk != null) {
             stmt.bindString(7, rmk);
         }
+        stmt.bindLong(8, entity.getStartHour());
+        stmt.bindLong(9, entity.getStopHour());
+        stmt.bindLong(10, entity.getStartMin());
+        stmt.bindLong(11, entity.getStopMin());
     }
 
     @Override
@@ -155,7 +171,11 @@ public class DeviceInfoBeanDao extends AbstractDao<DeviceInfoBean, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // deviceCode
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // deviceName
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // manufacturer
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // rmk
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // rmk
+            cursor.getInt(offset + 7), // startHour
+            cursor.getInt(offset + 8), // stopHour
+            cursor.getInt(offset + 9), // startMin
+            cursor.getInt(offset + 10) // stopMin
         );
         return entity;
     }
@@ -169,6 +189,10 @@ public class DeviceInfoBeanDao extends AbstractDao<DeviceInfoBean, Long> {
         entity.setDeviceName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setManufacturer(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setRmk(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setStartHour(cursor.getInt(offset + 7));
+        entity.setStopHour(cursor.getInt(offset + 8));
+        entity.setStartMin(cursor.getInt(offset + 9));
+        entity.setStopMin(cursor.getInt(offset + 10));
      }
     
     @Override

@@ -144,22 +144,44 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/result" />
 
             <Spinner
                 android:id="@+id/result_filter_sp"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="4"
                 android:entries="@array/result" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/class_filter" />
+
+            <Spinner
+                android:id="@+id/class_filter_sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:entries="@array/class_array" />
         </LinearLayout>
 
         <LinearLayout
@@ -197,6 +219,7 @@
                 android:text="Yes"
                 android:textColor="#38ADFF"
                 android:textSize="16sp" />
+
         </LinearLayout>
     </LinearLayout>
 

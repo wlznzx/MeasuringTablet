@@ -43,6 +43,8 @@ public class ParameterManagement2Activity extends BaseOActivity {
 
     private List<Parameter2Bean> beans;
 
+    private DeviceInfoBean _dBean;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class ParameterManagement2Activity extends BaseOActivity {
     @Override
     protected void initView() {
         beans = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
+        _dBean = App.getDeviceInfo();
         mParameterAdapter = new ParameterAdapter(ParameterManagement2Activity.this, beans);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ParameterManagement2Activity.this);
         rv.setLayoutManager(layoutManager);
@@ -69,7 +72,31 @@ public class ParameterManagement2Activity extends BaseOActivity {
         for (Parameter2Bean _bean : beans) {
             App.getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
         }
+        syncToServer();
         Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void syncToServer() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for (Parameter2Bean _bean : beans) {
+                        int ret = JdbcUtil.selectParamConfig(_dBean.getDeviceCode(), App.getSetupBean().getCodeID(), "M" + _bean.getIndex());
+                        android.util.Log.d("wlDebug", "" + ret);
+                        if (ret > 0) {
+                            JdbcUtil.updateParamConfigOnce(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(),
+                                    "程序" + App.getSetupBean().getCodeID(), "", "", "0", 0, 0, "rmk", _bean);
+                        } else {
+                            JdbcUtil.addParamConfigOnce(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(),
+                                    "程序" + App.getSetupBean().getCodeID(), "", "", "0", 0, 0, "rmk", _bean);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 }

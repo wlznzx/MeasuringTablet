@@ -203,6 +203,10 @@ public class App extends MultiDexApplication {
             _bean.setDeviceCode(SystemPropertiesProxy.getString(this, "ro.serialno"));
             _bean.setDeviceName(getResources().getString(R.string.default_device_name));
             _bean.setRmk("rmk");
+            _bean.setStartHour(9);
+            _bean.setStartMin(0);
+            _bean.setStopHour(18);
+            _bean.setStartMin(0);
             android.util.Log.d("wlDebug", "info = " + _bean.toString());
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }

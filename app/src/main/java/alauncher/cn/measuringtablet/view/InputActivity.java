@@ -37,12 +37,13 @@ import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOLandscapeActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
+import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
-import alauncher.cn.measuringtablet.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringtablet.utils.Constants;
+import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.SPUtils;
 import alauncher.cn.measuringtablet.view.adapter.EnterAdapter;
 import butterknife.BindView;
@@ -70,11 +71,15 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     long _stableTime = 800;
 
+    int startHour, stopHour, startMin, stopMin;
+
     @BindViews({R.id.judge_all, R.id.judge_1, R.id.judge_2, R.id.judge_3, R.id.judge_4, R.id.judge_5})
     public TextView[] judgeTVs;
 
     private String[] judges = {"- -", "- -", "- -", "- -", "- -", "- -"};
 
+
+    private DeviceInfoBean mDeviceInfoBean;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -105,14 +110,15 @@ public class InputActivity extends BaseOLandscapeActivity {
         setContentView(R.layout.activity_input);
     }
 
-    private int currentPos;
-    private int currentIndex;
+    private int currentPos = -1;
+    private int currentIndex = -1;
     private String updateValue;
-
 
     @Override
     protected void initView() {
         mParameter2Beans = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
+        mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
+        datas.clear();
         for (Parameter2Bean _bean : mParameter2Beans) {
             if (_bean.getEnable()) {
                 InputBean _inputBean = new InputBean();
@@ -129,9 +135,6 @@ public class InputActivity extends BaseOLandscapeActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(InputActivity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mEnterAdapter);
-
-
-        // android.util.Log.d("wlDebug", "stableTime = " + _stableTime);
 
         mEnterAdapter.setOnItemClickListener(new EnterAdapter.OnItemClickListener() {
             @Override
@@ -162,6 +165,11 @@ public class InputActivity extends BaseOLandscapeActivity {
     }
 
     private void doUpdate(int pos, int index, String s) {
+
+        if (pos == -1) {
+            return;
+        }
+
         switch (index) {
             case 1:
                 datas.get(pos).workspace1Value = s;
@@ -228,6 +236,7 @@ public class InputActivity extends BaseOLandscapeActivity {
             datas.get(pos).minValue = _tempList.get(0).toString().trim();
             isModify = true;
         }
+
 
         /*
         if (datas.get(pos).maxValue == null) {
@@ -314,8 +323,8 @@ public class InputActivity extends BaseOLandscapeActivity {
 
 
         if (isModify) mEnterAdapter.notifyDataSetChanged();
-        InputMethodManager m = (InputMethodManager) getSystemService(getBaseContext().INPUT_METHOD_SERVICE);
-        m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        // InputMethodManager m = (InputMethodManager) getSystemService(getBaseContext().INPUT_METHOD_SERVICE);
+        // m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     static final int REQUEST_TAKE_PHOTO = 2;
@@ -363,7 +372,6 @@ public class InputActivity extends BaseOLandscapeActivity {
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -394,7 +402,7 @@ public class InputActivity extends BaseOLandscapeActivity {
         }
     }
 
-    @OnClick
+    @OnClick(R.id.btn_refresh)
     public void onRefresh() {
         doUpdate(currentPos, currentIndex, updateValue);
     }
@@ -426,8 +434,9 @@ public class InputActivity extends BaseOLandscapeActivity {
     @OnClick(R.id.btn_save)
     public void onSave(View v) {
 
-        int saveNum = workpieceSP.getSelectedItemPosition() + 1;
+        List<ResultBean3> updateBeans = new ArrayList<>();
 
+        int saveNum = workpieceSP.getSelectedItemPosition() + 1;
         // 1
         ResultBean3 _workpiece1Bean = new ResultBean3();
         _workpiece1Bean.setMValues(new ArrayList<String>());
@@ -451,6 +460,7 @@ public class InputActivity extends BaseOLandscapeActivity {
             android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece1Bean.getMValues().get(i));
         }
         App.getDaoSession().getResultBean3Dao().insert(_workpiece1Bean);
+        updateBeans.add(_workpiece1Bean);
 
         // 2
         if (saveNum > 1) {
@@ -476,6 +486,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                 android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece2Bean.getMValues().get(i));
             }
             App.getDaoSession().getResultBean3Dao().insert(_workpiece2Bean);
+            updateBeans.add(_workpiece2Bean);
         }
 
 
@@ -503,6 +514,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                 android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece3Bean.getMValues().get(i));
             }
             App.getDaoSession().getResultBean3Dao().insert(_workpiece3Bean);
+            updateBeans.add(_workpiece3Bean);
         }
 
 
@@ -530,6 +542,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                 android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece4Bean.getMValues().get(i));
             }
             App.getDaoSession().getResultBean3Dao().insert(_workpiece4Bean);
+            updateBeans.add(_workpiece4Bean);
         }
 
 
@@ -557,8 +570,23 @@ public class InputActivity extends BaseOLandscapeActivity {
                 android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece5Bean.getMValues().get(i));
             }
             App.getDaoSession().getResultBean3Dao().insert(_workpiece5Bean);
+            updateBeans.add(_workpiece5Bean);
         }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                JdbcUtil.insertOrReplace(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getFactoryName(), mDeviceInfoBean.getDeviceCode(), mDeviceInfoBean.getDeviceName(), mDeviceInfoBean.getManufacturer(),
+//                        "rmk3", App.handlerAccout);
+                for (ResultBean3 _b3 : updateBeans) {
+                    try {
+                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
         Toast.makeText(this, "保存了" + saveNum + "件工件", Toast.LENGTH_SHORT).show();
     }
 
@@ -568,6 +596,7 @@ public class InputActivity extends BaseOLandscapeActivity {
      * @return
      */
     private String[] province = new String[10];
+
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < province.length; i++) {
@@ -604,6 +633,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                     actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
                 }
                 dialog.dismiss();
+                initView();
             }
         });
     }

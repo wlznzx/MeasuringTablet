@@ -1,15 +1,21 @@
 package alauncher.cn.measuringtablet.view.fragment;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
@@ -60,6 +66,16 @@ public class InfoFragment extends Fragment {
     @BindView(R.id.text_input_time_edt)
     public EditText tInputTimeEdt;
 
+    @BindView(R.id.start_tp)
+    public Button startTP;
+
+    @BindView(R.id.stop_tp)
+    public Button stopTP;
+
+    public int startHour, startMin, stopHour, stopMin;
+
+    SimpleDateFormat formatter = new SimpleDateFormat("HH时 : mm分");
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -88,6 +104,10 @@ public class InfoFragment extends Fragment {
             _bean.setManufacturer(manufacturerEdt.getText().toString().trim());
             _bean.setDeviceName(deviceNameEdt.getText().toString().trim());
             _bean.setDeviceCode(deviceCodeEdt.getText().toString().trim());
+            _bean.setStartHour(startHour);
+            _bean.setStartMin(startMin);
+            _bean.setStopHour(stopHour);
+            _bean.setStopMin(stopMin);
         }
         App.getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
@@ -142,8 +162,63 @@ public class InfoFragment extends Fragment {
         deviceCodeEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.serialno"));
         baseVersionEdt.setText(BuildUtils.getInner_Ver());
 
+        startHour = _bean.getStartHour();
+        startMin = _bean.getStartMin();
+        stopHour = _bean.getStopHour();
+        stopMin = _bean.getStopMin();
 
         tInputTimeEdt.setText(String.valueOf(SPUtils.get(getContext(), Constants.INPUT_TIME_KEY, Long.valueOf(800))));
+        startTP.setText("" + _bean.getStartHour() + "时:" + _bean.getStartMin() + "分");
+        Date startTime = new Date();
+        startTime.setHours(_bean.getStartHour());
+        startTime.setMinutes(_bean.getStartMin());
+        startTP.setText(formatter.format(startTime));
+        startTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (stopHour < hourOfDay || (stopHour == hourOfDay && stopMin <= minute)) {
+                            Toast.makeText(getContext(), "结束时间不能小于开始时间.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        startHour = hourOfDay;
+                        startMin = minute;
+                        Date currentTime = new Date();
+                        currentTime.setHours(startHour);
+                        currentTime.setMinutes(startMin);
+                        String dateString = formatter.format(currentTime);
+                        startTP.setText(dateString);
+                    }
+                }, _bean.getStartHour(), _bean.getStartMin(), true).show();
+            }
+        });
+
+        Date stopTime = new Date();
+        stopTime.setHours(_bean.getStopHour());
+        stopTime.setMinutes(_bean.getStopMin());
+        stopTP.setText(formatter.format(stopTime));
+        stopTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (hourOfDay < startHour || (hourOfDay == startHour && minute <= startMin)) {
+                            Toast.makeText(getContext(), "结束时间不能小于开始时间.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        stopHour = hourOfDay;
+                        stopMin = minute;
+                        Date stopTime = new Date();
+                        stopTime.setHours(stopHour);
+                        stopTime.setMinutes(stopMin);
+                        stopTP.setText(formatter.format(stopTime));
+                    }
+                }, _bean.getStopHour(), _bean.getStopMin(), true).show();
+            }
+        });
     }
 
 }

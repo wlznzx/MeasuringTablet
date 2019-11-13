@@ -40,12 +40,14 @@ public class FilterDialog extends Dialog {
     @BindView(R.id.result_filter_sp)
     public Spinner resultFilterSP;
 
-
     @BindView(R.id.start_time_btn)
     public Button startTimeBtn;
 
     @BindView(R.id.stop_time_btn)
     public Button stopTimeBtn;
+
+    @BindView(R.id.class_filter_sp)
+    public Spinner classTypeSP;
 
     public UserDao mUserDao;
     private User mUser;
@@ -165,6 +167,7 @@ public class FilterDialog extends Dialog {
         bean.setEvent((String) eventFilterEdt.getText().toString().trim());
         bean.setStartTime(startTime);
         bean.setEndTime(stopTimeStamp);
+        bean.setClassType(classTypeSP.getSelectedItemPosition());
         return bean;
     }
 

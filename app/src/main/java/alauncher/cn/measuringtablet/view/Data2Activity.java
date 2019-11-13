@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -20,11 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
+import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.FilterBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ResultBean;
@@ -80,6 +83,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     private ParameterBean mParameterBean;
 
+    private DeviceInfoBean mDeviceInfoBean;
+
     private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M1", "M1分组", "M2", "M2分组", "M3", "M3分组", "M4", "M4分组"};
 
     @Override
@@ -96,6 +101,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
     protected void initView() {
         List<ResultData> _datas = new ArrayList();
         _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+
+
+        mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
 
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
 
@@ -571,7 +579,16 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             rBean.setResult(cursor.getString(Result));
             rBean.setMValues(convertToEntityProperty(cursor.getString(MValues)));
             rBean.setMPicPaths(convertToEntityProperty(cursor.getString(MPicPaths)));
-            _datas.add(rBean);
+
+            Date date = new Date(rBean.getTimeStamp());
+
+            if (bean.getClassType() == 0) {
+                _datas.add(rBean);
+            } else if (bean.getClassType() == 1) {
+                if (getIsMorningClass(date.getHours(), date.getSeconds())) _datas.add(rBean);
+            } else if (bean.getClassType() == 2) {
+                if (!getIsMorningClass(date.getHours(), date.getSeconds())) _datas.add(rBean);
+            }
         }
         mDataAdapter.notifyAdapter(_datas, false);
     }
@@ -585,4 +602,12 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         }
     }
 
+    public boolean getIsMorningClass(int hour, int min) {
+        if ((hour > mDeviceInfoBean.getStartHour() || (hour == mDeviceInfoBean.getStartHour() && min > mDeviceInfoBean.getStartMin()))
+                &&
+                hour < mDeviceInfoBean.getStopHour() || (hour == mDeviceInfoBean.getStopHour() && min < mDeviceInfoBean.getStopMin())) {
+            return true;
+        }
+        return false;
+    }
 }

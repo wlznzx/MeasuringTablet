@@ -23,6 +23,16 @@ public class FilterBean {
     // 结束时间；
     private long endTime;
 
+    public int classType;
+
+    public int getClassType() {
+        return classType;
+    }
+
+    public void setClassType(int classType) {
+        this.classType = classType;
+    }
+
     public String getHandler() {
         return handler;
     }

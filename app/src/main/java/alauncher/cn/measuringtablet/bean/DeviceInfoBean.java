@@ -28,9 +28,18 @@ public class DeviceInfoBean {
 
     public String rmk;
 
-    @Generated(hash = 243295899)
+    public int startHour;
+
+    public int stopHour;
+
+    public int startMin;
+
+    public int stopMin;
+
+    @Generated(hash = 47425869)
     public DeviceInfoBean(Long id, String factoryCode, String factoryName, String deviceCode,
-            String deviceName, String manufacturer, String rmk) {
+            String deviceName, String manufacturer, String rmk, int startHour, int stopHour,
+            int startMin, int stopMin) {
         this.id = id;
         this.factoryCode = factoryCode;
         this.factoryName = factoryName;
@@ -38,6 +47,10 @@ public class DeviceInfoBean {
         this.deviceName = deviceName;
         this.manufacturer = manufacturer;
         this.rmk = rmk;
+        this.startHour = startHour;
+        this.stopHour = stopHour;
+        this.startMin = startMin;
+        this.stopMin = stopMin;
     }
 
     @Override
@@ -111,5 +124,37 @@ public class DeviceInfoBean {
 
     public void setRmk(String rmk) {
         this.rmk = rmk;
+    }
+
+    public int getStartHour() {
+        return this.startHour;
+    }
+
+    public void setStartHour(int startHour) {
+        this.startHour = startHour;
+    }
+
+    public int getStopHour() {
+        return this.stopHour;
+    }
+
+    public void setStopHour(int stopHour) {
+        this.stopHour = stopHour;
+    }
+
+    public int getStartMin() {
+        return this.startMin;
+    }
+
+    public void setStartMin(int startMin) {
+        this.startMin = startMin;
+    }
+
+    public int getStopMin() {
+        return this.stopMin;
+    }
+
+    public void setStopMin(int stopMin) {
+        this.stopMin = stopMin;
     }
 }

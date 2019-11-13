@@ -271,5 +271,8 @@
     <string name="text_input_time">输入持续时间(ms)</string>
     <string name="default_input_time">0.8</string>
     <string name="refresh_done">完成(刷新)</string>
+    <string name="class_filter">班次</string>
+    <string name="morning_class_start_time">早班开始时间</string>
+    <string name="morning_class_stop_time">早班结束时间</string>
 
 </resources>

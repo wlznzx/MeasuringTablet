@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import alauncher.cn.measuringtablet.App;
+import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ResultBean;
+import alauncher.cn.measuringtablet.bean.ResultBean3;
 
 public class JdbcUtil {
     //url
@@ -47,7 +49,7 @@ public class JdbcUtil {
         return null;
     }
 
-    public static String getIP(){
+    public static String getIP() {
         return IP;
     }
 
@@ -176,7 +178,7 @@ public class JdbcUtil {
         pstmt.setString(6, "");
         pstmt.setString(7, _bean.getHandlerAccout());
         pstmt.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
-        pstmt.executeUpdate();//执行sql                                                                             int autoInckey = -1;
+        pstmt.executeUpdate();//执行sql
         ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
         int autoIncKey = 0;
         if (rs.next()) {
@@ -226,6 +228,50 @@ public class JdbcUtil {
         m2pstmt.close();
         m3pstmt.close();
         m4pstmt.close();
+        close(pstmt, conn);
+        return 1;
+    }
+
+    public static int addResult3(String factory_code, String machine_code, int prog_id, String serial_number,
+                                 final ResultBean3 _bean) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) VALUES (?,?,?,?,?,?,?,?);";
+        PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+        pstmt.setString(1, factory_code);
+        pstmt.setString(2, machine_code);
+        pstmt.setInt(3, prog_id);
+        pstmt.setString(4, serial_number);
+        pstmt.setString(5, _bean.getResult());
+        pstmt.setString(6, "");
+        pstmt.setString(7, _bean.getHandlerAccout());
+        pstmt.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
+        pstmt.executeUpdate();//执行sql
+        ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
+        int autoIncKey = 0;
+        if (rs.next()) {
+            autoIncKey = rs.getInt(1);//取得ID
+            android.util.Log.d("wlDebug", "result = " + autoIncKey);
+        } else {
+            // throw an exception from here
+        }
+
+        for (int i = 0; i <= _bean.getMValues().size(); i++) {
+            String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value) VALUES (?,?,?,?,?,?);";
+            PreparedStatement m1pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
+            m1pstmt.setInt(1, autoIncKey);
+            m1pstmt.setString(2, "1");
+            try {
+                m1pstmt.setFloat(3, Float.valueOf(_bean.getMValues().get(i)));
+            } catch (NumberFormatException e) {
+
+            }
+            m1pstmt.setFloat(4, 0);
+            m1pstmt.setString(5, "- -");
+            m1pstmt.setString(6, _bean.getEvent());
+            m1pstmt.executeUpdate();
+            m1pstmt.close();
+        }
         close(pstmt, conn);
         return 1;
     }
@@ -385,7 +431,61 @@ public class JdbcUtil {
         pstmt.setString(13, "M4");
         pstmt.executeUpdate();//执行sql
         return 1;
+    }
 
+
+    public static int updateParamConfigOnce(String factory_code, String machine_code, int prog_id, String prog_name, String param_key,
+                                            String param_name, String type,
+                                            float warning_up, float warning_low, String rmk, Parameter2Bean _bean) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "update ntqc_param_config set factory_code=?,prog_name=?,param_name=?,type=?,nominal_value=?,lower_tolerance=?,upper_tolerance=?,warning_up=?,warning_low=?,rmk=? where machine_code=? and prog_id=? and param_key=?";
+        PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+        pstmt.setString(1, factory_code);
+        //pstmt.setString(2, machine_code);
+        // pstmt.setInt(3, App.getSetupBean().getCodeID());
+        pstmt.setString(2, App.getCodeName());
+        // pstmt.setString(5, "M1");
+        pstmt.setString(3, _bean.getDescribe());
+        pstmt.setString(4, type);
+        pstmt.setFloat(5, Float.valueOf(String.valueOf(_bean.getNominal_value())));
+        pstmt.setFloat(6, (float) _bean.getLower_tolerance_value());
+        pstmt.setFloat(7, (float) _bean.getUpper_tolerance_value());
+        pstmt.setFloat(8, warning_up);
+        pstmt.setFloat(9, warning_low);
+        pstmt.setString(10, rmk);
+
+        pstmt.setString(11, machine_code);
+        pstmt.setInt(12, App.getSetupBean().getCodeID());
+        pstmt.setString(13, "M" + _bean.getIndex());
+        pstmt.executeUpdate();//执行sql
+        return 1;
+    }
+
+    public static int addParamConfigOnce(String factory_code, String machine_code, int prog_id, String prog_name, String param_key,
+                                         String param_name, String type,
+                                         float warning_up, float warning_low, String rmk, Parameter2Bean _bean) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+
+        String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
+                "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+        pstmt.setString(1, factory_code);
+        pstmt.setString(2, machine_code);
+        pstmt.setInt(3, App.getSetupBean().getCodeID());
+        pstmt.setString(4, App.getCodeName());
+        pstmt.setString(5, "M" + _bean.getIndex());
+        pstmt.setString(6, _bean.getDescribe());
+        pstmt.setString(7, type);
+        pstmt.setFloat(8, Float.valueOf(String.valueOf(_bean.getNominal_value())));
+        pstmt.setFloat(9, (float) _bean.getLower_tolerance_value());
+        pstmt.setFloat(10, (float) _bean.getUpper_tolerance_value());
+        pstmt.setFloat(11, warning_up);
+        pstmt.setFloat(12, warning_low);
+        pstmt.setString(13, rmk);
+        pstmt.executeUpdate();//执行sql
+        return 1;
     }
 
     public static int selectParamConfig(String machine_code, int prog_id, String param_key) {
