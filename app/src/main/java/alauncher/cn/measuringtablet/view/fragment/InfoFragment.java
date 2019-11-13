@@ -57,6 +57,9 @@ public class InfoFragment extends Fragment {
     @BindView(R.id.ip_edt)
     public EditText ipEdt;
 
+    @BindView(R.id.text_input_time_edt)
+    public EditText tInputTimeEdt;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -91,7 +94,8 @@ public class InfoFragment extends Fragment {
 
         SPUtils.put(getContext(), Constants.IP_KEY, ipEdt.getText().toString().trim());
         android.util.Log.d("wlDebug", "info = " + _bean.toString());
-        JdbcUtil.IP = String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY,"47.98.58.40"));
+        SPUtils.put(getContext(), Constants.INPUT_TIME_KEY, Long.valueOf(tInputTimeEdt.getText().toString().trim()));
+        JdbcUtil.IP = String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY, "47.98.58.40"));
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -137,6 +141,9 @@ public class InfoFragment extends Fragment {
         kernelVersionEdt.setText(BuildUtils.getLinuxCore_Ver());
         deviceCodeEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.serialno"));
         baseVersionEdt.setText(BuildUtils.getInner_Ver());
+
+
+        tInputTimeEdt.setText(String.valueOf(SPUtils.get(getContext(), Constants.INPUT_TIME_KEY, Long.valueOf(800))));
     }
 
 }

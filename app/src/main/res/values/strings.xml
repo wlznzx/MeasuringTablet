@@ -268,5 +268,8 @@
     <string name="m6_pic">M6图片</string>
     <string name="m6">M6</string>
     <string name="workpiece_num">工件数</string>
+    <string name="text_input_time">输入持续时间(ms)</string>
+    <string name="default_input_time">0.8</string>
+    <string name="refresh_done">完成(刷新)</string>
 
 </resources>

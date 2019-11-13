@@ -435,6 +435,37 @@
                 android:textSize="18sp" />
         </FrameLayout>
 
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/btn_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/archive_24px"
+                android:text="@string/refresh_done"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/swap_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/swap_horiz_24px"
+                android:text="@string/swap"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

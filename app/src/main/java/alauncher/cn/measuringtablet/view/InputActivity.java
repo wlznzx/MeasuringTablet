@@ -1,5 +1,6 @@
 package alauncher.cn.measuringtablet.view;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -8,9 +9,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,14 +29,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOLandscapeActivity;
+import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
+import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
+import alauncher.cn.measuringtablet.mvp.presenter.impl.MeasuringPresenterImpl;
+import alauncher.cn.measuringtablet.utils.Constants;
+import alauncher.cn.measuringtablet.utils.SPUtils;
 import alauncher.cn.measuringtablet.view.adapter.EnterAdapter;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -56,6 +67,8 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     private int currentPosPic;
     private int workpieceNum;
+
+    long _stableTime = 800;
 
     @BindViews({R.id.judge_all, R.id.judge_1, R.id.judge_2, R.id.judge_3, R.id.judge_4, R.id.judge_5})
     public TextView[] judgeTVs;
@@ -83,6 +96,7 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        _stableTime = (long) SPUtils.get(InputActivity.this, Constants.INPUT_TIME_KEY, Long.valueOf(800));
         super.onCreate(savedInstanceState);
     }
 
@@ -116,6 +130,9 @@ public class InputActivity extends BaseOLandscapeActivity {
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mEnterAdapter);
 
+
+        // android.util.Log.d("wlDebug", "stableTime = " + _stableTime);
+
         mEnterAdapter.setOnItemClickListener(new EnterAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(int pos, List<InputActivity.InputBean> myLiveList, int workpiece_num) {
@@ -135,9 +152,10 @@ public class InputActivity extends BaseOLandscapeActivity {
                 currentPos = pos;
                 currentIndex = index;
                 updateValue = s;
+                /*
                 mHandler.removeMessages(1);
-                mHandler.sendEmptyMessageDelayed(1, 800);
-
+                mHandler.sendEmptyMessageDelayed(1, _stableTime);
+                */
             }
         });
         workpieceSP.setSelection(4);
@@ -344,6 +362,8 @@ public class InputActivity extends BaseOLandscapeActivity {
         return image;
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -370,6 +390,35 @@ public class InputActivity extends BaseOLandscapeActivity {
                 }
                 break;
             default:
+                break;
+        }
+    }
+
+    @OnClick
+    public void onRefresh() {
+        doUpdate(currentPos, currentIndex, updateValue);
+    }
+
+    @OnClick({R.id.swap_btn})
+    public void btnClick(View view) {
+        switch (view.getId()) {
+            case R.id.swap_btn:
+                /*
+                if (curMode < 4) curMode++;
+                else curMode = 0;
+                setMode(curMode);
+                */
+                // new ChooseCodeDialog(this).show();
+                for (int i = 0; i < 10; i++) {
+                    CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
+                    if (_bean != null) {
+                        province[i] = _bean.getName();
+                    } else {
+                        province[i] = "程序 " + (i + 1);
+                    }
+                }
+                // showSingleChoiceButton();
+                showGridDialog();
                 break;
         }
     }
@@ -511,6 +560,52 @@ public class InputActivity extends BaseOLandscapeActivity {
         }
 
         Toast.makeText(this, "保存了" + saveNum + "件工件", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 将数据ArrayList中
+     *
+     * @return
+     */
+    private String[] province = new String[10];
+    private List<Map<String, Object>> getData() {
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < province.length; i++) {
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("itemName", province[i]);
+            items.add(item);
+        }
+        return items;
+    }
+
+    private void showGridDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
+        // 设置style 控制默认dialog带来的边距问题
+        final Dialog dialog = new Dialog(this, R.style.common_dialog);
+        dialog.setContentView(view);
+        dialog.show();
+        GridView gridview = (GridView) view.findViewById(R.id.gridview);
+        final List<Map<String, Object>> item = getData();
+        // SimpleAdapter对象，匹配ArrayList中的元素
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, item, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
+        gridview.setAdapter(simpleAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                _bean.setCodeID(arg2 + 1);
+                App.getDaoSession().getSetupBeanDao().update(_bean);
+                //((MeasuringPresenterImpl) mMeasuringPresenter).initParameter();
+                // initParameters();
+                CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (arg2 + 1));
+                if (_CodeBean != null) {
+                    actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());
+                } else {
+                    actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                }
+                dialog.dismiss();
+            }
+        });
     }
 
 

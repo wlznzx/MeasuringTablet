@@ -318,6 +318,37 @@
                 android:text="@string/default_kernel_version" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="#64455A64"
+                android:text="@string/text_input_time" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="#E4E4E4" />
+
+            <EditText
+                android:id="@+id/text_input_time_edt"
+                style="@style/CodeTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:enabled="true"
+                android:background="#64455A64"
+                android:numeric="integer">
+            </EditText>
+        </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"

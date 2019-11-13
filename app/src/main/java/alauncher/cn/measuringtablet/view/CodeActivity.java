@@ -42,8 +42,8 @@ public class CodeActivity extends BaseOActivity {
         for (EditText edt : codeEdts) {
             edt.setEnabled(false);
         }
-        codeID = getCodeID(App.getSetupBean().getCodeID());
-        mCodeRadioGroup.check(codeID);
+        codeID = App.getSetupBean().getCodeID();
+        mCodeRadioGroup.check(getCodeID(codeID));
         mCodeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

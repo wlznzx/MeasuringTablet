@@ -2,11 +2,7 @@ package alauncher.cn.measuringtablet.view.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -26,9 +22,6 @@ import java.util.List;
 
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.ViewHolder;
-import alauncher.cn.measuringtablet.bean.ParameterBean;
-import alauncher.cn.measuringtablet.bean.ResultBean;
-import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.view.InputActivity;
 
 /**
