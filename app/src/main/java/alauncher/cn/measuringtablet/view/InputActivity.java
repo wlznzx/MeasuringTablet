@@ -66,6 +66,8 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     private List<InputBean> datas = new ArrayList<>();
 
+    private List<UpdateBean> updates = new ArrayList<>();
+
     private int currentPosPic;
     private int workpieceNum;
 
@@ -118,6 +120,9 @@ public class InputActivity extends BaseOLandscapeActivity {
     protected void initView() {
         mParameter2Beans = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
         mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
+        for (TextView _v : judgeTVs) {
+            _v.setText("");
+        }
         datas.clear();
         for (Parameter2Bean _bean : mParameter2Beans) {
             if (_bean.getEnable()) {
@@ -155,6 +160,25 @@ public class InputActivity extends BaseOLandscapeActivity {
                 currentPos = pos;
                 currentIndex = index;
                 updateValue = s;
+                switch (index) {
+                    case 1:
+                        datas.get(pos).workspace1Value = s;
+                        break;
+                    case 2:
+                        datas.get(pos).workspace2Value = s;
+                        break;
+                    case 3:
+                        datas.get(pos).workspace3Value = s;
+                        break;
+                    case 4:
+                        datas.get(pos).workspace4Value = s;
+                        break;
+                    case 5:
+                        datas.get(pos).workspace5Value = s;
+                        break;
+                }
+
+                updates.add(new UpdateBean(pos, index, s));
                 /*
                 mHandler.removeMessages(1);
                 mHandler.sendEmptyMessageDelayed(1, _stableTime);
@@ -323,6 +347,7 @@ public class InputActivity extends BaseOLandscapeActivity {
 
 
         if (isModify) mEnterAdapter.notifyDataSetChanged();
+
         // InputMethodManager m = (InputMethodManager) getSystemService(getBaseContext().INPUT_METHOD_SERVICE);
         // m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -404,7 +429,17 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     @OnClick(R.id.btn_refresh)
     public void onRefresh() {
-        doUpdate(currentPos, currentIndex, updateValue);
+        // doUpdate(currentPos, currentIndex, updateValue);
+        for (UpdateBean _bean : updates) {
+            doUpdate(_bean.pos, _bean.index, _bean.value);
+        }
+        updates.clear();
+    }
+
+    @OnClick(R.id.btn_clear)
+    public void onClear() {
+        updates.clear();
+        initView();
     }
 
     @OnClick({R.id.swap_btn})
@@ -636,6 +671,18 @@ public class InputActivity extends BaseOLandscapeActivity {
                 initView();
             }
         });
+    }
+
+    class UpdateBean {
+        public int pos;
+        public int index;
+        public String value;
+
+        public UpdateBean(int pos, int index, String value) {
+            this.pos = pos;
+            this.index = index;
+            this.value = value;
+        }
     }
 
 

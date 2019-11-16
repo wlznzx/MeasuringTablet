@@ -260,7 +260,7 @@ public class JdbcUtil {
             String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value) VALUES (?,?,?,?,?,?);";
             PreparedStatement m1pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
             m1pstmt.setInt(1, autoIncKey);
-            m1pstmt.setString(2, "1");
+            m1pstmt.setString(2, "" + (i + 1));
             try {
                 m1pstmt.setFloat(3, Float.valueOf(_bean.getMValues().get(i)));
             } catch (NumberFormatException e) {
