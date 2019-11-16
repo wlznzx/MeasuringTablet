@@ -232,7 +232,7 @@ public class App extends MultiDexApplication {
         }
 
         //
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 16; i++) {
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {
                 CalibrationBean _bean = new CalibrationBean();
                 _bean.setCode_id(i);
@@ -351,7 +351,7 @@ public class App extends MultiDexApplication {
                 _bean.setM4_code("ch4");
                 getDaoSession().getParameterBeanDao().insert(_bean);
             }
-
+            /*
             if (getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) i)).list().size() <= 0) {
                 for (int j = 1; j <= 22; j++) {
                     Parameter2Bean _bean = new Parameter2Bean();
@@ -365,6 +365,21 @@ public class App extends MultiDexApplication {
                     getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
                 }
             }
+            */
+            if (getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) i)).list().size() <= 0) {
+                for (int j = 1; j < Constants.mDefaultParameterBeanList.size(); j++) {
+                    Parameter2Bean _bean = new Parameter2Bean();
+                    _bean.setCode_id(i);
+                    _bean.setIndex(j);
+                    _bean.setEnable(true);
+                    _bean.setDescribe(Constants.mDefaultParameterBeanList.get(j).name);
+                    _bean.setNominal_value(Constants.mDefaultParameterBeanList.get(j).normalValue);
+                    _bean.setUpper_tolerance_value(Constants.mDefaultParameterBeanList.get(j).upperLimit);
+                    _bean.setLower_tolerance_value(Constants.mDefaultParameterBeanList.get(j).lowerLimit);
+                    getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                }
+            }
+
 
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
                 CodeBean _bean = new CodeBean();

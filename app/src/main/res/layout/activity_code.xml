@@ -152,8 +152,58 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="11"
-                android:visibility="gone" />
+                android:background="#64455A64"
+                android:text="11" />
+
+            <RadioButton
+                android:id="@+id/code_12"
+                style="@style/CodeRBStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:background="#32455A64"
+                android:text="12" />
+
+            <RadioButton
+                android:id="@+id/code_13"
+                style="@style/CodeRBStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:background="#64455A64"
+                android:text="13" />
+
+            <RadioButton
+                android:id="@+id/code_14"
+                style="@style/CodeRBStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:background="#32455A64"
+                android:text="14" />
+
+            <RadioButton
+                android:id="@+id/code_15"
+                style="@style/CodeRBStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:background="#64455A64"
+                android:text="15" />
+
+            <RadioButton
+                android:id="@+id/code_16"
+                style="@style/CodeRBStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:background="#32455A64"
+                android:text="16" />
         </RadioGroup>
 
 
@@ -257,12 +307,61 @@
                 android:text="@string/code10_name" />
 
             <EditText
+                android:id="@+id/code_11_edt"
                 style="@style/CodeTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="@string/code11_name"
-                android:visibility="gone" />
+                android:background="#64455A64"
+                />
+
+            <EditText
+                android:id="@+id/code_12_edt"
+                style="@style/CodeTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#32455A64"
+                android:text="@string/code12_name"
+                />
+            <EditText
+                android:id="@+id/code_13_edt"
+                style="@style/CodeTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code13_name"
+                android:background="#64455A64"
+                />
+            <EditText
+                android:id="@+id/code_14_edt"
+                style="@style/CodeTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#32455A64"
+                android:text="@string/code14_name"
+                />
+            <EditText
+                android:id="@+id/code_15_edt"
+                style="@style/CodeTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code15_name"
+                android:background="#64455A64"
+                />
+
+            <EditText
+                android:id="@+id/code_16_edt"
+                style="@style/CodeTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#32455A64"
+                android:text="@string/code16_name"
+                />
         </LinearLayout>
     </LinearLayout>
 
@@ -295,8 +394,8 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/measure_save_btn"

@@ -275,5 +275,10 @@
     <string name="morning_class_start_time">早班开始时间</string>
     <string name="morning_class_stop_time">早班结束时间</string>
     <string name="claer">清空</string>
+    <string name="code16_name">程序16</string>
+    <string name="code15_name">程序15</string>
+    <string name="code12_name">程序12</string>
+    <string name="code13_name">程序13</string>
+    <string name="code14_name">程序14</string>
 
 </resources>

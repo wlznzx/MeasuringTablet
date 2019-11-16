@@ -22,7 +22,11 @@ public class CodeActivity extends BaseOActivity {
     @BindView(R.id.code_rg)
     RadioGroup mCodeRadioGroup;
 
-    @BindViews({R.id.code_1_edt, R.id.code_2_edt, R.id.code_3_edt, R.id.code_4_edt, R.id.code_5_edt, R.id.code_6_edt, R.id.code_7_edt, R.id.code_8_edt, R.id.code_9_edt, R.id.code_10_edt})
+    @BindViews({R.id.code_1_edt, R.id.code_2_edt, R.id.code_3_edt, R.id.code_4_edt, R.id.code_5_edt,
+            R.id.code_6_edt, R.id.code_7_edt, R.id.code_8_edt, R.id.code_9_edt, R.id.code_10_edt,
+            R.id.code_11_edt, R.id.code_12_edt, R.id.code_13_edt, R.id.code_14_edt, R.id.code_15_edt
+            , R.id.code_16_edt
+    })
     public EditText codeEdts[];
 
     int codeID = 1;
@@ -80,19 +84,30 @@ public class CodeActivity extends BaseOActivity {
                         break;
                     case R.id.code_8:
                         codeID = 8;
-                        //女
                         break;
                     case R.id.code_9:
                         codeID = 9;
-                        //女
                         break;
                     case R.id.code_10:
                         codeID = 10;
-                        //女
                         break;
                     case R.id.code_11:
                         codeID = 11;
-                        //女
+                        break;
+                    case R.id.code_12:
+                        codeID = 12;
+                        break;
+                    case R.id.code_13:
+                        codeID = 13;
+                        break;
+                    case R.id.code_14:
+                        codeID = 14;
+                        break;
+                    case R.id.code_15:
+                        codeID = 15;
+                        break;
+                    case R.id.code_16:
+                        codeID = 16;
                         break;
                 }
             }
@@ -130,6 +145,16 @@ public class CodeActivity extends BaseOActivity {
                 return R.id.code_10;
             case 11:
                 return R.id.code_11;
+            case 12:
+                return R.id.code_12;
+            case 13:
+                return R.id.code_13;
+            case 14:
+                return R.id.code_14;
+            case 15:
+                return R.id.code_15;
+            case 16:
+                return R.id.code_16;
         }
         return R.id.code_1;
     }
