@@ -452,7 +452,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                 setMode(curMode);
                 */
                 // new ChooseCodeDialog(this).show();
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 16; i++) {
                     CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
                     if (_bean != null) {
                         province[i] = _bean.getName();
@@ -630,7 +630,7 @@ public class InputActivity extends BaseOLandscapeActivity {
      *
      * @return
      */
-    private String[] province = new String[10];
+    private String[] province = new String[16];
 
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();

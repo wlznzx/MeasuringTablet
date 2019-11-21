@@ -133,6 +133,11 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        android.util.Log.d("wlDebug", "resultCode = " + resultCode);
+        android.util.Log.d("wlDebug", "uri = " + data.getData().toString());
+
 //        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {//是否选择，没选择就不会继续
             Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
