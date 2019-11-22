@@ -30,16 +30,12 @@ import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.FilterBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
-import alauncher.cn.measuringtablet.bean.ResultBean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
-import alauncher.cn.measuringtablet.bean.ResultData;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
-import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.utils.CommonUtil;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.utils.ExcelUtil;
-import alauncher.cn.measuringtablet.view.adapter.DataAdapter;
 import alauncher.cn.measuringtablet.view.adapter.DataAdapter2;
 import alauncher.cn.measuringtablet.widget.FilterDialog;
 import butterknife.BindView;
@@ -99,9 +95,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     protected void initView() {
-        List<ResultData> _datas = new ArrayList();
-        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
-
+//        List<ResultData> _datas = new ArrayList();
+//        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
 
         mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
 
@@ -307,7 +302,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         }
     }
 
-
     @Override
     public void onItemClickListener(int pos, List<ResultBean3> myLiveList) {
         android.util.Log.d("wlDebug", "pos = " + pos);
@@ -510,7 +504,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         List<ResultBean> _datas = query.list();
         mDataAdapter.notifyAdapter(_datas, false);
         */
-
         //请求参数
         ArrayList<String> strParamLt = new ArrayList<String>();
 

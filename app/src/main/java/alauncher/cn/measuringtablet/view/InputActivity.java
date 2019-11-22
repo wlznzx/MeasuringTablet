@@ -1,6 +1,8 @@
 package alauncher.cn.measuringtablet.view;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -27,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,9 +67,9 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     private List<Parameter2Bean> mParameter2Beans;
 
-    private List<InputBean> datas = new ArrayList<>();
+    private static List<InputBean> datas = new ArrayList<>();
 
-    private List<UpdateBean> updates = new ArrayList<>();
+    private static List<UpdateBean> updates = new ArrayList<>();
 
     private int currentPosPic;
     private int workpieceNum;
@@ -123,16 +126,23 @@ public class InputActivity extends BaseOLandscapeActivity {
         for (TextView _v : judgeTVs) {
             _v.setText("");
         }
-        datas.clear();
-        for (Parameter2Bean _bean : mParameter2Beans) {
-            if (_bean.getEnable()) {
-                InputBean _inputBean = new InputBean();
-                _inputBean.describeStr = _bean.getDescribe();
-                _inputBean.measuringStr = "M" + _bean.getIndex();
-                _inputBean.isEnable = _bean.getEnable();
-                _inputBean.upperValue = _bean.getNominal_value() + _bean.getUpper_tolerance_value();
-                _inputBean.lowerValue = _bean.getNominal_value() + _bean.getLower_tolerance_value();
-                datas.add(_inputBean);
+        // datas.clear();
+        if (datas.size() <= 0) {
+            for (Parameter2Bean _bean : mParameter2Beans) {
+                if (_bean.getEnable()) {
+                    InputBean _inputBean = new InputBean();
+                    _inputBean.describeStr = _bean.getDescribe();
+                    _inputBean.measuringStr = "M" + _bean.getIndex();
+                    _inputBean.isEnable = _bean.getEnable();
+                    _inputBean.upperValue = _bean.getNominal_value() + _bean.getUpper_tolerance_value();
+                    _inputBean.lowerValue = _bean.getNominal_value() + _bean.getLower_tolerance_value();
+                    if (_bean.getDescribe().startsWith("外观检查")) {
+                        _inputBean.isSp = true;
+                    } else {
+                        _inputBean.isSp = false;
+                    }
+                    datas.add(_inputBean);
+                }
             }
         }
 
@@ -439,6 +449,7 @@ public class InputActivity extends BaseOLandscapeActivity {
     @OnClick(R.id.btn_clear)
     public void onClear() {
         updates.clear();
+        datas.clear();
         initView();
     }
 
@@ -468,7 +479,36 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     @OnClick(R.id.btn_save)
     public void onSave(View v) {
+        if (getIsEmpty()) {
+            final AlertDialog.Builder normalDialog =
+                    new AlertDialog.Builder(InputActivity.this);
+            normalDialog.setIcon(R.drawable.add_circle);
+            normalDialog.setTitle("确认保存");
+            normalDialog.setMessage("还有测量值未输入，是否保存？");
+            normalDialog.setPositiveButton("确定",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //...To-do
+                            doSave();
+                        }
+                    });
+            normalDialog.setNegativeButton("取消",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
+                        }
+                    });
+            // 显示
+            normalDialog.show();
+        } else {
+            doSave();
+        }
+    }
+
+
+    public void doSave() {
         List<ResultBean3> updateBeans = new ArrayList<>();
 
         int saveNum = workpieceSP.getSelectedItemPosition() + 1;
@@ -476,7 +516,7 @@ public class InputActivity extends BaseOLandscapeActivity {
         ResultBean3 _workpiece1Bean = new ResultBean3();
         _workpiece1Bean.setMValues(new ArrayList<String>());
         _workpiece1Bean.setMPicPaths(new ArrayList<String>());
-        _workpiece1Bean.setHandlerAccout(App.handlerAccout);
+        _workpiece1Bean.setHandlerAccout(App.handlerName);
         _workpiece1Bean.setCodeID(App.getSetupBean().getCodeID());
         _workpiece1Bean.setResult(judges[1]);
         _workpiece1Bean.setTimeStamp(System.currentTimeMillis());
@@ -502,7 +542,7 @@ public class InputActivity extends BaseOLandscapeActivity {
             ResultBean3 _workpiece2Bean = new ResultBean3();
             _workpiece2Bean.setMValues(new ArrayList<String>());
             _workpiece2Bean.setMPicPaths(new ArrayList<String>());
-            _workpiece2Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece2Bean.setHandlerAccout(App.handlerName);
             _workpiece2Bean.setCodeID(App.getSetupBean().getCodeID());
             _workpiece2Bean.setTimeStamp(System.currentTimeMillis());
             _workpiece2Bean.setResult(judges[2]);
@@ -530,7 +570,7 @@ public class InputActivity extends BaseOLandscapeActivity {
             ResultBean3 _workpiece3Bean = new ResultBean3();
             _workpiece3Bean.setMValues(new ArrayList<String>());
             _workpiece3Bean.setMPicPaths(new ArrayList<String>());
-            _workpiece3Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece3Bean.setHandlerAccout(App.handlerName);
             _workpiece3Bean.setCodeID(App.getSetupBean().getCodeID());
             _workpiece3Bean.setResult(judges[3]);
             _workpiece3Bean.setTimeStamp(System.currentTimeMillis());
@@ -552,13 +592,12 @@ public class InputActivity extends BaseOLandscapeActivity {
             updateBeans.add(_workpiece3Bean);
         }
 
-
         // 4
         if (saveNum > 3) {
             ResultBean3 _workpiece4Bean = new ResultBean3();
             _workpiece4Bean.setMValues(new ArrayList<String>());
             _workpiece4Bean.setMPicPaths(new ArrayList<String>());
-            _workpiece4Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece4Bean.setHandlerAccout(App.handlerName);
             _workpiece4Bean.setCodeID(App.getSetupBean().getCodeID());
             _workpiece4Bean.setResult(judges[4]);
             _workpiece4Bean.setTimeStamp(System.currentTimeMillis());
@@ -586,7 +625,7 @@ public class InputActivity extends BaseOLandscapeActivity {
             ResultBean3 _workpiece5Bean = new ResultBean3();
             _workpiece5Bean.setMValues(new ArrayList<String>());
             _workpiece5Bean.setMPicPaths(new ArrayList<String>());
-            _workpiece5Bean.setHandlerAccout(App.handlerAccout);
+            _workpiece5Bean.setHandlerAccout(App.handlerName);
             _workpiece5Bean.setCodeID(App.getSetupBean().getCodeID());
             _workpiece5Bean.setTimeStamp(System.currentTimeMillis());
             _workpiece5Bean.setResult(judges[5]);
@@ -612,7 +651,7 @@ public class InputActivity extends BaseOLandscapeActivity {
             @Override
             public void run() {
 //                JdbcUtil.insertOrReplace(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getFactoryName(), mDeviceInfoBean.getDeviceCode(), mDeviceInfoBean.getDeviceName(), mDeviceInfoBean.getManufacturer(),
-//                        "rmk3", App.handlerAccout);
+//                        "rmk3", App.handlerName);
                 for (ResultBean3 _b3 : updateBeans) {
                     try {
                         JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
@@ -623,6 +662,18 @@ public class InputActivity extends BaseOLandscapeActivity {
             }
         }).start();
         Toast.makeText(this, "保存了" + saveNum + "件工件", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean getIsEmpty() {
+        int saveNum = workpieceSP.getSelectedItemPosition() + 1;
+        for (InputBean _bean : datas) {
+            if (_bean.workspace1Value == null) return true;
+            if (saveNum > 1 && _bean.workspace2Value == null) return true;
+            if (saveNum > 2 && _bean.workspace3Value == null) return true;
+            if (saveNum > 3 && _bean.workspace4Value == null) return true;
+            if (saveNum > 4 && _bean.workspace5Value == null) return true;
+        }
+        return false;
     }
 
     /**
@@ -663,11 +714,13 @@ public class InputActivity extends BaseOLandscapeActivity {
                 // initParameters();
                 CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (arg2 + 1));
                 if (_CodeBean != null) {
-                    actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());
+                    actionTips.setText(App.handlerName + " " + _CodeBean.getName());
                 } else {
-                    actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                    actionTips.setText(App.handlerName + " 程序" + App.getSetupBean().getCodeID());
                 }
                 dialog.dismiss();
+                updates.clear();
+                datas.clear();
                 initView();
             }
         });
@@ -688,6 +741,7 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     public class InputBean {
         public boolean isEnable;
+        public boolean isSp;
         public String measuringStr;
         public String describeStr;
         public String maxValue;
@@ -708,6 +762,31 @@ public class InputActivity extends BaseOLandscapeActivity {
         public double lowerValue;
 
         public String[] workspaceJudges = {"无意义", "- -", "- -", "- -", "- -", "- -"};
+
+        @Override
+        public String toString() {
+            return "InputBean{" +
+                    "isEnable=" + isEnable +
+                    ", measuringStr='" + measuringStr + '\'' +
+                    ", describeStr='" + describeStr + '\'' +
+                    ", maxValue='" + maxValue + '\'' +
+                    ", minValue='" + minValue + '\'' +
+                    ", judge='" + judge + '\'' +
+                    ", workspace1Value='" + workspace1Value + '\'' +
+                    ", workspace1PicPath='" + workspace1PicPath + '\'' +
+                    ", workspace2Value='" + workspace2Value + '\'' +
+                    ", workspace2PicPath='" + workspace2PicPath + '\'' +
+                    ", workspace3Value='" + workspace3Value + '\'' +
+                    ", workspace3PicPath='" + workspace3PicPath + '\'' +
+                    ", workspace4Value='" + workspace4Value + '\'' +
+                    ", workspace4PicPath='" + workspace4PicPath + '\'' +
+                    ", workspace5Value='" + workspace5Value + '\'' +
+                    ", workspace5PicPath='" + workspace5PicPath + '\'' +
+                    ", upperValue=" + upperValue +
+                    ", lowerValue=" + lowerValue +
+                    ", workspaceJudges=" + Arrays.toString(workspaceJudges) +
+                    '}';
+        }
     }
 
 }

@@ -203,6 +203,7 @@
                 android:layout_weight="1"
                 android:checked="false"
                 android:background="#32455A64"
+                android:visibility="gone"
                 android:text="16" />
         </RadioGroup>
 
@@ -361,6 +362,7 @@
                 android:layout_weight="1"
                 android:background="#32455A64"
                 android:text="@string/code16_name"
+                android:visibility="gone"
                 />
         </LinearLayout>
     </LinearLayout>

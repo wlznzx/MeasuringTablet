@@ -365,4 +365,74 @@
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
         android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m23"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m23_pic"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m24"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m24_pic"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m25"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m25_pic"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m26"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m26_pic"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m27"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m27_pic"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
 </LinearLayout>

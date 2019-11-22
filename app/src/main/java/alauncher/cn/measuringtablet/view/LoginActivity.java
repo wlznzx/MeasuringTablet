@@ -142,6 +142,7 @@ public class LoginActivity extends BaseOActivity {
             return;
         }
         App.handlerAccout = accoutStr;
+        App.handlerName = _user.getName();
 
         RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
         if (_bean.getIsRemeber()) {

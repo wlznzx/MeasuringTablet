@@ -3,8 +3,8 @@
     android:id="@+id/data_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_height"
-    android:gravity="center_vertical"
     android:background="@drawable/textview_border"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <TextView
@@ -13,11 +13,11 @@
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
         android:text="M1" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <TextView
         android:id="@+id/m_info_tv"
@@ -25,11 +25,11 @@
         android:layout_width="@dimen/m_2part_width"
         android:layout_height="match_parent"
         android:text="M1" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- Max -->
     <TextView
@@ -39,11 +39,11 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:text="" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- Min -->
     <TextView
@@ -53,11 +53,11 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:text="" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- Judge -->
     <TextView
@@ -67,11 +67,11 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:text="" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- 1号工件 -->
     <EditText
@@ -79,27 +79,35 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
+        android:hint="@string/measure_value"
         android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/measure_value" />
+        android:visibility="visible" />
+
+    <Spinner
+        android:id="@+id/m_workspace1_sp"
+        android:layout_width="@dimen/m_part_width"
+        android:layout_height="match_parent"
+        android:entries="@array/result2"
+        android:visibility="gone" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <ImageView
         android:id="@+id/m_workspace1_iv"
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:src="@drawable/add_circle"
         android:padding="2dp"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/add_circle" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- 2号工件 -->
     <EditText
@@ -107,27 +115,34 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/measure_value" />
+        android:hint="@string/measure_value"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <Spinner
+        android:id="@+id/m_workspace2_sp"
+        android:layout_width="@dimen/m_part_width"
+        android:layout_height="match_parent"
+        android:entries="@array/result2"
+        android:visibility="gone" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <ImageView
         android:id="@+id/m_workspace2_iv"
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:src="@drawable/add_circle"
         android:padding="2dp"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/add_circle" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- 3号工件 -->
     <EditText
@@ -135,27 +150,34 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/measure_value" />
+        android:hint="@string/measure_value"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <Spinner
+        android:id="@+id/m_workspace3_sp"
+        android:layout_width="@dimen/m_part_width"
+        android:layout_height="match_parent"
+        android:entries="@array/result2"
+        android:visibility="gone" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <ImageView
         android:id="@+id/m_workspace3_iv"
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:src="@drawable/add_circle"
         android:padding="2dp"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/add_circle" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- 4号工件 -->
     <EditText
@@ -163,27 +185,34 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/measure_value" />
+        android:hint="@string/measure_value"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <Spinner
+        android:id="@+id/m_workspace4_sp"
+        android:layout_width="@dimen/m_part_width"
+        android:layout_height="match_parent"
+        android:entries="@array/result2"
+        android:visibility="gone" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <ImageView
         android:id="@+id/m_workspace4_iv"
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:src="@drawable/add_circle"
         android:padding="2dp"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/add_circle" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <!-- 5号工件 -->
     <EditText
@@ -191,26 +220,33 @@
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/measure_value" />
+        android:hint="@string/measure_value"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <Spinner
+        android:id="@+id/m_workspace5_sp"
+        android:layout_width="@dimen/m_part_width"
+        android:layout_height="match_parent"
+        android:entries="@array/result2"
+        android:visibility="gone" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
     <ImageView
         android:id="@+id/m_workspace5_iv"
         style="@style/BaseTabletTextStyle"
         android:layout_width="@dimen/m_part_width"
         android:layout_height="match_parent"
-        android:src="@drawable/add_circle"
         android:padding="2dp"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/add_circle" />
+
     <ImageView
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:src="@android:color/black"
-        />
+        android:src="@android:color/black" />
 
 </LinearLayout>

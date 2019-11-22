@@ -7,8 +7,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -121,11 +123,17 @@ public class EnterAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         });
 
+
         EditText workpiece1Edt = holder.getConvertView().findViewById(R.id.m_workspace1_tv);
         EditText workpiece2Edt = holder.getConvertView().findViewById(R.id.m_workspace2_tv);
         EditText workpiece3Edt = holder.getConvertView().findViewById(R.id.m_workspace3_tv);
         EditText workpiece4Edt = holder.getConvertView().findViewById(R.id.m_workspace4_tv);
         EditText workpiece5Edt = holder.getConvertView().findViewById(R.id.m_workspace5_tv);
+        Spinner workspace1SP = holder.getConvertView().findViewById(R.id.m_workspace1_sp);
+        Spinner workspace2SP = holder.getConvertView().findViewById(R.id.m_workspace2_sp);
+        Spinner workspace3SP = holder.getConvertView().findViewById(R.id.m_workspace3_sp);
+        Spinner workspace4SP = holder.getConvertView().findViewById(R.id.m_workspace4_sp);
+        Spinner workspace5SP = holder.getConvertView().findViewById(R.id.m_workspace5_sp);
         workpiece1Edt.setText(_bean.workspace1Value);
         workpiece2Edt.setText(_bean.workspace2Value);
         workpiece3Edt.setText(_bean.workspace3Value);
@@ -215,6 +223,179 @@ public class EnterAdapter extends RecyclerView.Adapter<ViewHolder> {
                 mOnItemClickListener.onTextWatch(position, 5, s.toString());
             }
         });
+
+        workspace1SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        workpiece1Edt.setText(null);
+                        break;
+                    case 1:
+                        workpiece1Edt.setText("1");
+                        break;
+                    case 2:
+                        workpiece1Edt.setText("0");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        workspace2SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        workpiece2Edt.setText(null);
+                        break;
+                    case 1:
+                        workpiece2Edt.setText("1");
+                        break;
+                    case 2:
+                        workpiece2Edt.setText("0");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        workspace3SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        workpiece3Edt.setText(null);
+                        break;
+                    case 1:
+                        workpiece3Edt.setText("1");
+                        break;
+                    case 2:
+                        workpiece3Edt.setText("0");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        workspace4SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        workpiece4Edt.setText(null);
+                        break;
+                    case 1:
+                        workpiece4Edt.setText("1");
+                        break;
+                    case 2:
+                        workpiece4Edt.setText("0");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        workspace5SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        workpiece5Edt.setText(null);
+                        break;
+                    case 1:
+                        workpiece5Edt.setText("1");
+                        break;
+                    case 2:
+                        workpiece5Edt.setText("0");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        if (_bean.isSp) {
+            workpiece1Edt.setVisibility(View.GONE);
+            workpiece2Edt.setVisibility(View.GONE);
+            workpiece3Edt.setVisibility(View.GONE);
+            workpiece4Edt.setVisibility(View.GONE);
+            workpiece5Edt.setVisibility(View.GONE);
+            workspace1SP.setVisibility(View.VISIBLE);
+            workspace2SP.setVisibility(View.VISIBLE);
+            workspace3SP.setVisibility(View.VISIBLE);
+            workspace4SP.setVisibility(View.VISIBLE);
+            workspace5SP.setVisibility(View.VISIBLE);
+            if (_bean.workspace1Value == null || _bean.workspace1Value.equals("")) {
+                workspace1SP.setSelection(0);
+            } else {
+                workspace1SP.setSelection(_bean.workspace1Value.equals("1") ? 1 : 2);
+            }
+
+            if (_bean.workspace2Value == null || _bean.workspace2Value.equals("")) {
+                workspace2SP.setSelection(0);
+            } else {
+                workspace2SP.setSelection(_bean.workspace2Value.equals("1") ? 1 : 2);
+            }
+
+            if (_bean.workspace1Value == null || _bean.workspace3Value.equals("")) {
+                workspace3SP.setSelection(0);
+            } else {
+                workspace3SP.setSelection(_bean.workspace3Value.equals("1") ? 1 : 2);
+            }
+
+            if (_bean.workspace4Value == null || _bean.workspace4Value.equals("")) {
+                workspace4SP.setSelection(0);
+            } else {
+                workspace4SP.setSelection(_bean.workspace4Value.equals("1") ? 1 : 2);
+            }
+
+            if (_bean.workspace5Value == null || _bean.workspace5Value.equals("")) {
+                workspace5SP.setSelection(0);
+            } else {
+                workspace5SP.setSelection(_bean.workspace5Value.equals("1") ? 1 : 2);
+            }
+        } else {
+            workpiece1Edt.setVisibility(View.VISIBLE);
+            workpiece2Edt.setVisibility(View.VISIBLE);
+            workpiece3Edt.setVisibility(View.VISIBLE);
+            workpiece4Edt.setVisibility(View.VISIBLE);
+            workpiece5Edt.setVisibility(View.VISIBLE);
+            workspace1SP.setVisibility(View.GONE);
+            workspace2SP.setVisibility(View.GONE);
+            workspace3SP.setVisibility(View.GONE);
+            workspace4SP.setVisibility(View.GONE);
+            workspace5SP.setVisibility(View.GONE);
+        }
 
         holder.setText(R.id.m_max_tv, _bean.maxValue == null ? "- -" : _bean.maxValue);
         holder.setText(R.id.m_min_tv, _bean.maxValue == null ? "- -" : _bean.minValue);

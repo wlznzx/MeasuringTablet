@@ -280,5 +280,15 @@
     <string name="code12_name">程序12</string>
     <string name="code13_name">程序13</string>
     <string name="code14_name">程序14</string>
+    <string name="m23">M23</string>
+    <string name="m23_pic">M23图片</string>
+    <string name="m24">M24</string>
+    <string name="m24_pic">M24图片</string>
+    <string name="m25">M25</string>
+    <string name="m25_pic">M25图片</string>
+    <string name="m26">M26</string>
+    <string name="m26_pic">M26图片</string>
+    <string name="m27">M27</string>
+    <string name="m27_pic">M27图片</string>
 
 </resources>

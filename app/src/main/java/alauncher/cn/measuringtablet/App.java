@@ -30,15 +30,10 @@ import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
-import alauncher.cn.measuringtablet.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringtablet.utils.Constants;
-import alauncher.cn.measuringtablet.utils.DeviceUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.SPUtils;
 import alauncher.cn.measuringtablet.utils.SystemPropertiesProxy;
-import alauncher.cn.measuringtablet.view.CodeActivity;
-import alauncher.cn.measuringtablet.view.SystemManagementActivity;
-import alauncher.cn.measuringtablet.view.TActivity;
 import alauncher.cn.measuringtablet.view.UpgradeActivity;
 
 /**
@@ -57,6 +52,7 @@ public class App extends MultiDexApplication {
     public static long SETTING_ID = 1;
 
     public static String handlerAccout = "恩梯";
+    public static String handlerName = "";
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -143,9 +139,9 @@ public class App extends MultiDexApplication {
 
         if (getDaoSession().getUserDao().loadAll().size() == 0) {
             User _user = new User();
-            _user.setAccout("admin");
-            _user.setPassword("123456");
-            _user.setName("管理员");
+            _user.setAccout("xgy");
+            _user.setPassword("1");
+            _user.setName("薛国毅");
             _user.setStatus(0);
             _user.setId("1");
             _user.setLimit(0);
@@ -153,9 +149,9 @@ public class App extends MultiDexApplication {
             getDaoSession().getUserDao().insert(_user);
 
             User _manager = new User();
-            _manager.setAccout("manager");
-            _manager.setPassword("123456");
-            _manager.setName("经理");
+            _manager.setAccout("zj");
+            _manager.setPassword("1");
+            _manager.setName("张杰");
             _manager.setStatus(0);
             _manager.setId("2");
             _manager.setLimit(0);
@@ -163,9 +159,9 @@ public class App extends MultiDexApplication {
             getDaoSession().getUserDao().insert(_manager);
 
             User _monitor = new User();
-            _monitor.setAccout("monitor");
-            _monitor.setPassword("123456");
-            _monitor.setName("班长");
+            _monitor.setAccout("zxz");
+            _monitor.setPassword("1");
+            _monitor.setName("周秀珍");
             _monitor.setStatus(0);
             _monitor.setId("3");
             _monitor.setLimit(0);
@@ -173,14 +169,44 @@ public class App extends MultiDexApplication {
             getDaoSession().getUserDao().insert(_monitor);
 
             User _operator = new User();
-            _operator.setAccout("operator");
+            _operator.setAccout("dh");
             _operator.setPassword("123456");
-            _operator.setName("测试员");
+            _operator.setName("邓华");
             _operator.setStatus(0);
             _operator.setId("4");
-            _operator.setLimit(4);
+            _operator.setLimit(0);
             _operator.setEmail("");
             getDaoSession().getUserDao().insert(_operator);
+
+            User _wmg = new User();
+            _wmg.setAccout("wmg");
+            _wmg.setPassword("1");
+            _wmg.setName("王美干");
+            _wmg.setStatus(0);
+            _wmg.setId("5");
+            _wmg.setLimit(0);
+            _wmg.setEmail("");
+            getDaoSession().getUserDao().insert(_wmg);
+
+            User _hhb = new User();
+            _hhb.setAccout("hhb");
+            _hhb.setPassword("1");
+            _hhb.setName("胡海波");
+            _hhb.setStatus(0);
+            _hhb.setId("6");
+            _hhb.setLimit(0);
+            _hhb.setEmail("");
+            getDaoSession().getUserDao().insert(_hhb);
+
+            User _yxh = new User();
+            _yxh.setAccout("yxh");
+            _yxh.setPassword("1");
+            _yxh.setName("尹学慧");
+            _yxh.setStatus(0);
+            _yxh.setId("7");
+            _yxh.setLimit(0);
+            _yxh.setEmail("");
+            getDaoSession().getUserDao().insert(_yxh);
         }
 
 
@@ -232,7 +258,7 @@ public class App extends MultiDexApplication {
         }
 
         //
-        for (int i = 1; i <= 16; i++) {
+        for (int i = 1; i <= 15; i++) {
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {
                 CalibrationBean _bean = new CalibrationBean();
                 _bean.setCode_id(i);
@@ -382,9 +408,9 @@ public class App extends MultiDexApplication {
 
 
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
-                CodeBean _bean = new CodeBean();
+                CodeBean _bean = Constants.defaultCodeBeans.get(i);
                 _bean.setCodeID(i);
-                _bean.setName("程序" + i);
+//                _bean.setName("程序" + i);
                 _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
                 _bean.setParts(getResources().getString(R.string.spare_parts) + i);
                 getDaoSession().getCodeBeanDao().insert(_bean);
