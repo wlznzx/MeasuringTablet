@@ -15,6 +15,9 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import alauncher.cn.measuringtablet.bean.CalibrationBean;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
@@ -247,6 +250,15 @@ public class App extends MultiDexApplication {
         }
 
         if (getDaoSession().getStoreBeanDao().load(SETTING_ID) == null) {
+            android.util.Log.d("wlDebug", "size = " + Constants.defaultCodeBeans.size());
+            for (int i = 1; i < Constants.defaultCodeBeans.size(); i++) {
+                CodeBean _bean = Constants.defaultCodeBeans.get(i);
+                _bean.setCodeID(i);
+                _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
+                _bean.setParts(getResources().getString(R.string.spare_parts) + i);
+                getDaoSession().getCodeBeanDao().insert(_bean);
+            }
+
             StoreBean _bean = new StoreBean();
             _bean.setId(SETTING_ID);
             _bean.setStoreMode(2);
@@ -256,9 +268,8 @@ public class App extends MultiDexApplication {
             _bean.setDelayTime(1);
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
-
         //
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 1; i < Constants.defaultCodeBeans.size(); i++) {
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {
                 CalibrationBean _bean = new CalibrationBean();
                 _bean.setCode_id(i);
@@ -393,30 +404,84 @@ public class App extends MultiDexApplication {
             }
             */
             if (getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) i)).list().size() <= 0) {
-                for (int j = 1; j < Constants.mDefaultParameterBeanList.size(); j++) {
-                    Parameter2Bean _bean = new Parameter2Bean();
-                    _bean.setCode_id(i);
-                    _bean.setIndex(j);
-                    _bean.setEnable(true);
-                    _bean.setDescribe(Constants.mDefaultParameterBeanList.get(j).name);
-                    _bean.setNominal_value(Constants.mDefaultParameterBeanList.get(j).normalValue);
-                    _bean.setUpper_tolerance_value(Constants.mDefaultParameterBeanList.get(j).upperLimit);
-                    _bean.setLower_tolerance_value(Constants.mDefaultParameterBeanList.get(j).lowerLimit);
-                    getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                android.util.Log.d("wlDebug", "i = " + i);
+                if (i <= 15) {
+                    android.util.Log.d("wlDebug", "i = 1");
+                    for (int j = 1; j < Constants.m1_15DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m1_15DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m1_15DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m1_15DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m1_15DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else if (16 <= i && i <= 27) {
+                    android.util.Log.d("wlDebug", "i = 2");
+                    for (int j = 1; j < Constants.m16_27DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m16_27DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m16_27DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m16_27DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m16_27DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else if (28 <= i && i <= 30) {
+                    for (int j = 1; j < Constants.m28_30DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m28_30DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m28_30DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m28_30DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m28_30DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else if (31 <= i && i <= 42) {
+                    android.util.Log.d("wlDebug", "i = 3");
+                    for (int j = 1; j < Constants.m31_45DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m31_45DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m31_45DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m31_45DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m31_45DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else {
+                    android.util.Log.d("wlDebug", "i = 4");
+                    for (int j = 1; j < Constants.m43_45DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m43_45DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m43_45DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m43_45DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m43_45DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
                 }
             }
 
-
+            /*
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
                 CodeBean _bean = Constants.defaultCodeBeans.get(i);
                 _bean.setCodeID(i);
-//                _bean.setName("程序" + i);
                 _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
                 _bean.setParts(getResources().getString(R.string.spare_parts) + i);
                 getDaoSession().getCodeBeanDao().insert(_bean);
             }
+            */
         }
-
         // initTestDatas();
     }
 
@@ -584,4 +649,5 @@ public class App extends MultiDexApplication {
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
                 "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
     }
+
 }

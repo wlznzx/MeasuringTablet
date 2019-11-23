@@ -67,9 +67,9 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     private List<Parameter2Bean> mParameter2Beans;
 
-    private static List<InputBean> datas = new ArrayList<>();
+    public static List<InputBean> datas = new ArrayList<>();
 
-    private static List<UpdateBean> updates = new ArrayList<>();
+    public static List<UpdateBean> updates = new ArrayList<>();
 
     private int currentPosPic;
     private int workpieceNum;
@@ -463,7 +463,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                 setMode(curMode);
                 */
                 // new ChooseCodeDialog(this).show();
-                for (int i = 0; i < 16; i++) {
+                for (int i = 0; i < App.getDaoSession().getCodeBeanDao().loadAll().size(); i++) {
                     CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
                     if (_bean != null) {
                         province[i] = _bean.getName();
@@ -667,11 +667,15 @@ public class InputActivity extends BaseOLandscapeActivity {
     private boolean getIsEmpty() {
         int saveNum = workpieceSP.getSelectedItemPosition() + 1;
         for (InputBean _bean : datas) {
-            if (_bean.workspace1Value == null) return true;
-            if (saveNum > 1 && _bean.workspace2Value == null) return true;
-            if (saveNum > 2 && _bean.workspace3Value == null) return true;
-            if (saveNum > 3 && _bean.workspace4Value == null) return true;
-            if (saveNum > 4 && _bean.workspace5Value == null) return true;
+            if (_bean.workspace1Value == null || _bean.workspace1Value.equals("")) return true;
+            if (saveNum > 1 && (_bean.workspace2Value == null || _bean.workspace2Value.equals("")))
+                return true;
+            if (saveNum > 2 && (_bean.workspace3Value == null || _bean.workspace3Value.equals("")))
+                return true;
+            if (saveNum > 3 && (_bean.workspace4Value == null || _bean.workspace4Value.equals("")))
+                return true;
+            if (saveNum > 4 && (_bean.workspace5Value == null || _bean.workspace5Value.equals("")))
+                return true;
         }
         return false;
     }
@@ -681,7 +685,7 @@ public class InputActivity extends BaseOLandscapeActivity {
      *
      * @return
      */
-    private String[] province = new String[16];
+    private String[] province = new String[45];
 
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();

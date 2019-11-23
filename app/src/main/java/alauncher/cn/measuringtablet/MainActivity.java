@@ -50,7 +50,7 @@ public class MainActivity extends BaseOActivity {
                 _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.Data2Activity", R.string.data_query, R.drawable.find_in_page));
                 _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.ParameterManagement2Activity", R.string.parameter_management, R.drawable.functions));
 //                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.CalibrationActivity", R.string.calibration, R.drawable.straighten));
-                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.CodeActivity", R.string.program_management, R.drawable.code));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.Code2Activity", R.string.program_management, R.drawable.code));
                 _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.AccoutManagementActivity", R.string.user_management, R.drawable.account_box));
                 _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.SystemManagementActivity", R.string.system_management, R.drawable.phonelink_setup));
 //                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.StoreActivity", R.string.store, R.drawable.archive));

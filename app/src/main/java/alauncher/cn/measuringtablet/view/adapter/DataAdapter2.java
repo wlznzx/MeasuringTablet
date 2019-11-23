@@ -61,7 +61,6 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         */
     }
 
-
     public void notifyAdapter(List<ResultBean3> myLiveList, boolean isAdd) {
 
         if (!isAdd) {
@@ -123,7 +122,6 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         holder.setText(R.id.data_result, datas.get(position).getResult());
         holder.setText(R.id.data_time, DateUtils.getDate(datas.get(position).getTimeStamp()));
 
-
          /*
         holder.setText(R.id.data_m1, "" + datas.get(position).getMValues().get(0));
 
@@ -142,7 +140,7 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         */
 
 
-        for (int i = 0; i < mValueIDs.size(); i++) {
+        for (int i = 0; i < datas.get(0).getMValues().size(); i++) {
 //            if (mParameterBean.get(i).getEnable()) {
 
             if (i > 21) {
@@ -155,6 +153,8 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
             } else {
                 holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
             }
+            holder.setVisible(mValueIDs.get(i), true);
+            holder.setVisible(mPicIDs.get(i), true);
             try {
                 if (datas.get(position).getMPicPaths().get(i) != null && !datas.get(position).getMPicPaths().get(i).equals("")) {
                     Glide.with(mContext).load("file://" + datas.get(position).getMPicPaths().get(i))

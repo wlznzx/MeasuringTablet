@@ -1,5 +1,6 @@
 package alauncher.cn.measuringtablet.view;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.database.Cursor;
@@ -8,7 +9,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.FilterBean;
+import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
@@ -64,12 +68,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
     @BindView(R.id.ll_mycollection_bottom_dialog)
     LinearLayout mLlMycollectionBottomDialog;
 
-    @BindViews({R.id.m1_title, R.id.m2_title, R.id.m3_title, R.id.m4_title})
-    TextView[] mTitleViews;
-
-    @BindViews({R.id.m1_group_title, R.id.m2_group_title, R.id.m3_group_title, R.id.m4_group_title})
-    TextView[] mTitleGroupViews;
-
     public DataAdapter2 mDataAdapter;
 
     private int mEditMode = MYLIVE_MODE_CHECK;
@@ -83,6 +81,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M1", "M1分组", "M2", "M2分组", "M3", "M3分组", "M4", "M4分组"};
 
+    private LinearLayout titleLinearLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +90,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     protected void initLayout() {
-        setContentView(R.layout.activity_data);
+        setContentView(R.layout.activity_data2);
     }
 
     @Override
@@ -102,8 +102,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
 
+        List<Parameter2Bean> _datas = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
         mDataAdapter = new DataAdapter2(Data2Activity.this, App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean3Dao.Properties.Id).list(),
-                App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list());
+                _datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Data2Activity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mDataAdapter);
@@ -122,15 +123,23 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         excelBtn.setOnClickListener(this);
         filterBtn.setOnClickListener(this);
 
-        if (mParameterBean != null) {
-            mTitleViews[0].setVisibility(mParameterBean.getM1_enable() ? View.VISIBLE : View.GONE);
-            mTitleGroupViews[0].setVisibility(mParameterBean.getM1_enable() ? View.VISIBLE : View.GONE);
-            mTitleViews[1].setVisibility(mParameterBean.getM2_enable() ? View.VISIBLE : View.GONE);
-            mTitleGroupViews[1].setVisibility(mParameterBean.getM2_enable() ? View.VISIBLE : View.GONE);
-            mTitleViews[2].setVisibility(mParameterBean.getM3_enable() ? View.VISIBLE : View.GONE);
-            mTitleGroupViews[2].setVisibility(mParameterBean.getM3_enable() ? View.VISIBLE : View.GONE);
-            mTitleViews[3].setVisibility(mParameterBean.getM4_enable() ? View.VISIBLE : View.GONE);
-            mTitleGroupViews[3].setVisibility(mParameterBean.getM4_enable() ? View.VISIBLE : View.GONE);
+        titleLinearLayout = findViewById(R.id.data_title_layout);
+        final float scale = getResources().getDisplayMetrics().density;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) (70 * scale + 0.5f), ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(10, 15, 10, 15);
+        layoutParams.gravity = Gravity.CENTER_VERTICAL;
+        for (int i = 0; i < _datas.size(); i++) {
+            TextView titleView = new TextView(this);
+            titleView.setGravity(Gravity.CENTER);
+            titleView.setTextAppearance(this, R.style.TextStyle);
+            titleView.setText("M" + (i + 1));
+            titleView.setLayoutParams(layoutParams);
+            TextView picView = new TextView(this);
+            picView.setGravity(Gravity.CENTER);
+            picView.setTextAppearance(this, R.style.TextStyle);
+            picView.setText("M" + (i + 1) + "图片");
+            titleLinearLayout.addView(titleView);
+            titleLinearLayout.addView(picView, layoutParams);
         }
     }
 
@@ -416,7 +425,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         }
     }
-
 
     /*
      *
