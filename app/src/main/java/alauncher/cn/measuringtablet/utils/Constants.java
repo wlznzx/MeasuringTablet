@@ -90,6 +90,7 @@ public class Constants {
 
         // 28 - 30
         m28_30DefaultParameterBeanList.add(new DefaultParameterBean("阀面平面度\n50um以下", 0, 0.05, 0));
+        m28_30DefaultParameterBeanList.add(new DefaultParameterBean("阀面平面度\n50um以下", 0, 0.05, 0));
         m28_30DefaultParameterBeanList.add(new DefaultParameterBean("阀面粗糙度\nRa3.2以下", 0, 3.2, 0));
         m28_30DefaultParameterBeanList.add(new DefaultParameterBean("C部直径（止推面）\n20.5~21", 20.5, 0.5, 0));
         m28_30DefaultParameterBeanList.add(new DefaultParameterBean("E部直径（止推面）\n26.15~26.65", 26.15, 0.5, 0));
@@ -101,6 +102,7 @@ public class Constants {
         m31_45DefaultParameterBeanList.add(new DefaultParameterBean("曲轴孔粗糙度\nRa0.2以下", 0, 0.2, 0));
 
         // 43 - 45
+        m43_45DefaultParameterBeanList.add(new DefaultParameterBean("气缸孔圆柱度\n2um以下", 0, 0.002, 0));
         m43_45DefaultParameterBeanList.add(new DefaultParameterBean("气缸孔圆柱度\n2um以下", 0, 0.002, 0));
         m43_45DefaultParameterBeanList.add(new DefaultParameterBean("气缸孔粗糙度\nRa0.2以下", 0, 0.2, 0));
         m43_45DefaultParameterBeanList.add(new DefaultParameterBean("曲轴孔粗糙度\nRa0.2以下", 0, 0.2, 0));

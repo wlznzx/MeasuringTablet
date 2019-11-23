@@ -483,14 +483,14 @@ public class InputActivity extends BaseOLandscapeActivity {
             final AlertDialog.Builder normalDialog =
                     new AlertDialog.Builder(InputActivity.this);
             normalDialog.setIcon(R.drawable.add_circle);
-            normalDialog.setTitle("确认保存");
-            normalDialog.setMessage("还有测量值未输入，是否保存？");
+            normalDialog.setTitle("无法保存");
+            normalDialog.setMessage("还有测量值未输入，无法保存。");
             normalDialog.setPositiveButton("确定",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //...To-do
-                            doSave();
+                            // doSave();
                         }
                     });
             normalDialog.setNegativeButton("取消",
@@ -611,7 +611,6 @@ public class InputActivity extends BaseOLandscapeActivity {
                     _workpiece4Bean.getMPicPaths().add("");
                 }
             }
-
             for (int i = 0; i < _workpiece4Bean.getMValues().size(); i++) {
                 android.util.Log.d("wlDebug", "index = " + i + " value = " + _workpiece4Bean.getMValues().get(i));
             }

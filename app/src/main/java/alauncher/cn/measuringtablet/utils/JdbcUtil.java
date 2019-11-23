@@ -267,6 +267,7 @@ public class JdbcUtil {
                 m1pstmt.close();
                 continue;
             }
+            // m1pstmt.setString(3, _bean.getMValues().get(i));
             m1pstmt.setFloat(4, 0);
             m1pstmt.setString(5, "- -");
             m1pstmt.setString(6, _bean.getEvent());
