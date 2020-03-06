@@ -41,6 +41,14 @@ public class CodeBean {
     public CodeBean() {
     }
 
+    public CodeBean(long codeID, String name, String machineTool, String parts, boolean isEnableStep) {
+        this.codeID = codeID;
+        this.name = name;
+        this.machineTool = machineTool;
+        this.parts = parts;
+        this.isEnableStep = isEnableStep;
+    }
+
     public long getCodeID() {
         return this.codeID;
     }

@@ -64,7 +64,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
     @BindViews({R.id.m1_title, R.id.m2_title, R.id.m3_title, R.id.m4_title})
     TextView[] mTitleViews;
 
-    @BindViews({R.id.m1_group_title, R.id.m2_group_title, R.id.m3_group_title, R.id.m4_group_title})
+    @BindViews({R.id.m2_group_title, R.id.m3_group_title, R.id.m4_group_title})
     TextView[] mTitleGroupViews;
 
     public ResultBeanDao mResultBeanDao;

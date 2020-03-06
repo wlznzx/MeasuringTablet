@@ -18,6 +18,7 @@ import java.util.List;
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseActivity;
+import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
 import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.UserDao;
@@ -31,7 +32,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class AccoutManagementActivity extends BaseActivity implements UserEditDialog.UIInterface {
+public class AccoutManagementActivity extends BaseOActivity implements UserEditDialog.UIInterface {
 
     @BindView(R.id.rv)
     SwipeRecyclerView rv;
@@ -125,7 +126,6 @@ public class AccoutManagementActivity extends BaseActivity implements UserEditDi
             if (direction == SwipeRecyclerView.RIGHT_DIRECTION) {
 //                Toast.makeText(AccoutManagementActivity.this, "list第" + position + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT)
 //                        .show();
-
                 final AlertDialog.Builder normalDialog =
                         new AlertDialog.Builder(AccoutManagementActivity.this);
                 normalDialog.setIcon(R.drawable.delete);

@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioGroup;
+
+import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
@@ -22,6 +25,7 @@ public class CodeActivity extends BaseOActivity {
     @BindView(R.id.code_rg)
     RadioGroup mCodeRadioGroup;
 
+
     @BindViews({R.id.code_1_edt, R.id.code_2_edt, R.id.code_3_edt, R.id.code_4_edt, R.id.code_5_edt,
             R.id.code_6_edt, R.id.code_7_edt, R.id.code_8_edt, R.id.code_9_edt, R.id.code_10_edt,
             R.id.code_11_edt, R.id.code_12_edt, R.id.code_13_edt, R.id.code_14_edt, R.id.code_15_edt
@@ -29,7 +33,11 @@ public class CodeActivity extends BaseOActivity {
     })
     public EditText codeEdts[];
 
-    int codeID = 1;
+    private ListView listView;
+
+    private List<String> listText;
+
+    private int codeID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

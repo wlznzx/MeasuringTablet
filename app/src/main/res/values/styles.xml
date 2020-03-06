@@ -35,10 +35,10 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:maxLines">1</item>
         <item name="android:background">@null</item>
-        <item name="android:layout_marginTop">15dp</item>
-        <item name="android:layout_marginBottom">15dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">15px</item>
+        <item name="android:layout_marginBottom">15px</item>
+        <item name="android:layout_marginLeft">10px</item>
+        <item name="android:layout_marginRight">10px</item>
     </style>
 
     <style name="SPTextStyle">

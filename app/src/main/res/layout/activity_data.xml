@@ -23,6 +23,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/data_title_layout"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="center_vertical"
@@ -72,7 +73,7 @@
                     android:text="@string/m1" />
 
                 <TextView
-                    android:id="@+id/m1_group_title"
+                    android:id="@+id/m1_pic_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
@@ -336,6 +337,65 @@
                     android:layout_height="match_parent"
                     android:text="@string/m22_pic" />
 
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m23" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m23_pic" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m24" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m24_pic" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m25" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m25_pic" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m26" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m26_pic" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m27" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m27_pic" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -440,16 +500,16 @@
         </RelativeLayout>
     </LinearLayout>
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_filter"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center_horizontal"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        android:background="@drawable/button_noclickable_shape"-->
-<!--        android:text="@string/filter"-->
-<!--        android:textColor="#b7b8bd"-->
-<!--        android:textSize="14sp" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_filter"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center_horizontal"-->
+    <!--        android:layout_marginBottom="10dp"-->
+    <!--        android:background="@drawable/button_noclickable_shape"-->
+    <!--        android:text="@string/filter"-->
+    <!--        android:textColor="#b7b8bd"-->
+    <!--        android:textSize="14sp" />-->
 
     <LinearLayout
         android:layout_width="match_parent"

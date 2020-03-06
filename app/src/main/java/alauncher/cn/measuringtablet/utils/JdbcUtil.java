@@ -256,16 +256,18 @@ public class JdbcUtil {
             // throw an exception from here
         }
 
-        for (int i = 0; i <= _bean.getMValues().size(); i++) {
+        for (int i = 0; i < _bean.getMValues().size(); i++) {
             String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value) VALUES (?,?,?,?,?,?);";
             PreparedStatement m1pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
             m1pstmt.setInt(1, autoIncKey);
             m1pstmt.setString(2, "" + (i + 1));
             try {
                 m1pstmt.setFloat(3, Float.valueOf(_bean.getMValues().get(i)));
-            } catch (NumberFormatException e) {
-
+            } catch (Exception e) {
+                m1pstmt.close();
+                continue;
             }
+            // m1pstmt.setString(3, _bean.getMValues().get(i));
             m1pstmt.setFloat(4, 0);
             m1pstmt.setString(5, "- -");
             m1pstmt.setString(6, _bean.getEvent());
@@ -446,7 +448,7 @@ public class JdbcUtil {
         // pstmt.setInt(3, App.getSetupBean().getCodeID());
         pstmt.setString(2, App.getCodeName());
         // pstmt.setString(5, "M1");
-        pstmt.setString(3, _bean.getDescribe());
+        pstmt.setString(3, _bean.getDescribe().substring(0, _bean.getDescribe().indexOf("\n")));
         pstmt.setString(4, type);
         pstmt.setFloat(5, Float.valueOf(String.valueOf(_bean.getNominal_value())));
         pstmt.setFloat(6, (float) _bean.getLower_tolerance_value());
@@ -476,7 +478,7 @@ public class JdbcUtil {
         pstmt.setInt(3, App.getSetupBean().getCodeID());
         pstmt.setString(4, App.getCodeName());
         pstmt.setString(5, "M" + _bean.getIndex());
-        pstmt.setString(6, _bean.getDescribe());
+        pstmt.setString(6, _bean.getDescribe().substring(0, _bean.getDescribe().indexOf("\n")));
         pstmt.setString(7, type);
         pstmt.setFloat(8, Float.valueOf(String.valueOf(_bean.getNominal_value())));
         pstmt.setFloat(9, (float) _bean.getLower_tolerance_value());

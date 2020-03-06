@@ -60,6 +60,7 @@
 
     <TextView
         android:id="@+id/data_m1"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -67,6 +68,7 @@
 
     <ImageView
         android:id="@+id/data_m1_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -74,6 +76,7 @@
 
     <TextView
         android:id="@+id/data_m2"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -81,6 +84,7 @@
 
     <ImageView
         android:id="@+id/data_m2_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -88,6 +92,7 @@
 
     <TextView
         android:id="@+id/data_m3"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -95,6 +100,7 @@
 
     <ImageView
         android:id="@+id/data_m3_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -102,6 +108,7 @@
 
     <TextView
         android:id="@+id/data_m4"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -109,6 +116,7 @@
 
     <ImageView
         android:id="@+id/data_m4_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -116,6 +124,7 @@
 
     <TextView
         android:id="@+id/data_m5"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -123,6 +132,7 @@
 
     <ImageView
         android:id="@+id/data_m5_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -130,6 +140,7 @@
 
     <TextView
         android:id="@+id/data_m6"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -137,6 +148,7 @@
 
     <ImageView
         android:id="@+id/data_m6_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -144,6 +156,7 @@
 
     <TextView
         android:id="@+id/data_m7"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -151,6 +164,7 @@
 
     <ImageView
         android:id="@+id/data_m7_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -158,6 +172,7 @@
 
     <TextView
         android:id="@+id/data_m8"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -165,6 +180,7 @@
 
     <ImageView
         android:id="@+id/data_m8_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -172,6 +188,7 @@
 
     <TextView
         android:id="@+id/data_m9"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -179,6 +196,7 @@
 
     <ImageView
         android:id="@+id/data_m9_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -186,6 +204,7 @@
 
     <TextView
         android:id="@+id/data_m10"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -193,6 +212,7 @@
 
     <ImageView
         android:id="@+id/data_m10_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -200,6 +220,7 @@
 
     <TextView
         android:id="@+id/data_m11"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -207,6 +228,7 @@
 
     <ImageView
         android:id="@+id/data_m11_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -214,6 +236,7 @@
 
     <TextView
         android:id="@+id/data_m12"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -221,6 +244,7 @@
 
     <ImageView
         android:id="@+id/data_m12_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -228,6 +252,7 @@
 
     <TextView
         android:id="@+id/data_m13"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -235,6 +260,7 @@
 
     <ImageView
         android:id="@+id/data_m13_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -242,6 +268,7 @@
 
     <TextView
         android:id="@+id/data_m14"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -249,6 +276,7 @@
 
     <ImageView
         android:id="@+id/data_m14_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -256,6 +284,7 @@
 
     <TextView
         android:id="@+id/data_m15"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -263,6 +292,7 @@
 
     <ImageView
         android:id="@+id/data_m15_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -270,6 +300,7 @@
 
     <TextView
         android:id="@+id/data_m16"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -277,6 +308,7 @@
 
     <ImageView
         android:id="@+id/data_m16_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -284,6 +316,7 @@
 
     <TextView
         android:id="@+id/data_m17"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -291,6 +324,7 @@
 
     <ImageView
         android:id="@+id/data_m17_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -298,6 +332,7 @@
 
     <TextView
         android:id="@+id/data_m18"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -305,6 +340,7 @@
 
     <ImageView
         android:id="@+id/data_m18_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -312,6 +348,7 @@
 
     <TextView
         android:id="@+id/data_m19"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -319,6 +356,7 @@
 
     <ImageView
         android:id="@+id/data_m19_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -326,6 +364,7 @@
 
     <TextView
         android:id="@+id/data_m20"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -333,6 +372,7 @@
 
     <ImageView
         android:id="@+id/data_m20_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -340,6 +380,7 @@
 
     <TextView
         android:id="@+id/data_m21"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -347,6 +388,7 @@
 
     <ImageView
         android:id="@+id/data_m21_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -354,6 +396,7 @@
 
     <TextView
         android:id="@+id/data_m22"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
@@ -361,6 +404,87 @@
 
     <ImageView
         android:id="@+id/data_m22_pic"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m23"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m23_pic"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m24"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m24_pic"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m25"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m25_pic"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m26"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m26_pic"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+    <TextView
+        android:id="@+id/data_m27"
+        android:visibility="gone"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <ImageView
+        android:id="@+id/data_m27_pic"
+        android:visibility="gone"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"

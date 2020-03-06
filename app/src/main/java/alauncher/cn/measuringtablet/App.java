@@ -15,6 +15,9 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import alauncher.cn.measuringtablet.bean.CalibrationBean;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
@@ -30,15 +33,10 @@ import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
-import alauncher.cn.measuringtablet.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringtablet.utils.Constants;
-import alauncher.cn.measuringtablet.utils.DeviceUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.SPUtils;
 import alauncher.cn.measuringtablet.utils.SystemPropertiesProxy;
-import alauncher.cn.measuringtablet.view.CodeActivity;
-import alauncher.cn.measuringtablet.view.SystemManagementActivity;
-import alauncher.cn.measuringtablet.view.TActivity;
 import alauncher.cn.measuringtablet.view.UpgradeActivity;
 
 /**
@@ -57,6 +55,7 @@ public class App extends MultiDexApplication {
     public static long SETTING_ID = 1;
 
     public static String handlerAccout = "恩梯";
+    public static String handlerName = "";
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -143,9 +142,9 @@ public class App extends MultiDexApplication {
 
         if (getDaoSession().getUserDao().loadAll().size() == 0) {
             User _user = new User();
-            _user.setAccout("admin");
-            _user.setPassword("123456");
-            _user.setName("管理员");
+            _user.setAccout("xgy");
+            _user.setPassword("1");
+            _user.setName("薛国毅");
             _user.setStatus(0);
             _user.setId("1");
             _user.setLimit(0);
@@ -153,9 +152,9 @@ public class App extends MultiDexApplication {
             getDaoSession().getUserDao().insert(_user);
 
             User _manager = new User();
-            _manager.setAccout("manager");
-            _manager.setPassword("123456");
-            _manager.setName("经理");
+            _manager.setAccout("zj");
+            _manager.setPassword("1");
+            _manager.setName("张杰");
             _manager.setStatus(0);
             _manager.setId("2");
             _manager.setLimit(0);
@@ -163,9 +162,9 @@ public class App extends MultiDexApplication {
             getDaoSession().getUserDao().insert(_manager);
 
             User _monitor = new User();
-            _monitor.setAccout("monitor");
-            _monitor.setPassword("123456");
-            _monitor.setName("班长");
+            _monitor.setAccout("zxz");
+            _monitor.setPassword("1");
+            _monitor.setName("周秀珍");
             _monitor.setStatus(0);
             _monitor.setId("3");
             _monitor.setLimit(0);
@@ -173,14 +172,44 @@ public class App extends MultiDexApplication {
             getDaoSession().getUserDao().insert(_monitor);
 
             User _operator = new User();
-            _operator.setAccout("operator");
+            _operator.setAccout("dh");
             _operator.setPassword("123456");
-            _operator.setName("测试员");
+            _operator.setName("邓华");
             _operator.setStatus(0);
             _operator.setId("4");
-            _operator.setLimit(4);
+            _operator.setLimit(0);
             _operator.setEmail("");
             getDaoSession().getUserDao().insert(_operator);
+
+            User _wmg = new User();
+            _wmg.setAccout("wmg");
+            _wmg.setPassword("1");
+            _wmg.setName("王美干");
+            _wmg.setStatus(0);
+            _wmg.setId("5");
+            _wmg.setLimit(0);
+            _wmg.setEmail("");
+            getDaoSession().getUserDao().insert(_wmg);
+
+            User _hhb = new User();
+            _hhb.setAccout("hhb");
+            _hhb.setPassword("1");
+            _hhb.setName("胡海波");
+            _hhb.setStatus(0);
+            _hhb.setId("6");
+            _hhb.setLimit(0);
+            _hhb.setEmail("");
+            getDaoSession().getUserDao().insert(_hhb);
+
+            User _yxh = new User();
+            _yxh.setAccout("yxh");
+            _yxh.setPassword("1");
+            _yxh.setName("尹学慧");
+            _yxh.setStatus(0);
+            _yxh.setId("7");
+            _yxh.setLimit(0);
+            _yxh.setEmail("");
+            getDaoSession().getUserDao().insert(_yxh);
         }
 
 
@@ -221,6 +250,15 @@ public class App extends MultiDexApplication {
         }
 
         if (getDaoSession().getStoreBeanDao().load(SETTING_ID) == null) {
+            android.util.Log.d("wlDebug", "size = " + Constants.defaultCodeBeans.size());
+            for (int i = 1; i < Constants.defaultCodeBeans.size(); i++) {
+                CodeBean _bean = Constants.defaultCodeBeans.get(i);
+                _bean.setCodeID(i);
+                _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
+                _bean.setParts(getResources().getString(R.string.spare_parts) + i);
+                getDaoSession().getCodeBeanDao().insert(_bean);
+            }
+
             StoreBean _bean = new StoreBean();
             _bean.setId(SETTING_ID);
             _bean.setStoreMode(2);
@@ -230,9 +268,8 @@ public class App extends MultiDexApplication {
             _bean.setDelayTime(1);
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
-
         //
-        for (int i = 1; i <= 16; i++) {
+        for (int i = 1; i < Constants.defaultCodeBeans.size(); i++) {
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {
                 CalibrationBean _bean = new CalibrationBean();
                 _bean.setCode_id(i);
@@ -367,30 +404,84 @@ public class App extends MultiDexApplication {
             }
             */
             if (getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) i)).list().size() <= 0) {
-                for (int j = 1; j < Constants.mDefaultParameterBeanList.size(); j++) {
-                    Parameter2Bean _bean = new Parameter2Bean();
-                    _bean.setCode_id(i);
-                    _bean.setIndex(j);
-                    _bean.setEnable(true);
-                    _bean.setDescribe(Constants.mDefaultParameterBeanList.get(j).name);
-                    _bean.setNominal_value(Constants.mDefaultParameterBeanList.get(j).normalValue);
-                    _bean.setUpper_tolerance_value(Constants.mDefaultParameterBeanList.get(j).upperLimit);
-                    _bean.setLower_tolerance_value(Constants.mDefaultParameterBeanList.get(j).lowerLimit);
-                    getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                android.util.Log.d("wlDebug", "i = " + i);
+                if (i <= 15) {
+                    android.util.Log.d("wlDebug", "i = 1");
+                    for (int j = 1; j < Constants.m1_15DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m1_15DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m1_15DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m1_15DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m1_15DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else if (16 <= i && i <= 27) {
+                    android.util.Log.d("wlDebug", "i = 2");
+                    for (int j = 1; j < Constants.m16_27DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m16_27DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m16_27DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m16_27DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m16_27DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else if (28 <= i && i <= 30) {
+                    for (int j = 1; j < Constants.m28_30DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m28_30DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m28_30DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m28_30DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m28_30DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else if (31 <= i && i <= 42) {
+                    android.util.Log.d("wlDebug", "i = 3");
+                    for (int j = 1; j < Constants.m31_45DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m31_45DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m31_45DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m31_45DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m31_45DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
+                } else {
+                    android.util.Log.d("wlDebug", "i = 4");
+                    for (int j = 1; j < Constants.m43_45DefaultParameterBeanList.size(); j++) {
+                        Parameter2Bean _bean = new Parameter2Bean();
+                        _bean.setCode_id(i);
+                        _bean.setIndex(j);
+                        _bean.setEnable(true);
+                        _bean.setDescribe(Constants.m43_45DefaultParameterBeanList.get(j).name);
+                        _bean.setNominal_value(Constants.m43_45DefaultParameterBeanList.get(j).normalValue);
+                        _bean.setUpper_tolerance_value(Constants.m43_45DefaultParameterBeanList.get(j).upperLimit);
+                        _bean.setLower_tolerance_value(Constants.m43_45DefaultParameterBeanList.get(j).lowerLimit);
+                        getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
+                    }
                 }
             }
 
-
+            /*
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
-                CodeBean _bean = new CodeBean();
+                CodeBean _bean = Constants.defaultCodeBeans.get(i);
                 _bean.setCodeID(i);
-                _bean.setName("程序" + i);
                 _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
                 _bean.setParts(getResources().getString(R.string.spare_parts) + i);
                 getDaoSession().getCodeBeanDao().insert(_bean);
             }
+            */
         }
-
         // initTestDatas();
     }
 
@@ -558,4 +649,5 @@ public class App extends MultiDexApplication {
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
                 "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
     }
+
 }

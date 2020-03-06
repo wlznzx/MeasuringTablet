@@ -52,8 +52,14 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         datas = pDatas;
         mParameterBean = parameterBeans;
         initIDs();
+        /*
+        for (ResultBean3 _bean : datas) {
+            android.util.Log.d("wlDebug", _bean.toString());
+            android.util.Log.d("wlDebug", "values size = " + _bean.getMValues().size());
+            android.util.Log.d("wlDebug", "pic size = " + _bean.getMPicPaths().size());
+        }
+        */
     }
-
 
     public void notifyAdapter(List<ResultBean3> myLiveList, boolean isAdd) {
 
@@ -115,6 +121,7 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         holder.setText(R.id.data_event, "- -");
         holder.setText(R.id.data_result, datas.get(position).getResult());
         holder.setText(R.id.data_time, DateUtils.getDate(datas.get(position).getTimeStamp()));
+
          /*
         holder.setText(R.id.data_m1, "" + datas.get(position).getMValues().get(0));
 
@@ -133,9 +140,21 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         */
 
 
-        for (int i = 0; i < mValueIDs.size(); i++) {
+        for (int i = 0; i < datas.get(0).getMValues().size(); i++) {
 //            if (mParameterBean.get(i).getEnable()) {
-            holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
+
+            if (i > 21) {
+                // holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
+                if (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null") || datas.get(position).getMValues().get(i).equals("")) {
+                    holder.setText(mValueIDs.get(i), "- -");
+                } else {
+                    holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i).equals("1")) ? "OK" : "NG");
+                }
+            } else {
+                holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
+            }
+            holder.setVisible(mValueIDs.get(i), true);
+            holder.setVisible(mPicIDs.get(i), true);
             try {
                 if (datas.get(position).getMPicPaths().get(i) != null && !datas.get(position).getMPicPaths().get(i).equals("")) {
                     Glide.with(mContext).load("file://" + datas.get(position).getMPicPaths().get(i))
@@ -218,7 +237,6 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.setDataAndType(uri, "image/jpeg");
-
             mContext.startActivity(intent);
         } else {
             // Toast.makeText(this, "图片不存在", Toast.LENGTH_SHORT).show();
@@ -250,6 +268,11 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         mValueIDs.add(R.id.data_m20);
         mValueIDs.add(R.id.data_m21);
         mValueIDs.add(R.id.data_m22);
+        mValueIDs.add(R.id.data_m23);
+        mValueIDs.add(R.id.data_m24);
+        mValueIDs.add(R.id.data_m25);
+        mValueIDs.add(R.id.data_m26);
+        mValueIDs.add(R.id.data_m27);
 
         mPicIDs.add(R.id.data_m1_pic);
         mPicIDs.add(R.id.data_m2_pic);
@@ -273,5 +296,10 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         mPicIDs.add(R.id.data_m20_pic);
         mPicIDs.add(R.id.data_m21_pic);
         mPicIDs.add(R.id.data_m22_pic);
+        mPicIDs.add(R.id.data_m23_pic);
+        mPicIDs.add(R.id.data_m24_pic);
+        mPicIDs.add(R.id.data_m25_pic);
+        mPicIDs.add(R.id.data_m26_pic);
+        mPicIDs.add(R.id.data_m27_pic);
     }
 }
