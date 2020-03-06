@@ -13,7 +13,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
@@ -33,8 +32,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
@@ -83,6 +84,9 @@ public class InputActivity extends BaseOLandscapeActivity {
 
     private String[] judges = {"- -", "- -", "- -", "- -", "- -", "- -"};
 
+    private Set<String> nameSet = new HashSet<String>();
+
+    private HashMap codeMap = new HashMap<String, List<CodeBean>>();
 
     private DeviceInfoBean mDeviceInfoBean;
 
@@ -355,7 +359,6 @@ public class InputActivity extends BaseOLandscapeActivity {
         judgeTVs[0].setText("综合判定 " + judges[0]);
         judgeTVs[0].setTextColor(judges[0].equals("OK") ? Color.GREEN : Color.RED);
 
-
         if (isModify) mEnterAdapter.notifyDataSetChanged();
 
         // InputMethodManager m = (InputMethodManager) getSystemService(getBaseContext().INPUT_METHOD_SERVICE);
@@ -463,16 +466,33 @@ public class InputActivity extends BaseOLandscapeActivity {
                 setMode(curMode);
                 */
                 // new ChooseCodeDialog(this).show();
-                for (int i = 0; i < App.getDaoSession().getCodeBeanDao().loadAll().size(); i++) {
-                    CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
-                    if (_bean != null) {
-                        province[i] = _bean.getName();
-                    } else {
-                        province[i] = "程序 " + (i + 1);
-                    }
+
+                List<CodeBean> _lists = App.getDaoSession().getCodeBeanDao().loadAll();
+                for (CodeBean _bean : _lists) {
+                    String str = _bean.getName().substring(0, _bean.getName().indexOf("-"));
+                    android.util.Log.d("wlDebug", "str = " + str);
+                    nameSet.add(str);
                 }
+                for (String key : nameSet) {
+                    codeMap.put(key, new ArrayList<>());
+                    android.util.Log.d("wlDebug", "key = " + key);
+                }
+                for (CodeBean _bean : _lists) {
+                    // nameSet.add(_bean.getName().substring(0, _bean.getName().indexOf("-")));
+                    ((List) codeMap.get(_bean.getName().substring(0, _bean.getName().indexOf("-")))).add(_bean);
+                }
+
+//                for (int i = 0; i < App.getDaoSession().getCodeBeanDao().loadAll().size(); i++) {
+//                    CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
+//                    if (_bean != null) {
+//                        province[i] = _bean.getName();
+//                    } else {
+//                        province[i] = "程序 " + (i + 1);
+//                    }
+//                }
                 // showSingleChoiceButton();
-                showGridDialog();
+                showClassDialog();
+                // showGridDialog();
                 break;
         }
     }
@@ -694,6 +714,73 @@ public class InputActivity extends BaseOLandscapeActivity {
             items.add(item);
         }
         return items;
+    }
+
+    private void showClassDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
+        GridView gridview = (GridView) view.findViewById(R.id.gridview);
+        final Dialog dialog = new Dialog(this, R.style.common_dialog);
+        dialog.setContentView(view);
+        dialog.show();
+
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+        for (String str : nameSet) {
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("itemName", str);
+            items.add(item);
+        }
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, items, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
+        gridview.setAdapter(simpleAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int ar, long arg3) {
+                dialog.dismiss();
+                TextView tv = view.findViewById(R.id.grid_name);
+                String str = tv.getText().toString();
+//                android.util.Log.d("wlDebug", "str = " + str);
+                List<CodeBean> codeList = ((List) codeMap.get(str));
+//                android.util.Log.d("wlDebug", "size = " + codeList.size());
+
+                View _view = LayoutInflater.from(InputActivity.this).inflate(R.layout.gridview_dialog, null);
+                final Dialog _dialog = new Dialog(InputActivity.this, R.style.common_dialog);
+                _dialog.setContentView(_view);
+                _dialog.show();
+
+                List<Map<String, Object>> _items = new ArrayList<Map<String, Object>>();
+                GridView _gridview = (GridView) _view.findViewById(R.id.gridview);
+
+                final List<Map<String, Object>> item = getData();
+
+                for (int i = 0; i < codeList.size(); i++) {
+                    Map<String, Object> _item = new HashMap<String, Object>();
+                    _item.put("itemName", codeList.get(i).getName());
+                    _items.add(_item);
+                }
+                SimpleAdapter simpleAdapter = new SimpleAdapter(InputActivity.this, _items, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
+                _gridview.setAdapter(simpleAdapter);
+                _gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        CodeBean _CodeBean = codeList.get(i);
+                        if (_CodeBean != null) {
+                            actionTips.setText(App.handlerName + " " + _CodeBean.getName());
+                        } else {
+                            actionTips.setText(App.handlerName + " 程序" + App.getSetupBean().getCodeID());
+                        }
+                        SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                        _bean.setCodeID((int) _CodeBean.getCodeID());
+                        App.getDaoSession().getSetupBeanDao().update(_bean);
+
+                        _dialog.dismiss();
+                        updates.clear();
+                        datas.clear();
+                        initView();
+                    }
+                });
+            }
+        });
+
     }
 
     private void showGridDialog() {

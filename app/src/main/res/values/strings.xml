@@ -290,5 +290,6 @@
     <string name="m26_pic">M26图片</string>
     <string name="m27">M27</string>
     <string name="m27_pic">M27图片</string>
+    <string name="template_management">模板管理</string>
 
 </resources>

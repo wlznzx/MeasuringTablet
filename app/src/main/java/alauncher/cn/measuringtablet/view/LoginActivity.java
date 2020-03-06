@@ -14,27 +14,21 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.MainActivity;
 import alauncher.cn.measuringtablet.R;
-import alauncher.cn.measuringtablet.base.BaseOActivity;
-import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
+import alauncher.cn.measuringtablet.base.BaseOLandscapeActivity;
 import alauncher.cn.measuringtablet.bean.RememberPasswordBean;
 import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.UserDao;
-import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 
-public class LoginActivity extends BaseOActivity {
+public class LoginActivity extends BaseOLandscapeActivity {
 
     @BindView(R.id.login_user_name_edt)
     public EditText loginUserNameEdt;
