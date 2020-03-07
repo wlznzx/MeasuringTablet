@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <include
@@ -11,47 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height" />
 
-    <HorizontalScrollView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
-    </HorizontalScrollView>
-
-    <com.yanzhenjie.recyclerview.SwipeRecyclerView
-        android:id="@+id/rv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_weight="10" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/white">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true">
-
-            <ImageView
-                android:id="@+id/add_user_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:src="@drawable/add_circle"
-                android:textColor="@android:color/white" />
-        </FrameLayout>
-
-    </RelativeLayout>
+        android:layout_height="match_parent"></androidx.viewpager2.widget.ViewPager2>
 
 </LinearLayout>

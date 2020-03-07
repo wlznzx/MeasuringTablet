@@ -15,4 +15,6 @@
     <dimen name="m_3part_width">302px</dimen>
     <dimen name="m_item_height">70px</dimen>
     <dimen name="m_half_item_height">34px</dimen>
+    <dimen name="header_margin">35dp</dimen>
+    <dimen name="septal_lines_margin">20dp</dimen>
 </resources>
