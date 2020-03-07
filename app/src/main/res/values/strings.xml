@@ -291,5 +291,16 @@
     <string name="m27">M27</string>
     <string name="m27_pic">M27图片</string>
     <string name="template_management">模板管理</string>
+    <string name="inventory_template">检查表模板编辑</string>
+    <string name="page_header">页眉:</string>
+    <string name="left">左边</string>
+    <string name="left_header">左页眉</string>
+    <string name="mid_header">中间页眉</string>
+    <string name="right_header">右页眉</string>
+    <string name="page_footer">页脚:</string>
+    <string name="title_name">标题名称</string>
+    <string name="sign_part">签字栏:</string>
+    <string name="title_name_">标题名称:</string>
+    <string name="title_part">表头:</string>
 
 </resources>

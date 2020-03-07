@@ -55,7 +55,7 @@ public class MainActivity extends BaseOActivity {
                 _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.SystemManagementActivity", R.string.system_management, R.drawable.phonelink_setup));
 //                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.StoreActivity", R.string.store, R.drawable.archive));
 //                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.SPCStatisticalActivity", R.string.spc_analysis, R.drawable.show_chart));
-                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.StatisticalActivity", R.string.template_management, R.drawable.template));
+                _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.TemplateActivity", R.string.template_management, R.drawable.template));
                 _datas.add(new MainInfo("", R.string.logout, R.drawable.logout_96));
             }
         } catch (NullPointerException e) {
