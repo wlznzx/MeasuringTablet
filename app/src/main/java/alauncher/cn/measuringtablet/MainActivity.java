@@ -44,7 +44,7 @@ public class MainActivity extends BaseOActivity {
     @Override
     protected void initView() {
         List<MainInfo> _datas = new ArrayList();
-        _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.InputActivity", R.string.measuring, R.drawable.equalizer));
+        _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.Input2Activity", R.string.measuring, R.drawable.equalizer));
         try {
             if (App.getDaoSession().getUserDao().load(App.handlerAccout).getLimit() < 2) {
                 _datas.add(new MainInfo("alauncher.cn.measuringtablet.view.Data2Activity", R.string.data_query, R.drawable.find_in_page));

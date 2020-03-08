@@ -145,4 +145,11 @@
         <item>NG</item>
     </string-array>
 
+    <string-array name="sign" translatable="false">
+        <item></item>
+        <item>系长</item>
+        <item>课长</item>
+        <item>部长</item>
+    </string-array>
+
 </resources>

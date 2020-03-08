@@ -27,8 +27,10 @@ import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.RememberPasswordBean;
 import alauncher.cn.measuringtablet.bean.ResultBean;
+import alauncher.cn.measuringtablet.bean.RoleBean;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.StoreBean;
+import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoSession;
@@ -236,7 +238,6 @@ public class App extends MultiDexApplication {
             _bean.setStartMin(0);
             _bean.setStopHour(18);
             _bean.setStartMin(0);
-            android.util.Log.d("wlDebug", "info = " + _bean.toString());
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }
 
@@ -250,7 +251,6 @@ public class App extends MultiDexApplication {
         }
 
         if (getDaoSession().getStoreBeanDao().load(SETTING_ID) == null) {
-            android.util.Log.d("wlDebug", "size = " + Constants.defaultCodeBeans.size());
             for (int i = 1; i < Constants.defaultCodeBeans.size(); i++) {
                 CodeBean _bean = Constants.defaultCodeBeans.get(i);
                 _bean.setCodeID(i);
@@ -388,6 +388,55 @@ public class App extends MultiDexApplication {
                 _bean.setM4_code("ch4");
                 getDaoSession().getParameterBeanDao().insert(_bean);
             }
+
+            // 默认模板;
+            if (getDaoSession().getTemplateBeanDao().load((long) i) == null) {
+                TemplateBean mTemplateBean = new TemplateBean();
+                mTemplateBean.setCodeID(i);
+                ArrayList<String> Titles = new ArrayList<>();
+                Titles.add("部品名称");
+                Titles.add("进货批量");
+                Titles.add("进货日期");
+                Titles.add("检查日期");
+                Titles.add("部品代号");
+                Titles.add("尺寸检查");
+                Titles.add("生产日期");
+                Titles.add("部品发送到");
+                Titles.add("材料名称");
+                Titles.add("订单No");
+                Titles.add("检查目的");
+                // Titles.add("供货方名称");
+                ArrayList<String> AQLList = new ArrayList<>();
+                AQLList.add("无毛刺、无异物、无气孔");
+                AQLList.add("无收缩、无裂缝、无缺陷");
+                AQLList.add("毛刺高度控制在0.3以下");
+                AQLList.add("外包装无破损、无变形、无潮湿");
+                AQLList.add("月份标签确认");
+                AQLList.add("供应商数据确认");
+                ArrayList<String> RoHSList = new ArrayList<>();
+                RoHSList.add("RoHS确认频率");
+                RoHSList.add("本批确认");
+                RoHSList.add("上回RoHS确认日");
+                RoHSList.add("确认结果(RoHS检查数据以检查日期追溯)");
+                RoHSList.add("模号:");
+                ArrayList<String> signList = new ArrayList<>();
+                signList.add("课长");
+                signList.add("系长");
+                signList.add("部长");
+                mTemplateBean.setAverageEnable(true);
+                mTemplateBean.setMaximumEnable(true);
+                mTemplateBean.setMinimumEnable(true);
+                mTemplateBean.setRangeEnable(true);
+                mTemplateBean.setJudgeEnable(true);
+
+                mTemplateBean.setTitle("量产受入品检查表E*W");
+                mTemplateBean.setAQLList(AQLList);
+                mTemplateBean.setRoHSList(RoHSList);
+                mTemplateBean.setTitleList(Titles);
+                mTemplateBean.setSignList(signList);
+                getDaoSession().getTemplateBeanDao().insert(mTemplateBean);
+            }
+
             /*
             if (getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) i)).list().size() <= 0) {
                 for (int j = 1; j <= 22; j++) {
@@ -470,6 +519,16 @@ public class App extends MultiDexApplication {
                         getDaoSession().getParameter2BeanDao().insertOrReplace(_bean);
                     }
                 }
+            }
+
+            if (getDaoSession().getRoleBeanDao().loadAll().size() > 0) {
+                RoleBean _bean = new RoleBean();
+                _bean.setRoleName("系长");
+                getDaoSession().getRoleBeanDao().insert(_bean);
+                _bean.setRoleName("课长");
+                getDaoSession().getRoleBeanDao().insert(_bean);
+                _bean.setRoleName("部长");
+                getDaoSession().getRoleBeanDao().insert(_bean);
             }
 
             /*

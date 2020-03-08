@@ -119,4 +119,18 @@
     <string name="sign_part">签字栏:</string>
     <string name="title_name_">标题名称:</string>
     <string name="title_part">表头:</string>
+    <string name="data_from">数据表单:</string>
+    <string name="maximum">最大值</string>
+    <string name="minimum">最小值</string>
+    <string name="average">平均值</string>
+    <string name="range_value">极差值</string>
+    <string name="sign1">签字1</string>
+    <string name="sign2">签名2</string>
+    <string name="sign3">签名3</string>
+    <string name="list_header">标题</string>
+    <string name="aql_title">检测项</string>
+    <string name="rosh_str">相关信息</string>
+    <string name="info_item">信息项</string>
+    <string name="save_success">保存成功</string>
+    <string name="edit">编辑</string>
 </resources>

@@ -73,6 +73,7 @@ public class InputActivity extends BaseOLandscapeActivity {
     public static List<UpdateBean> updates = new ArrayList<>();
 
     private int currentPosPic;
+
     private int workpieceNum;
 
     long _stableTime = 800;

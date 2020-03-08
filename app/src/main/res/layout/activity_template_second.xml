@@ -4,327 +4,213 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/inventory_template"
-        android:textSize="28sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@color/baseColor" />
-    <!-- 页眉 -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/template_margin_left"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/page_header"
-            android:textSize="22sp"></TextView>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"
-            android:textColorHint="@color/colorPrimary"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/left_header_edt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableRight="@drawable/page"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/left_header"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/colorPrimary" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"
-            android:textColorHint="@color/colorPrimary"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/mid_header_edt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableRight="@drawable/page"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/mid_header"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/colorPrimary" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"
-            android:textColorHint="@color/colorPrimary"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/right_header_edt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableRight="@drawable/page"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/right_header"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/colorPrimary" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <!-- 页脚 -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/page_footer"
-            android:textSize="22sp"></TextView>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"
-            android:textColorHint="@color/colorPrimary"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/left_footer_edt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableRight="@drawable/page"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/left_header"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/colorPrimary" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"
-            android:textColorHint="@color/colorPrimary"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/mid_footer_edt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableRight="@drawable/page"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/mid_header"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/colorPrimary" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"
-            android:textColorHint="@color/colorPrimary"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/right_footer_edt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableRight="@drawable/page"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/right_header"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/colorPrimary" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="@dimen/septal_lines_margin"
-        android:layout_marginRight="@dimen/septal_lines_margin"
-        android:background="@color/baseColor" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/title_name_"
-            android:textSize="22sp"></TextView>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"
-            android:textColorHint="@color/colorPrimary"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/title_edt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableRight="@drawable/page"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/title_name"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/colorPrimary" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="@dimen/septal_lines_margin"
-        android:layout_marginRight="@dimen/septal_lines_margin"
-        android:background="@color/baseColor" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/sign_part"
-            android:textSize="22sp"></TextView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/sign_rv"
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"></androidx.recyclerview.widget.RecyclerView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/title_part"
-            android:textSize="22sp"></TextView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/title_p_rv"
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/header_margin"></androidx.recyclerview.widget.RecyclerView>
-
-    </LinearLayout>
-
-    <!--
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+            android:text="@string/data_from"
+            android:textSize="18sp"></TextView>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/data_from_margin_left"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv1"
-                android:layout_width="300dp"
-                android:layout_height="400dp"
-                android:layout_gravity="center_horizontal"></androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Go."></TextView>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv2"
-                android:layout_width="300dp"
-                android:layout_height="400dp"
-                android:layout_gravity="center_horizontal"></androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
-    </ScrollView>
-
-    <com.yanzhenjie.recyclerview.SwipeRecyclerView
-        android:id="@+id/rv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_weight="10" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/white">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true">
-
-            <ImageView
-                android:id="@+id/add_user_btn"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:src="@drawable/add_circle"
-                android:textColor="@android:color/white" />
-        </FrameLayout>
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-    </RelativeLayout>
-        -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/maximum"
+                    android:textSize="18sp"></TextView>
+
+                <Switch
+                    android:id="@+id/maximum_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/data_from_margin_tv"></Switch>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minimum"
+                    android:textSize="18sp"></TextView>
+
+                <Switch
+                    android:id="@+id/minimum_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/data_from_margin_tv"></Switch>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/average"
+                    android:textSize="18sp"></TextView>
+
+                <Switch
+                    android:id="@+id/average_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/data_from_margin_tv"></Switch>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/data_from_margin_left"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/range_value"
+                    android:textSize="18sp"></TextView>
+
+                <Switch
+                    android:id="@+id/range_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/data_from_margin_tv"></Switch>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/judge"
+                    android:textSize="18sp"></TextView>
+
+                <Switch
+                    android:id="@+id/judge_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/data_from_margin_tv"></Switch>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="@dimen/septal_lines_margin"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="@dimen/septal_lines_margin"
+        android:background="@color/baseColor" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/template_margin_left"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/aql_str"
+            android:textSize="18sp"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/aql_rv"
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/header_margin"></androidx.recyclerview.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/add_aql"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="50dp"
+            android:src="@drawable/add_circle"></ImageView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="@dimen/septal_lines_margin"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="@dimen/septal_lines_margin"
+        android:background="@color/baseColor" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/template_margin_left"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/rosh_str"
+            android:textSize="18sp"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rosh_rv"
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/header_margin"></androidx.recyclerview.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/add_rosh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="50dp"
+            android:src="@drawable/add_circle"></ImageView>
+
+    </LinearLayout>
+
 </LinearLayout>

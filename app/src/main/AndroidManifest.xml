@@ -204,6 +204,14 @@
         </activity>
 
         <activity
+            android:name=".view.Input2Activity"
+            android:windowSoftInputMode="adjustUnspecified|adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".view.UpgradeActivity"
             android:launchMode="singleTop"
             android:theme="@style/MessageTheme"

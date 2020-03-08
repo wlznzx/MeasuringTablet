@@ -9,7 +9,7 @@
     <dimen name="swipe_size">50dp</dimen>
 
 
-    <dimen name="item_height">56dp</dimen>
+    <dimen name="item_height">46dp</dimen>
     <dimen name="m_part_width">100px</dimen>
     <dimen name="m_2part_width">201px</dimen>
     <dimen name="m_3part_width">302px</dimen>
@@ -17,4 +17,7 @@
     <dimen name="m_half_item_height">34px</dimen>
     <dimen name="header_margin">35dp</dimen>
     <dimen name="septal_lines_margin">20dp</dimen>
+    <dimen name="data_from_margin_left">80dp</dimen>
+    <dimen name="data_from_margin_tv">50dp</dimen>
+    <dimen name="template_margin_left">40dp</dimen>
 </resources>
