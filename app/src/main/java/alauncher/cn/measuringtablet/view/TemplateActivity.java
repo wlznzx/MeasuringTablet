@@ -81,7 +81,7 @@ public class TemplateActivity extends BaseOActivity {
     @Override
     protected void initView() {
 
-        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
+       mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
 
         views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, null);
         leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
