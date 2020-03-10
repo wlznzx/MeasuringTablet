@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alauncher.cn.measuringtablet.widget.BorderEditView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/BaseTabletTextStyle"
+    android:layout_width="@dimen/m_part_width"
+    android:layout_height="match_parent"
+    android:hint="@string/measure_value"
+    android:inputType="numberSigned|numberDecimal" />

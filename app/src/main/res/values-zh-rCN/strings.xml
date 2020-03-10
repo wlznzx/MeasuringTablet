@@ -133,4 +133,5 @@
     <string name="info_item">信息项</string>
     <string name="save_success">保存成功</string>
     <string name="edit">编辑</string>
+    <string name="exprot">导出PDF</string>
 </resources>
