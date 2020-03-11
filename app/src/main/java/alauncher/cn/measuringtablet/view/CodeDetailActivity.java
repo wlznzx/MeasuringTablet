@@ -2,6 +2,7 @@ package alauncher.cn.measuringtablet.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class CodeDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     @Override
@@ -64,7 +66,7 @@ public class CodeDetailActivity extends BaseActivity {
                 forceCalibrationFragment = (ForceCalibrationFragment) fragment;
             } else if (fragment instanceof CodeStepFragment) {
                 launcherFragment = (CodeStepFragment) fragment;
-            } else if(fragment instanceof  WorkpieceFragment){
+            } else if (fragment instanceof WorkpieceFragment) {
                 mWorkpieceFragment = (WorkpieceFragment) fragment;
             }
         }
@@ -74,9 +76,10 @@ public class CodeDetailActivity extends BaseActivity {
             forceCalibrationFragment = new ForceCalibrationFragment();
         if (launcherFragment == null)
             launcherFragment = new CodeStepFragment();
-        if(mWorkpieceFragment == null){
+        if (mWorkpieceFragment == null) {
             mWorkpieceFragment = new WorkpieceFragment();
         }
+
 
         String[] mTitles = new String[]{getString(R.string.code_base_info),
                 getString(R.string.workpiece_pic),
@@ -85,7 +88,7 @@ public class CodeDetailActivity extends BaseActivity {
         mTitleList = Arrays.asList(mTitles);
 
 
-        mFragmentList = Arrays.asList(codeBaseInfoFragment,mWorkpieceFragment, forceCalibrationFragment, launcherFragment);
+        mFragmentList = Arrays.asList(codeBaseInfoFragment, mWorkpieceFragment, forceCalibrationFragment, launcherFragment);
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);

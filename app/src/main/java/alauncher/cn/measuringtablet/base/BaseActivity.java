@@ -52,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         super.onCreate(savedInstanceState);
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);//设置无ActionBar，单在继承AppCompat?Activity时无效，继承Activity时才有效
         //保持竖屏
-        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
         //当系统版本为4.4或者4.4以上时可以使用沉浸式状态栏

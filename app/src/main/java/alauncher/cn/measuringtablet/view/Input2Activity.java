@@ -9,17 +9,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.provider.Browser;
-import android.text.Layout;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -27,17 +25,15 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
-import alauncher.cn.measuringtablet.MainActivity;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
+import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
@@ -75,6 +71,8 @@ public class Input2Activity extends BaseOActivity {
     // result;
     private List<List<EditText>> results = new ArrayList<>();
 
+    // CodeBean;
+    private CodeBean mCodeBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +89,7 @@ public class Input2Activity extends BaseOActivity {
 
         mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
         mParameter2Beans = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
+        mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
 
         for (int i = 0; i < 5; i++) {
             results.add(new ArrayList<>());
@@ -132,7 +131,15 @@ public class Input2Activity extends BaseOActivity {
         // 添加工件图;
         FrameLayout imgLayout = new FrameLayout(this);
         mainLayout.addView(imgLayout, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 10));
+
         imgLayout.setBackgroundResource(R.drawable.workspice);
+        byte[] _pic = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID()).getWorkpiecePic();
+        if (_pic != null) {
+            Bitmap map = BitmapFactory.decodeByteArray(_pic, 0, _pic.length);
+            imgLayout.setBackground(new BitmapDrawable(map));
+        } else {
+            imgLayout.setBackgroundResource(R.drawable.workspice);
+        }
 
         // 秀的操作来了，真是可怕;
         //每页显示的记录数
@@ -303,6 +310,7 @@ public class Input2Activity extends BaseOActivity {
             if (roshEdts.size() < mTemplateBean.getRoHSList().size()) roshEdts.add(_edt);
         }
         bottomLayout.addView(roshResultLayout, getItemLayoutParams(1, 1 * bottomRow));
+        android.util.Log.d("wlDebug", "roshEdts.size() = " + roshEdts.size());
         // Judge Result;
         LinearLayout judgeResultLayout = new LinearLayout(this);
         judgeResultLayout.setOrientation(LinearLayout.VERTICAL);
@@ -428,10 +436,14 @@ public class Input2Activity extends BaseOActivity {
 //                e.printStackTrace();
 //            }
             try {
-                Bitmap bitmap = BitmapFactory.decodeResource(Input2Activity.this.getResources(), R.drawable.workspice);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] img = baos.toByteArray();
+                byte[] img = null;
+                if (mCodeBean.getWorkpiecePic() == null) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(Input2Activity.this.getResources(), R.drawable.workspice);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                } else {
+                    img = mCodeBean.getWorkpiecePic();
+                }
 
                 mTemplateResultBean = new TemplateResultBean();
                 List<String> titleLists = new ArrayList<>();
@@ -466,7 +478,7 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setResult("OK");
                     _bean.setWorkid_extra("");
                     mResultBean3s.add(_bean);
-                    android.util.Log.d("wlDebug",_bean.toString());
+                    android.util.Log.d("wlDebug", _bean.toString());
                 }
 
                 File file = new File(PDFUtils.DEST);

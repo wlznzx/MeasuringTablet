@@ -6,14 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -101,7 +99,6 @@ public class WorkpieceFragment extends Fragment {
             String _path = UriToPathUtil.getFilePathByUri(getActivity(), uri);
             // _path = getDataColumn(this, uri, null, null);
             android.util.Log.d("wlDebug", "_path = " + _path);
-
 
             File file = new File(_path);
             if (!file.exists()) return;
