@@ -23,8 +23,8 @@ import alauncher.cn.measuringtablet.bean.ResultData;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.StepBean;
 import alauncher.cn.measuringtablet.bean.StoreBean;
-import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
+import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.bean.RoleBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 
@@ -43,8 +43,8 @@ import alauncher.cn.measuringtablet.database.greenDao.db.ResultDataDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.SetupBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.StoreBeanDao;
-import alauncher.cn.measuringtablet.database.greenDao.db.UserDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.TemplateBeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.UserDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.RoleBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.TemplateResultBeanDao;
 
@@ -72,8 +72,8 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig setupBeanDaoConfig;
     private final DaoConfig stepBeanDaoConfig;
     private final DaoConfig storeBeanDaoConfig;
-    private final DaoConfig userDaoConfig;
     private final DaoConfig templateBeanDaoConfig;
+    private final DaoConfig userDaoConfig;
     private final DaoConfig roleBeanDaoConfig;
     private final DaoConfig templateResultBeanDaoConfig;
 
@@ -92,8 +92,8 @@ public class DaoSession extends AbstractDaoSession {
     private final SetupBeanDao setupBeanDao;
     private final StepBeanDao stepBeanDao;
     private final StoreBeanDao storeBeanDao;
-    private final UserDao userDao;
     private final TemplateBeanDao templateBeanDao;
+    private final UserDao userDao;
     private final RoleBeanDao roleBeanDao;
     private final TemplateResultBeanDao templateResultBeanDao;
 
@@ -146,11 +146,11 @@ public class DaoSession extends AbstractDaoSession {
         storeBeanDaoConfig = daoConfigMap.get(StoreBeanDao.class).clone();
         storeBeanDaoConfig.initIdentityScope(type);
 
-        userDaoConfig = daoConfigMap.get(UserDao.class).clone();
-        userDaoConfig.initIdentityScope(type);
-
         templateBeanDaoConfig = daoConfigMap.get(TemplateBeanDao.class).clone();
         templateBeanDaoConfig.initIdentityScope(type);
+
+        userDaoConfig = daoConfigMap.get(UserDao.class).clone();
+        userDaoConfig.initIdentityScope(type);
 
         roleBeanDaoConfig = daoConfigMap.get(RoleBeanDao.class).clone();
         roleBeanDaoConfig.initIdentityScope(type);
@@ -173,8 +173,8 @@ public class DaoSession extends AbstractDaoSession {
         setupBeanDao = new SetupBeanDao(setupBeanDaoConfig, this);
         stepBeanDao = new StepBeanDao(stepBeanDaoConfig, this);
         storeBeanDao = new StoreBeanDao(storeBeanDaoConfig, this);
-        userDao = new UserDao(userDaoConfig, this);
         templateBeanDao = new TemplateBeanDao(templateBeanDaoConfig, this);
+        userDao = new UserDao(userDaoConfig, this);
         roleBeanDao = new RoleBeanDao(roleBeanDaoConfig, this);
         templateResultBeanDao = new TemplateResultBeanDao(templateResultBeanDaoConfig, this);
 
@@ -193,8 +193,8 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(SetupBean.class, setupBeanDao);
         registerDao(StepBean.class, stepBeanDao);
         registerDao(StoreBean.class, storeBeanDao);
-        registerDao(User.class, userDao);
         registerDao(TemplateBean.class, templateBeanDao);
+        registerDao(User.class, userDao);
         registerDao(RoleBean.class, roleBeanDao);
         registerDao(TemplateResultBean.class, templateResultBeanDao);
     }
@@ -215,8 +215,8 @@ public class DaoSession extends AbstractDaoSession {
         setupBeanDaoConfig.clearIdentityScope();
         stepBeanDaoConfig.clearIdentityScope();
         storeBeanDaoConfig.clearIdentityScope();
-        userDaoConfig.clearIdentityScope();
         templateBeanDaoConfig.clearIdentityScope();
+        userDaoConfig.clearIdentityScope();
         roleBeanDaoConfig.clearIdentityScope();
         templateResultBeanDaoConfig.clearIdentityScope();
     }
@@ -281,12 +281,12 @@ public class DaoSession extends AbstractDaoSession {
         return storeBeanDao;
     }
 
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
     public TemplateBeanDao getTemplateBeanDao() {
         return templateBeanDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
     }
 
     public RoleBeanDao getRoleBeanDao() {

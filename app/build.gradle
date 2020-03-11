@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "alauncher.cn.measuringtablet"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 13
         versionName "v2.9_Bate_45Code"

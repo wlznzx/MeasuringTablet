@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Browser;
+import android.provider.MediaStore;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,12 +23,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.FileProvider;
+
+import com.bumptech.glide.Glide;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
@@ -42,9 +51,12 @@ import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
 import alauncher.cn.measuringtablet.pdf.PDFUtils;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
 import alauncher.cn.measuringtablet.widget.BorderEditView;
+import alauncher.cn.measuringtablet.widget.BorderImageView;
 import alauncher.cn.measuringtablet.widget.BorderTextView;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static alauncher.cn.measuringtablet.view.InputActivity.REQUEST_TAKE_PHOTO;
 
 public class Input2Activity extends BaseOActivity {
 
@@ -65,11 +77,23 @@ public class Input2Activity extends BaseOActivity {
     // aql
     private List<EditText> aqlEdts = new ArrayList<>();
 
-    // aql
+    // rosh
     private List<EditText> roshEdts = new ArrayList<>();
 
     // result;
     private List<List<EditText>> results = new ArrayList<>();
+
+    // resultImg;
+    private List<List<ImageView>> resultImgs = new ArrayList<>();
+
+    // max
+    private List<TextView> maxEdts = new ArrayList<>();
+
+    // min
+    private List<EditText> minEdts = new ArrayList<>();
+
+    // judge
+    private List<EditText> judgeEdts = new ArrayList<>();
 
     // CodeBean;
     private CodeBean mCodeBean;
@@ -93,6 +117,7 @@ public class Input2Activity extends BaseOActivity {
 
         for (int i = 0; i < 5; i++) {
             results.add(new ArrayList<>());
+            resultImgs.add(new ArrayList<>());
         }
 
         // 标题 + 签名栏;
@@ -200,28 +225,48 @@ public class Input2Activity extends BaseOActivity {
             for (int j = 0; j < 5; j++) {
                 LinearLayout dataLayout = new LinearLayout(this);
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
-                EditText _edt1 = getInputEditView(true);
-                dataLayout.addView(_edt1, getItemLayoutParams(2, 1));
-                if (results.get(j).size() < mParameter2Beans.size()) results.get(j).add(_edt1);
 
-                dataLayout.addView(getInputEditView(true), getItemLayoutParams(3, 1));
 
-                EditText _edt2 = getInputEditView(true);
-                dataLayout.addView(_edt2, getItemLayoutParams(2, 1));
-                if (results.get(j).size() < mParameter2Beans.size()) results.get(j).add(_edt2);
+                if (results.get(j).size() < mParameter2Beans.size()) {
+                    EditText _edt1 = getInputEditView(true);
+                    dataLayout.addView(_edt1, getItemLayoutParams(2, 1));
+                    results.get(j).add(_edt1);
+                    // 图片;
+                    dataLayout.addView(getImageView(), getItemLayoutParams(3, 1));
+                    ImageView img = getImageView();
+                    resultImgs.get(j).add(img);
+                } else {
+                    dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
+                    dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
+                }
 
-                dataLayout.addView(getInputEditView(true), getItemLayoutParams(3, 1));
 
-                EditText _edt3 = getInputEditView(true);
-                dataLayout.addView(_edt3, getItemLayoutParams(2, 1));
-                if (results.get(j).size() < mParameter2Beans.size()) results.get(j).add(_edt3);
+                if (results.get(j).size() < mParameter2Beans.size()) {
+                    EditText _edt2 = getInputEditView(true);
+                    dataLayout.addView(_edt2, getItemLayoutParams(2, 1));
+                    results.get(j).add(_edt2);
+                    dataLayout.addView(getImageView(), getItemLayoutParams(3, 1));
+                } else {
+                    dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
+                    dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
+                }
 
-                dataLayout.addView(getInputEditView(true), getItemLayoutParams(3, 1));
+
+                if (results.get(j).size() < mParameter2Beans.size()) {
+                    EditText _edt3 = getInputEditView(true);
+                    dataLayout.addView(_edt3, getItemLayoutParams(2, 1));
+                    results.get(j).add(_edt3);
+                    dataLayout.addView(getImageView(), getItemLayoutParams(3, 1));
+                } else {
+                    dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
+                    dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
+                }
                 mainLayout.addView(dataLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
 
-            /*
+
             // 数据；
+            /*
             for (int j = 0; j < mResultBean3s.size(); j++) {
                 String value1 = i * 3 + 0 <= (mResultBean3s.get(j).getMValues().size() - 1) ? mResultBean3s.get(j).getMValues().get(i * 3 + 0) : " ";
                 String path1 = i * 3 + 0 <= (mResultBean3s.get(j).getMPicPaths().size() - 1) ? mResultBean3s.get(j).getMPicPaths().get(i * 3 + 0) : " ";
@@ -237,17 +282,37 @@ public class Input2Activity extends BaseOActivity {
                 table.addCell(getDataCell(value3, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
                 table.addCell(getDataCell(path3, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
             }
+             */
 
-            // 最大值；
-            table.addCell(getDataCell("最大值", 1, 1, dataTitleColor));
-            table.addCell(getDataCell(i * 3 + 0 < _maxs.size() ?
-                    String.valueOf(_maxs.get(i * 3 + 0)) : " ", 1, 5, dataLineOneColor));
-            table.addCell(getDataCell(i * 3 + 1 < _maxs.size() ?
-                    String.valueOf(_maxs.get(i * 3 + 1)) : " ", 1, 5, dataLineOneColor));
-            table.addCell(getDataCell(i * 3 + 2 < _maxs.size() ?
-                    String.valueOf(_maxs.get(i * 3 + 2)) : " ", 1, 5, dataLineOneColor));
+            // 最大值;
+            LinearLayout maxLayout = new LinearLayout(this);
+            maxLayout.addView(getInfoTV("最大值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+            TextView maxTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
+            maxLayout.addView(maxTV1, getItemLayoutParams(5, 1));
+            TextView maxTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
+            maxLayout.addView(maxTV2, getItemLayoutParams(5, 1));
+            TextView maxTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
+            maxLayout.addView(maxTV3, getItemLayoutParams(5, 1));
+            if (maxEdts.size() < mParameter2Beans.size()) maxEdts.add(maxTV1);
+            if (maxEdts.size() < mParameter2Beans.size()) maxEdts.add(maxTV2);
+            if (maxEdts.size() < mParameter2Beans.size()) maxEdts.add(maxTV3);
+            mainLayout.addView(maxLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 最小值；
+            LinearLayout minLayout = new LinearLayout(this);
+            minLayout.addView(getInfoTV("最小值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+            TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
+            minLayout.addView(minTV1, getItemLayoutParams(5, 1));
+            TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
+            minLayout.addView(minTV2, getItemLayoutParams(5, 1));
+            TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
+            minLayout.addView(minTV3, getItemLayoutParams(5, 1));
+            if (minEdts.size() < mParameter2Beans.size()) maxEdts.add(minTV1);
+            if (minEdts.size() < mParameter2Beans.size()) maxEdts.add(minTV2);
+            if (minEdts.size() < mParameter2Beans.size()) maxEdts.add(minTV3);
+            mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+
+            /*
             table.addCell(getDataCell("最小值", 1, 1, dataTitleColor));
             table.addCell(getDataCell(i * 3 + 0 < _mins.size() ?
                     String.valueOf(_mins.get(i * 3 + 0)) : " ", 1, 5, dataLineOneColor));
@@ -255,19 +320,18 @@ public class Input2Activity extends BaseOActivity {
                     String.valueOf(_mins.get(i * 3 + 1)) : " ", 1, 5, dataLineOneColor));
             table.addCell(getDataCell(i * 3 + 2 < _mins.size() ?
                     String.valueOf(_mins.get(i * 3 + 2)) : " ", 1, 5, dataLineOneColor));
+            */
 
             // 判定;
-            table.addCell(getDataCell("判定", 1, 1, dataTitleColor));
-            String judge1 = i * 3 + 0 < _results.size() ?
-                    String.valueOf(_results.get(i * 3 + 0)) : " ";
-            String judge2 = i * 3 + 1 < _results.size() ?
-                    String.valueOf(_results.get(i * 3 + 1)) : " ";
-            String judge3 = i * 3 + 2 < _results.size() ?
-                    String.valueOf(_results.get(i * 3 + 2)) : " ";
-            table.addCell(getDataCell(judge1, 1, 5, judge1.equals("OK") ? dataOKColor : dataNGColor));
-            table.addCell(getDataCell(judge2, 1, 5, judge2.equals("OK") ? dataOKColor : dataNGColor));
-            table.addCell(getDataCell(judge3, 1, 5, judge3.equals("OK") ? dataOKColor : dataNGColor));
-             */
+            LinearLayout judgeLayout = new LinearLayout(this);
+            judgeLayout.addView(getInfoTV("判定", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+            TextView judgeTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
+            judgeLayout.addView(judgeTV1, getItemLayoutParams(5, 1));
+            TextView judgeTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
+            judgeLayout.addView(judgeTV2, getItemLayoutParams(5, 1));
+            TextView judgeTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
+            judgeLayout.addView(judgeTV3, getItemLayoutParams(5, 1));
+            mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
         }
 
         int bottomRow = Math.max(Math.max(mTemplateBean.getAQLList().size(), mTemplateBean.getRoHSList().size()), 5);
@@ -281,6 +345,7 @@ public class Input2Activity extends BaseOActivity {
             aqlLayout.addView(getInfoTV(mTemplateBean.getAQLList().size() > j ? mTemplateBean.getAQLList().get(j) : " ", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
         }
         bottomLayout.addView(aqlLayout, getItemLayoutParams(1, 1 * bottomRow));
+
         // aql result
         LinearLayout aqlResultLayout = new LinearLayout(this);
         aqlResultLayout.setOrientation(LinearLayout.VERTICAL);
@@ -342,6 +407,23 @@ public class Input2Activity extends BaseOActivity {
         return params;
     }
 
+
+    public ImageView currentImg = null;
+
+    public ImageView getImageView() {
+        ImageView imgTV = new BorderImageView(this);
+        imgTV.setImageResource(R.drawable.add_circle);
+        imgTV.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imgTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentImg = imgTV;
+                dispatchTakePictureIntent();
+            }
+        });
+        return imgTV;
+    }
+
     public TextView getInfoTV(String msg, int color) {
         TextView tv = new BorderTextView(this);
         tv.setMaxLines(1);
@@ -397,6 +479,22 @@ public class Input2Activity extends BaseOActivity {
             // doSave();
 
             new ExportedTask().execute();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    if (currentImg != null) {
+                        Glide.with(this).load(currentPhotoPath).into(currentImg);
+                        currentImg.setTag(currentPhotoPath);
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -536,5 +634,48 @@ public class Input2Activity extends BaseOActivity {
         } catch (ActivityNotFoundException e) {
             Log.w("URLSpan", "Activity was not found for intent, " + intent.toString());
         }
+    }
+
+    static final int REQUEST_TAKE_PHOTO = 2;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "alauncher.cn.measuringtablet.fileProvider",
+                        photoFile);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg", /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 }
