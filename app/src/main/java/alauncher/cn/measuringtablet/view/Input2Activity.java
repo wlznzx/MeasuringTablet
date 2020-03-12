@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
@@ -43,6 +44,7 @@ import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
+import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
@@ -50,13 +52,12 @@ import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
 import alauncher.cn.measuringtablet.pdf.PDFUtils;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
+import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.widget.BorderEditView;
 import alauncher.cn.measuringtablet.widget.BorderImageView;
 import alauncher.cn.measuringtablet.widget.BorderTextView;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static alauncher.cn.measuringtablet.view.InputActivity.REQUEST_TAKE_PHOTO;
 
 public class Input2Activity extends BaseOActivity {
 
@@ -90,13 +91,22 @@ public class Input2Activity extends BaseOActivity {
     private List<TextView> maxEdts = new ArrayList<>();
 
     // min
-    private List<EditText> minEdts = new ArrayList<>();
+    private List<TextView> minEdts = new ArrayList<>();
 
     // judge
-    private List<EditText> judgeEdts = new ArrayList<>();
+    private List<TextView> judgeEdts = new ArrayList<>();
+
+    private DeviceInfoBean mDeviceInfoBean;
 
     // CodeBean;
     private CodeBean mCodeBean;
+
+    private TextView allResultTV;
+
+    private List<Double> maxs = new ArrayList<>();
+    private List<Double> mins = new ArrayList<>();
+    private List<String> judges = new ArrayList<>();
+    private String allJudge = "OK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,10 +124,14 @@ public class Input2Activity extends BaseOActivity {
         mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
         mParameter2Beans = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
         mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
 
         for (int i = 0; i < 5; i++) {
             results.add(new ArrayList<>());
             resultImgs.add(new ArrayList<>());
+            maxs.add(Double.valueOf(-100000));
+            mins.add(Double.valueOf(1000000));
+            judges.add("OK");
         }
 
         // 标题 + 签名栏;
@@ -146,9 +160,13 @@ public class Input2Activity extends BaseOActivity {
             for (int j = 0; j < colSize; j++) {
                 __layout.addView(getInfoTV((i * 4 + j) < mTemplateBean.getTitleList().size() ?
                         mTemplateBean.getTitleList().get(i * 4 + j) : "", ColorConstants.titleColor), getItemLayoutParams(1, 1));
-                EditText _edt = getInputEditView(false);
-                __layout.addView(_edt, getItemLayoutParams(1, 1));
-                if (titleEdts.size() < mTemplateBean.getTitleList().size()) titleEdts.add(_edt);
+                if (titleEdts.size() < mTemplateBean.getTitleList().size()) {
+                    EditText _edt = getInputEditView(false);
+                    __layout.addView(_edt, getItemLayoutParams(1, 1));
+                    titleEdts.add(_edt);
+                } else {
+                    __layout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(1, 1));
+                }
             }
             mainLayout.addView(__layout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
         }
@@ -232,8 +250,8 @@ public class Input2Activity extends BaseOActivity {
                     dataLayout.addView(_edt1, getItemLayoutParams(2, 1));
                     results.get(j).add(_edt1);
                     // 图片;
-                    dataLayout.addView(getImageView(), getItemLayoutParams(3, 1));
                     ImageView img = getImageView();
+                    dataLayout.addView(img, getItemLayoutParams(3, 1));
                     resultImgs.get(j).add(img);
                 } else {
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
@@ -245,7 +263,9 @@ public class Input2Activity extends BaseOActivity {
                     EditText _edt2 = getInputEditView(true);
                     dataLayout.addView(_edt2, getItemLayoutParams(2, 1));
                     results.get(j).add(_edt2);
-                    dataLayout.addView(getImageView(), getItemLayoutParams(3, 1));
+                    ImageView img = getImageView();
+                    dataLayout.addView(img, getItemLayoutParams(3, 1));
+                    resultImgs.get(j).add(img);
                 } else {
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
@@ -256,7 +276,9 @@ public class Input2Activity extends BaseOActivity {
                     EditText _edt3 = getInputEditView(true);
                     dataLayout.addView(_edt3, getItemLayoutParams(2, 1));
                     results.get(j).add(_edt3);
-                    dataLayout.addView(getImageView(), getItemLayoutParams(3, 1));
+                    ImageView img = getImageView();
+                    dataLayout.addView(img, getItemLayoutParams(3, 1));
+                    resultImgs.get(j).add(img);
                 } else {
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
@@ -282,7 +304,7 @@ public class Input2Activity extends BaseOActivity {
                 table.addCell(getDataCell(value3, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
                 table.addCell(getDataCell(path3, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
             }
-             */
+            */
 
             // 最大值;
             LinearLayout maxLayout = new LinearLayout(this);
@@ -307,9 +329,9 @@ public class Input2Activity extends BaseOActivity {
             minLayout.addView(minTV2, getItemLayoutParams(5, 1));
             TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
             minLayout.addView(minTV3, getItemLayoutParams(5, 1));
-            if (minEdts.size() < mParameter2Beans.size()) maxEdts.add(minTV1);
-            if (minEdts.size() < mParameter2Beans.size()) maxEdts.add(minTV2);
-            if (minEdts.size() < mParameter2Beans.size()) maxEdts.add(minTV3);
+            if (minEdts.size() < mParameter2Beans.size()) minEdts.add(minTV1);
+            if (minEdts.size() < mParameter2Beans.size()) minEdts.add(minTV2);
+            if (minEdts.size() < mParameter2Beans.size()) minEdts.add(minTV3);
             mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             /*
@@ -331,6 +353,9 @@ public class Input2Activity extends BaseOActivity {
             judgeLayout.addView(judgeTV2, getItemLayoutParams(5, 1));
             TextView judgeTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
             judgeLayout.addView(judgeTV3, getItemLayoutParams(5, 1));
+            if (judgeEdts.size() < mParameter2Beans.size()) judgeEdts.add(judgeTV1);
+            if (judgeEdts.size() < mParameter2Beans.size()) judgeEdts.add(judgeTV2);
+            if (judgeEdts.size() < mParameter2Beans.size()) judgeEdts.add(judgeTV3);
             mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
         }
 
@@ -350,9 +375,13 @@ public class Input2Activity extends BaseOActivity {
         LinearLayout aqlResultLayout = new LinearLayout(this);
         aqlResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
-            EditText _edt = getInputEditView(false);
-            aqlResultLayout.addView(_edt, getItemVLayoutParams(1, 1));
-            if (aqlEdts.size() < mTemplateBean.getAQLList().size()) aqlEdts.add(_edt);
+            if (aqlEdts.size() < mTemplateBean.getAQLList().size()) {
+                EditText _edt = getInputEditView(false);
+                aqlResultLayout.addView(_edt, getItemVLayoutParams(1, 1));
+                aqlEdts.add(_edt);
+            } else {
+                aqlResultLayout.addView(getInfoTV("", Color.WHITE), getItemVLayoutParams(1, 1));
+            }
         }
         bottomLayout.addView(aqlResultLayout, getItemLayoutParams(1, 1 * bottomRow));
 
@@ -370,17 +399,23 @@ public class Input2Activity extends BaseOActivity {
         LinearLayout roshResultLayout = new LinearLayout(this);
         roshResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
-            EditText _edt = getInputEditView(false);
-            roshResultLayout.addView(_edt, getItemVLayoutParams(1, 1));
-            if (roshEdts.size() < mTemplateBean.getRoHSList().size()) roshEdts.add(_edt);
+            if (roshEdts.size() < mTemplateBean.getRoHSList().size()) {
+                EditText _edt = getInputEditView(false);
+                roshResultLayout.addView(_edt, getItemVLayoutParams(1, 1));
+                roshEdts.add(_edt);
+            } else {
+                roshResultLayout.addView(getInfoTV("", Color.WHITE), getItemVLayoutParams(1, 1));
+            }
         }
         bottomLayout.addView(roshResultLayout, getItemLayoutParams(1, 1 * bottomRow));
         android.util.Log.d("wlDebug", "roshEdts.size() = " + roshEdts.size());
+
         // Judge Result;
         LinearLayout judgeResultLayout = new LinearLayout(this);
         judgeResultLayout.setOrientation(LinearLayout.VERTICAL);
         judgeResultLayout.addView(getInfoTV("综合判断", ColorConstants.titleColor), getItemVLayoutParams(4, 1 * (bottomRow - 2)));
-        judgeResultLayout.addView(getInfoTV("合格", ColorConstants.titleColor), getItemVLayoutParams(4, 1 * 2));
+        allResultTV = getInfoTV("OK", ColorConstants.titleColor);
+        judgeResultLayout.addView(allResultTV, getItemVLayoutParams(4, 1 * 2));
         bottomLayout.addView(judgeResultLayout, getItemLayoutParams(1, 1 * bottomRow));
 
         mainLayout.addView(bottomLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1 * bottomRow, 1));
@@ -413,6 +448,7 @@ public class Input2Activity extends BaseOActivity {
     public ImageView getImageView() {
         ImageView imgTV = new BorderImageView(this);
         imgTV.setImageResource(R.drawable.add_circle);
+        imgTV.setPadding(0, 3, 0, 3);
         imgTV.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         imgTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -443,9 +479,10 @@ public class Input2Activity extends BaseOActivity {
         if (numOnly) {
             DigitsKeyListener numericOnlyListener = new DigitsKeyListener(false, true);
             et.setKeyListener(numericOnlyListener);
-            et.setText("1");
+            et.setText("0");
         } else {
-            et.setText("测试");
+            // et.setText("测试");
+            et.setHint(R.string.hint);
         }
         return et;
     }
@@ -462,7 +499,6 @@ public class Input2Activity extends BaseOActivity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //...To-do
                             // doSave();
                         }
                     });
@@ -477,9 +513,14 @@ public class Input2Activity extends BaseOActivity {
             normalDialog.show();
         } else {
             // doSave();
-
             new ExportedTask().execute();
         }
+    }
+
+    @OnClick(R.id.btn_refresh)
+    public void refresh() {
+        // 刷新;
+        new judgeTask().execute();
     }
 
     @Override
@@ -505,6 +546,76 @@ public class Input2Activity extends BaseOActivity {
             }
         }
         return false;
+    }
+
+    public class judgeTask extends AsyncTask<String, Integer, String> {
+
+        private ProgressDialog dialog;
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(Input2Activity.this);
+            dialog.setTitle("刷新中.");
+            dialog.setMessage("正在刷新数据 , 请稍等.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
+        @Override
+        protected String doInBackground(String... params) {
+            //处理耗时操作
+            for (int i = 0; i < mParameter2Beans.size(); i++) {
+                for (int j = 0; j < 5; j++) {
+                    try {
+                        double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                        if (_value < mins.get(i)) {
+                            mins.set(i, _value);
+                        }
+                        if (_value > maxs.get(i)) {
+                            maxs.set(i, _value);
+                        }
+                        if (_value > mParameter2Beans.get(i).getUpper_tolerance_value()
+                                || _value < mParameter2Beans.get(i).getLower_tolerance_value()) {
+                            judges.set(i, "NG");
+                            allJudge = "NG";
+                        } else {
+                            // judge = "OK";
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+            return "后台任务执行完毕";
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+            //"loading..." + progresses[0] + "%"
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            dialog.dismiss();
+            for (int i = 0; i < mParameter2Beans.size(); i++) {
+                maxEdts.get(i).setText(String.valueOf(maxs.get(i)));
+                minEdts.get(i).setText(String.valueOf(maxs.get(i)));
+                judgeEdts.get(i).setText(judges.get(i));
+                judgeEdts.get(i).setBackgroundColor(judges.get(i).equals("OK")
+                        ? ColorConstants.dataOKColor : ColorConstants.dataNGColor);
+                allResultTV.setText(allJudge);
+                allResultTV.setBackgroundColor(allJudge.equals("OK")
+                        ? ColorConstants.dataOKColor : ColorConstants.dataNGColor);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
     }
 
     public class ExportedTask extends AsyncTask<String, Integer, String> {
@@ -533,6 +644,30 @@ public class Input2Activity extends BaseOActivity {
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
+            for (int i = 0; i < mParameter2Beans.size(); i++) {
+                for (int j = 0; j < 5; j++) {
+                    try {
+                        double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                        if (_value < mins.get(i)) {
+                            mins.set(i, _value);
+                        }
+                        if (_value > maxs.get(i)) {
+                            maxs.set(i, _value);
+                        }
+                        if (_value > mParameter2Beans.get(i).getUpper_tolerance_value()
+                                || _value < mParameter2Beans.get(i).getLower_tolerance_value()) {
+                            judges.set(i, "NG");
+                            allJudge = "NG";
+                        } else {
+                            // judge = "OK";
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+            doSave();
+
             try {
                 byte[] img = null;
                 if (mCodeBean.getWorkpiecePic() == null) {
@@ -583,6 +718,7 @@ public class Input2Activity extends BaseOActivity {
                 if (file.exists()) file.delete();
                 file.getParentFile().mkdirs();
                 PDFUtils.createNTTable(mTemplateBean, mTemplateResultBean, mParameter2Beans, mResultBean3s, img);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -591,7 +727,7 @@ public class Input2Activity extends BaseOActivity {
 
         /*这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
          但是这里取到的是一个数组,所以要用progesss[0]来取值
-         第n个参数就用progress[n]来取值   */
+         第n个参数就用progress[n]来取值*/
         @Override
         protected void onProgressUpdate(Integer... progresses) {
             //"loading..." + progresses[0] + "%"
@@ -610,6 +746,46 @@ public class Input2Activity extends BaseOActivity {
         protected void onCancelled() {
 
         }
+    }
+
+    public void doSave() {
+        List<ResultBean3> updateBeans = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            // 1
+            ResultBean3 _workpiece1Bean = new ResultBean3();
+
+            _workpiece1Bean.setHandlerAccout(App.handlerName);
+            _workpiece1Bean.setCodeID(App.getSetupBean().getCodeID());
+            _workpiece1Bean.setResult(judges.get(i));
+            _workpiece1Bean.setTimeStamp(System.currentTimeMillis());
+
+            List<String> values = new ArrayList();
+            for (int j = 0; j < mParameter2Beans.size(); j++) {
+                values.add(results.get(i).get(j).getText().toString().trim());
+            }
+            List<String> paths = new ArrayList();
+            for (int j = 0; j < mParameter2Beans.size(); j++) {
+                paths.add((String) resultImgs.get(i).get(j).getTag());
+            }
+            _workpiece1Bean.setMValues(values);
+            _workpiece1Bean.setMPicPaths(paths);
+            App.getDaoSession().getResultBean3Dao().insert(_workpiece1Bean);
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (ResultBean3 _b3 : updateBeans) {
+                    try {
+                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        // Toast.makeText(this, "保存了" + saveNum + "件工件", Toast.LENGTH_SHORT).show();
     }
 
     public void openPDFInBrowser(Context context, String url) {

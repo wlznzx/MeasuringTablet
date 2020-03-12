@@ -318,5 +318,6 @@
     <string name="save_success">保存成功</string>
     <string name="edit">编辑</string>
     <string name="exprot">导出PDF</string>
+    <string name="hint">请输入</string>
 
 </resources>

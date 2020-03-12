@@ -366,6 +366,7 @@ public class InputActivity extends BaseOLandscapeActivity {
     }
 
     static final int REQUEST_TAKE_PHOTO = 2;
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent

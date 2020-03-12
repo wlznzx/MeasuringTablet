@@ -53,8 +53,7 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="gone">
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/btn_refresh"
