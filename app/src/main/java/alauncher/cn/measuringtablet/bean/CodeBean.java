@@ -17,9 +17,7 @@ import java.util.Arrays;
 public class CodeBean {
 
     @Id(autoincrement = true)
-    public Long id;
-
-    public long codeID;
+    public Long codeID;
 
     public String name;
 
@@ -31,11 +29,19 @@ public class CodeBean {
 
     public byte[] workpiecePic;
 
-    @Generated(hash = 23474324)
-    public CodeBean(Long id, long codeID, String name, String machineTool,
-            String parts, boolean isEnableStep, byte[] workpiecePic) {
-        this.id = id;
+    @Generated(hash = 1043518827)
+    public CodeBean(Long codeID, String name, String machineTool, String parts,
+                    boolean isEnableStep, byte[] workpiecePic) {
         this.codeID = codeID;
+        this.name = name;
+        this.machineTool = machineTool;
+        this.parts = parts;
+        this.isEnableStep = isEnableStep;
+        this.workpiecePic = workpiecePic;
+    }
+
+    public CodeBean(String name, String machineTool, String parts,
+                    boolean isEnableStep, byte[] workpiecePic) {
         this.name = name;
         this.machineTool = machineTool;
         this.parts = parts;
@@ -47,19 +53,11 @@ public class CodeBean {
     public CodeBean() {
     }
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getCodeID() {
+    public Long getCodeID() {
         return this.codeID;
     }
 
-    public void setCodeID(long codeID) {
+    public void setCodeID(Long codeID) {
         this.codeID = codeID;
     }
 
@@ -102,6 +100,16 @@ public class CodeBean {
     public void setWorkpiecePic(byte[] workpiecePic) {
         this.workpiecePic = workpiecePic;
     }
-    
 
+    @Override
+    public String toString() {
+        return "CodeBean{" +
+                "codeID=" + codeID +
+                ", name='" + name + '\'' +
+                ", machineTool='" + machineTool + '\'' +
+                ", parts='" + parts + '\'' +
+                ", isEnableStep=" + isEnableStep +
+                ", workpiecePic=" + Arrays.toString(workpiecePic) +
+                '}';
+    }
 }

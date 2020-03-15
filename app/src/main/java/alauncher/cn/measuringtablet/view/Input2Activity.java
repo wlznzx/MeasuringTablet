@@ -52,6 +52,8 @@ import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.pdf.PDFUtils;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
+import alauncher.cn.measuringtablet.utils.DateUtils;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.widget.BorderEditView;
 import alauncher.cn.measuringtablet.widget.BorderImageView;
@@ -572,28 +574,7 @@ public class Input2Activity extends BaseOActivity {
         @Override
         protected String doInBackground(String... params) {
             //处理耗时操作
-            for (int i = 0; i < mParameterBean2s.size(); i++) {
-                for (int j = 0; j < 5; j++) {
-                    try {
-                        double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
-                        if (_value < mins.get(i)) {
-                            mins.set(i, _value);
-                        }
-                        if (_value > maxs.get(i)) {
-                            maxs.set(i, _value);
-                        }
-                        if (_value > mParameterBean2s.get(i).getUpperToleranceValue()
-                                || _value < mParameterBean2s.get(i).getLowerToleranceValue()) {
-                            judges.set(i, "NG");
-                            allJudge = "NG";
-                        } else {
-                            // judge = "OK";
-                        }
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
+            doJudges();
             return "后台任务执行完毕";
         }
 
@@ -623,15 +604,41 @@ public class Input2Activity extends BaseOActivity {
         }
     }
 
+    public void doJudges() {
+        for (int i = 0; i < mParameterBean2s.size(); i++) {
+            for (int j = 0; j < 5; j++) {
+                try {
+                    double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                    if (_value < mins.get(i)) {
+                        mins.set(i, _value);
+                    }
+                    if (_value > maxs.get(i)) {
+                        maxs.set(i, _value);
+                    }
+                    if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
+                            || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
+                        judges.set(i, "NG");
+                        allJudge = "NG";
+                    } else {
+                        // judge = "OK";
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
+
     public class ExportedTask extends AsyncTask<String, Integer, String> {
 
         private ProgressDialog dialog;
 
-        private String path = Environment.getExternalStorageDirectory() + "/ETGate/";
+        private String path = "/mnt/sdcard/ETGate/";
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override
         protected void onPreExecute() {
+            path = path + "table_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".pdf";
             dialog = new ProgressDialog(Input2Activity.this);
             dialog.setTitle("导出");
             dialog.setMessage("正在导出数据 , 请稍等.");
@@ -649,28 +656,7 @@ public class Input2Activity extends BaseOActivity {
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-            for (int i = 0; i < mParameterBean2s.size(); i++) {
-                for (int j = 0; j < 5; j++) {
-                    try {
-                        double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
-                        if (_value < mins.get(i)) {
-                            mins.set(i, _value);
-                        }
-                        if (_value > maxs.get(i)) {
-                            maxs.set(i, _value);
-                        }
-                        if (_value > mParameterBean2s.get(i).getUpperToleranceValue()
-                                || _value < mParameterBean2s.get(i).getLowerToleranceValue()) {
-                            judges.set(i, "NG");
-                            allJudge = "NG";
-                        } else {
-                            // judge = "OK";
-                        }
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
+            doJudges();
             doSave();
 
             try {
@@ -703,6 +689,8 @@ public class Input2Activity extends BaseOActivity {
                 }
                 mTemplateResultBean.setRoHSList(roshLists);
 
+                mTemplateResultBean.setAllJudge(allJudge);
+
                 mResultBean3s.clear();
                 for (int i = 0; i < results.size(); i++) {
                     ResultBean3 _bean = new ResultBean3();
@@ -711,19 +699,22 @@ public class Input2Activity extends BaseOActivity {
                     for (EditText edt : results.get(i)) {
                         values.add(edt.getText().toString().trim());
                     }
+                    for (int j = 0; j < mParameterBean2s.size(); j++) {
+                        picPaths.add((String) resultImgs.get(i).get(j).getTag());
+                    }
                     _bean.setMValues(values);
                     _bean.setMPicPaths(picPaths);
                     _bean.setHandlerAccout("hhb");
-                    _bean.setResult("OK");
+                    _bean.setResult(judges.get(i));
                     _bean.setWorkid_extra("");
                     mResultBean3s.add(_bean);
                     android.util.Log.d("wlDebug", _bean.toString());
                 }
 
-                File file = new File(PDFUtils.DEST);
+                File file = new File(path);
                 if (file.exists()) file.delete();
                 file.getParentFile().mkdirs();
-                PDFUtils.createNTTable(mTemplateBean, mTemplateResultBean, mParameterBean2s, mResultBean3s, img);
+                PDFUtils.createNTTable(mTemplateBean, mTemplateResultBean, mParameterBean2s, mResultBean3s, img, path);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -744,7 +735,8 @@ public class Input2Activity extends BaseOActivity {
         @Override
         protected void onPostExecute(String result) {
             dialog.dismiss();
-            openPDFInNative(Input2Activity.this, PDFUtils.DEST);
+            DialogUtils.showDialog(Input2Activity.this, getResources().getString(R.string.pdf_export_title), getResources().getString(R.string.pdf_export_msg) + path);
+            openPDFInNative(Input2Activity.this, path);
         }
 
         //onCancelled方法用于在取消执行中的任务时更改UI
@@ -773,6 +765,7 @@ public class Input2Activity extends BaseOActivity {
             List<String> paths = new ArrayList();
             for (int j = 0; j < mParameterBean2s.size(); j++) {
                 paths.add((String) resultImgs.get(i).get(j).getTag());
+                if (j == 0) paths.set(j, "/mnt/sdcard/e0bfe5aa51336f4508397adc87992263.jpg");
             }
             _workpiece1Bean.setMValues(values);
             _workpiece1Bean.setMPicPaths(paths);

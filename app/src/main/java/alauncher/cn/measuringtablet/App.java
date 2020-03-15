@@ -533,15 +533,14 @@ public class App extends MultiDexApplication {
                 getDaoSession().getRoleBeanDao().insert(_bean);
             }
 
-            /*
+            /**/
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
                 CodeBean _bean = Constants.defaultCodeBeans.get(i);
-                _bean.setCodeID(i);
-                _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
-                _bean.setParts(getResources().getString(R.string.spare_parts) + i);
+                _bean.setMachineTool(getResources().getString(R.string.machine_tool));
+                _bean.setParts(getResources().getString(R.string.spare_parts));
                 getDaoSession().getCodeBeanDao().insert(_bean);
             }
-            */
+
         }
         // initTestDatas();
     }

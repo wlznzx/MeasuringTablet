@@ -769,7 +769,7 @@ public class InputActivity extends BaseOLandscapeActivity {
                             actionTips.setText(App.handlerName + " 程序" + App.getSetupBean().getCodeID());
                         }
                         SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
-                        _bean.setCodeID((int) _CodeBean.getCodeID());
+                        _bean.setCodeID(_CodeBean.getCodeID().intValue());
                         App.getDaoSession().getSetupBeanDao().update(_bean);
 
                         _dialog.dismiss();

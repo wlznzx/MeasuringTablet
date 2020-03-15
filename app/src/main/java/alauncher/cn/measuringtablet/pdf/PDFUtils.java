@@ -1,5 +1,6 @@
 package alauncher.cn.measuringtablet.pdf;
 
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -22,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
@@ -41,7 +41,7 @@ public class PDFUtils {
      */
 
 
-    public static final String DEST = "/mnt/sdcard/table_android_table.pdf";
+    // public static final String DEST = "/mnt/sdcard/table_android_table.pdf";
 
 
     // E4F2F6
@@ -74,7 +74,7 @@ public class PDFUtils {
     }
 
     public static void createNTTable(TemplateBean mTemplateBean, TemplateResultBean pTemplateResultBean,
-                                     List<ParameterBean2> mParameter2Beans, List<ResultBean3> pResultBean3s, byte[] img) throws IOException, DocumentException {
+                                     List<ParameterBean2> mParameter2Beans, List<ResultBean3> pResultBean3s, byte[] img, String path) throws IOException, DocumentException {
 
         BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
         Font font = new Font(bf, 8, Font.NORMAL);
@@ -82,8 +82,15 @@ public class PDFUtils {
 
         Document document = new Document();
         // 创建PdfWriter对象
-        // PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(DEST));
-        // writer.setPageEvent(new PDFBuilder());
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(path));
+        PDFBuilder builder = new PDFBuilder();
+        builder.setHeaders(mTemplateBean.headerLeft == null ? "" : mTemplateBean.headerLeft,
+                mTemplateBean.headerMid == null ? "" : mTemplateBean.headerMid,
+                mTemplateBean.headerRight == null ? "" : mTemplateBean.headerRight);
+        builder.setFooters(mTemplateBean.footerLeft == null ? "" : mTemplateBean.footerLeft,
+                mTemplateBean.footerMid == null ? "" : mTemplateBean.footerMid,
+                mTemplateBean.footerRight == null ? "" : mTemplateBean.footerRight);
+        writer.setPageEvent(builder);
         // 打开文档
         document.open();
         // 添加表格，4列
@@ -199,9 +206,6 @@ public class PDFUtils {
             }
         }
 
-//        android.util.Log.d("wlDebug", "_maxs = " + _maxs);
-//        android.util.Log.d("wlDebug", "_mins = " + _mins);
-//        android.util.Log.d("wlDebug", "_results = " + _results);
         for (int i = 0; i < pageSum; i++) {
             // i * 3 + 0 > mParameter2Beans.size() -1  ? String.valueOf(mParameter2Beans.get(i * 3 + 0).getIndex()) : " ";
 
@@ -251,7 +255,11 @@ public class PDFUtils {
                 String path3 = i * 3 + 2 <= (pResultBean3s.get(j).getMPicPaths().size() - 1) ? pResultBean3s.get(j).getMPicPaths().get(i * 3 + 2) : " ";
                 table.addCell(getDataCell(String.valueOf((j + 1)), 1, 1, dataHeader));
                 table.addCell(getDataCell(value1, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
-                table.addCell(getDataCell(path1, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
+                if (path1 == null || path1.equals(" ")) {
+                    table.addCell(getDataCell(path1, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
+                } else {
+                    table.addCell(getDataImgCell(path1, 1, 3));
+                }
                 table.addCell(getDataCell(value2, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
                 table.addCell(getDataCell(path2, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
                 table.addCell(getDataCell(value3, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
@@ -291,7 +299,7 @@ public class PDFUtils {
         // 底部 6 ，6 ，4；
         int bottomRow = Math.max(Math.max(mTemplateBean.getAQLList().size(), mTemplateBean.getRoHSList().size()), 5);
 
-        android.util.Log.d("wlDebug", "bottomRow = " + bottomRow);
+//        android.util.Log.d("wlDebug", "bottomRow = " + bottomRow);
 
         table.addCell(getBottomCell("外观检查一般I级\nAQL=0.15", bottomRow, 2, bottomColor));
         table.addCell(getBottomCell(mTemplateBean.getAQLList().size() > 0 ? mTemplateBean.getAQLList().get(0) : " ", 1, 4, titleColor));
@@ -310,7 +318,7 @@ public class PDFUtils {
             table.addCell(getBottomCell(pTemplateResultBean.getRoHSList().size() > i ? pTemplateResultBean.getRoHSList().get(i) : " ", 1, 1, BaseColor.WHITE));
         }
 
-        table.addCell(getBottomCell("不合格", 2, 2, judgeColor));
+        table.addCell(getBottomCell(pTemplateResultBean.getAllJudge(), 2, 2, pTemplateResultBean.getAllJudge().equals("OK") ? dataOKColor : dataNGColor));
 
         for (int i = bottomRow - 1; i < bottomRow; i++) {
             android.util.Log.d("wlDebug", "i = " + i + " " + (mTemplateBean.getRoHSList().size() > i ? mTemplateBean.getRoHSList().get(i) : " "));
@@ -320,8 +328,24 @@ public class PDFUtils {
             table.addCell(getBottomCell(pTemplateResultBean.getRoHSList().size() > i ? pTemplateResultBean.getRoHSList().get(i) : " ", 1, 1, BaseColor.WHITE));
         }
         document.add(table);
+
         // 关闭文档
         document.close();
+    }
+
+    private static PdfPCell getDataImgCell(String path, int row, int col) throws IOException, BadElementException {
+        Image cellIMG = Image.getInstance(path);
+        PdfPCell cell4 = new PdfPCell(cellIMG, true);
+        cell4.setRowspan(row);
+        cell4.setColspan(col);
+        cell4.setBorderColor(BaseColor.BLACK);
+        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell4.setPaddingLeft(5);
+        cell4.setPaddingRight(5);
+        cell4.setPaddingTop(5);
+        cell4.setPaddingBottom(5);
+        return cell4;
     }
 
 
@@ -423,67 +447,5 @@ public class PDFUtils {
             e.printStackTrace();
         }
         return blackFont;
-    }
-
-    // 模板
-    public PdfTemplate total;
-
-    // 基础字体对象
-    public BaseFont bf = null;
-
-    // 利用基础字体生成的字体对象，一般用于生成中文文字
-    public Font fontDetail = null;
-
-    public int presentFontSize = 8;
-
-    public String header = "itext测试页眉";
-
-    public void addPage(PdfWriter writer, Document document) {
-        //设置分页页眉页脚字体
-        try {
-            if (bf == null) {
-                bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", false);
-            }
-            if (fontDetail == null) {
-                fontDetail = new Font(bf, presentFontSize, Font.NORMAL);// 数据体字体
-            }
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // 1.写入页眉
-        ColumnText.showTextAligned(writer.getDirectContent(),
-                Element.ALIGN_LEFT, new Phrase(header, fontDetail),
-                document.left(), document.top() + 20, 0);
-        // 2.写入前半部分的 第 X页/共
-        int pageS = writer.getPageNumber();
-        String foot1 = "第 " + pageS + " 页 /共";
-        Phrase footer = new Phrase(foot1, fontDetail);
-
-        // 3.计算前半部分的foot1的长度，后面好定位最后一部分的'Y页'这俩字的x轴坐标，字体长度也要计算进去 = len
-        float len = bf.getWidthPoint(foot1, presentFontSize);
-
-        // 4.拿到当前的PdfContentByte
-        PdfContentByte cb = writer.getDirectContent();
-
-        // 5.写入页脚1，x轴就是(右margin+左margin + right() -left()- len)/2.0F
-        // 再给偏移20F适合人类视觉感受，否则肉眼看上去就太偏左了
-        // ,y轴就是底边界-20,否则就贴边重叠到数据体里了就不是页脚了；注意Y轴是从下往上累加的，最上方的Top值是大于Bottom好几百开外的。
-        ColumnText.showTextAligned(
-                cb,
-                Element.ALIGN_CENTER,
-                footer,
-                (document.rightMargin() + document.right()
-                        + document.leftMargin() - document.left() - len) / 2.0F + 20F,
-                document.bottom() - 20, 0);
-
-        // 6.写入页脚2的模板（就是页脚的Y页这俩字）添加到文档中，计算模板的和Y轴,X=(右边界-左边界 - 前半部分的len值)/2.0F +
-        // len ， y 轴和之前的保持一致，底边界-20
-        cb.addTemplate(total, (document.rightMargin() + document.right()
-                        + document.leftMargin() - document.left()) / 2.0F + 20F,
-                document.bottom() - 20); // 调节模版显示的位置
-
     }
 }

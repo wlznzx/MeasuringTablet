@@ -7,6 +7,7 @@ import org.greenrobot.greendao.annotation.Id;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.utils.StringConverter;
+
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
@@ -14,6 +15,8 @@ public class TemplateResultBean {
 
     @Id
     public long codeID;
+
+    public String allJudge;
 
     // 标题;
     @Convert(columnType = String.class, converter = StringConverter.class)
@@ -27,10 +30,11 @@ public class TemplateResultBean {
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> RoHSList;
 
-    @Generated(hash = 219804434)
-    public TemplateResultBean(long codeID, List<String> titleList,
+    @Generated(hash = 1040133342)
+    public TemplateResultBean(long codeID, String allJudge, List<String> titleList,
             List<String> AQLList, List<String> RoHSList) {
         this.codeID = codeID;
+        this.allJudge = allJudge;
         this.titleList = titleList;
         this.AQLList = AQLList;
         this.RoHSList = RoHSList;
@@ -70,6 +74,14 @@ public class TemplateResultBean {
 
     public void setRoHSList(List<String> RoHSList) {
         this.RoHSList = RoHSList;
+    }
+
+    public String getAllJudge() {
+        return this.allJudge;
+    }
+
+    public void setAllJudge(String allJudge) {
+        this.allJudge = allJudge;
     }
 
 }

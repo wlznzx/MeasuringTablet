@@ -112,8 +112,9 @@ public class Constants {
 
     public static List<CodeBean> defaultCodeBeans = new ArrayList<>();
 
-//    static {
-//        defaultCodeBeans.add(new CodeBean(0, "TRA100", "", "", false, null));
+    static {
+        defaultCodeBeans.add(new CodeBean("TRA100", "", "", false, null));
+        defaultCodeBeans.add(new CodeBean("TRA100", "", "", false, null));
 //        // 1 ~ 15
 //        defaultCodeBeans.add(new CodeBean(1, "十工位-TRA100", "", "", false, null));
 //        defaultCodeBeans.add(new CodeBean(2, "十工位-TRA91", "", "", false, null));
@@ -162,6 +163,6 @@ public class Constants {
 //        defaultCodeBeans.add(new CodeBean(43, "大足-EEI100", "", "", false, null));
 //        defaultCodeBeans.add(new CodeBean(44, "大足-EEI91", "", "", false, null));
 //        defaultCodeBeans.add(new CodeBean(45, "大足-EEI120", "", "", false, null));
-//    }
+    }
 
 }

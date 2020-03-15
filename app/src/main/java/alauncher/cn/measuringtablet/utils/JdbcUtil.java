@@ -293,7 +293,7 @@ public class JdbcUtil {
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, factory_code);
         pstmt.setString(2, machine_code);
-        pstmt.setInt(3, App.getSetupBean().getCodeID());
+        pstmt.setInt(3, (int)App.getSetupBean().getCodeID());
         pstmt.setString(4, App.getCodeName());
         pstmt.setString(5, "M1");
         pstmt.setString(6, _bean.getM1_describe());

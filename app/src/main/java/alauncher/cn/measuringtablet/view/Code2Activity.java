@@ -46,9 +46,12 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
     protected void initView() {
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
         codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
+        for (CodeBean bean : codeBeans) {
+            android.util.Log.d("wlDebug", "bean = " + bean.toString());
+        }
         codeID = App.getSetupBean().getCodeID();
         states.put(String.valueOf(codeID - 1), true);
-        adapter = new CodeListAdapter(codeBeans, states, codeID, this);
+        adapter = new CodeListAdapter(codeBeans, states, this, this);
         listView.setAdapter(adapter);
     }
 
@@ -85,18 +88,17 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
                 break;
             case R.id.add_code_btn:
                 CodeEditDialog codeEditDialog = new CodeEditDialog(Code2Activity.this, null);
+                codeEditDialog.setDataUpdateInterface(this);
                 codeEditDialog.show();
                 break;
         }
     }
 
-    private int getCodeID() {
-        return 1;
-    }
 
     @Override
     public void dataUpdate() {
         codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
+        adapter.setList(codeBeans);
         adapter.notifyDataSetChanged();
     }
 }

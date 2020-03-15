@@ -1,27 +1,24 @@
 package alauncher.cn.measuringtablet.view.adapter;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
-import alauncher.cn.measuringtablet.base.ViewHolder;
 import alauncher.cn.measuringtablet.bean.CodeBean;
-import alauncher.cn.measuringtablet.bean.ParameterBean;
-import alauncher.cn.measuringtablet.bean.ResultBean;
-import alauncher.cn.measuringtablet.utils.DateUtils;
+import alauncher.cn.measuringtablet.database.greenDao.db.CodeBeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
+import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 
 /**
  * Created by guohao on 2017/9/6.
@@ -35,11 +32,18 @@ public class CodeListAdapter extends BaseAdapter {
 
     public int currentCodeID;
 
-    public CodeListAdapter(List<CodeBean> listText, HashMap<String, Boolean> pstates, int code, Context context) {
+    private DataUpdateInterface mDataUpdateInterface;
+
+    public CodeListAdapter(List<CodeBean> listText, HashMap<String, Boolean> pstates, DataUpdateInterface pDataUpdateInterface, Context context) {
         this.listText = listText;
         this.states = pstates;
         this.context = context;
-        currentCodeID = code;
+        mDataUpdateInterface = pDataUpdateInterface;
+        currentCodeID = App.getSetupBean().getCodeID();
+    }
+
+    public void setList(List<CodeBean> pList) {
+        listText = pList;
     }
 
     @Override
@@ -68,10 +72,10 @@ public class CodeListAdapter extends BaseAdapter {
             view = convertView;//复用历史缓存对象
         }
         //单选按钮的文字
-        TextView radioText = (TextView) view.findViewById(R.id.tv_radio_text);
+        TextView radioText = view.findViewById(R.id.tv_radio_text);
         //单选按钮
         RadioButton radioButton = view.findViewById(R.id.rb_radio_button);
-        radioButton.setText(String.valueOf(listText.get(position).getCodeID()));
+        radioButton.setText(String.valueOf(position + 1));
         radioText.setText(listText.get(position).getName());
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,18 +85,72 @@ public class CodeListAdapter extends BaseAdapter {
                     states.put(key, false);
                 }
                 states.put(String.valueOf(position), true);
-                currentCodeID = position + 1;
+                currentCodeID = listText.get(position).getCodeID().intValue();
                 CodeListAdapter.this.notifyDataSetChanged();
             }
         });
-        boolean res = false;
+        boolean res;
+        /*
         if (states.get(String.valueOf(position)) == null || states.get(String.valueOf(position)) == false) {
             res = false;
             states.put(String.valueOf(position), false);
-        } else
+        } else {
             res = true;
+        }
+        */
+
+        if (currentCodeID == listText.get(position).getCodeID()) {
+            res = true;
+        } else {
+            res = false;
+        }
+
 
         radioButton.setChecked(res);
+
+        radioButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (App.getSetupBean().getCodeID() == listText.get(position).getCodeID()) {
+                    DialogUtils.showDialog(context, context.getResources().getString(R.string.cannot_delete),
+                            context.getResources().getString(R.string.cannot_delete_msg));
+                    return false;
+                }
+
+                final AlertDialog builder = new AlertDialog.Builder(context)
+                        .create();
+                builder.show();
+                if (builder.getWindow() == null) return false;
+                builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+                TextView msg = builder.findViewById(R.id.tv_msg);
+                Button cancel = builder.findViewById(R.id.btn_cancle);
+                Button sure = builder.findViewById(R.id.btn_sure);
+                msg.setText("是否删除 " + listText.get(position).getName() + " ?");
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        builder.dismiss();
+                    }
+                });
+                sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        App.getDaoSession().getCodeBeanDao().queryBuilder().where(CodeBeanDao.Properties.CodeID.eq(listText.get(position).getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
+                        /*
+                         * 还要依次删除其他程序相关;
+                         * */
+                        App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq(listText.get(position).getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
+
+                        builder.dismiss();
+                        if (mDataUpdateInterface != null) {
+                            mDataUpdateInterface.dataUpdate();
+                        }
+                    }
+                });
+                return false;
+            }
+        });
         return view;
     }
 

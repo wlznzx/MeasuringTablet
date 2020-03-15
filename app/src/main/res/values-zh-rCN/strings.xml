@@ -137,4 +137,8 @@
     <string name="exprot">导出PDF</string>
     <string name="hint">请输入</string>
     <string name="add_code">添加程序</string>
+    <string name="cannot_delete">无法删除</string>
+    <string name="cannot_delete_msg">无法删除当前使用程序</string>
+    <string name="pdf_export_title">PDF导出</string>
+    <string name="pdf_export_msg">PDF导出成功，路径位于:</string>
 </resources>

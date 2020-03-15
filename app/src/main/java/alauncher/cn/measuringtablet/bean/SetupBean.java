@@ -48,6 +48,14 @@ public class SetupBean {
     public SetupBean() {
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public int getCodeID() {
         return this.codeID;
     }
@@ -62,14 +70,6 @@ public class SetupBean {
 
     public void setAccout(String accout) {
         this.accout = accout;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public boolean getIsAutoPopUp() {
@@ -111,5 +111,9 @@ public class SetupBean {
     public void setRLowerLine(double rLowerLine) {
         this.rLowerLine = rLowerLine;
     }
+
+    
+
+  
 
 }
