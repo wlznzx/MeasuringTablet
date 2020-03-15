@@ -50,8 +50,8 @@ public class CodeBaseInfoFragment extends Fragment {
     public void onSave(View v) {
         CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         if (_bean == null) {
-            _bean = new CodeBean(App.getSetupBean().getCodeID(), "",
-                    machineToolEdt.getText().toString().trim(), partEdt.getText().toString().trim(),false,null);
+//            _bean = new CodeBean(App.getSetupBean().getCodeID(), "",
+//                    machineToolEdt.getText().toString().trim(), partEdt.getText().toString().trim(),false,null);
         } else {
             _bean.setMachineTool(machineToolEdt.getText().toString().trim());
             _bean.setParts(partEdt.getText().toString().trim());

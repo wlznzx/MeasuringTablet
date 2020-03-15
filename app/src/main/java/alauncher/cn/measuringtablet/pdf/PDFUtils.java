@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
+import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
@@ -64,7 +65,7 @@ public class PDFUtils {
 
     //  0, 153, 102 合格
 
-    private static ArrayList<String> signatureTitle = new ArrayList<String>();
+    private static ArrayList<String> signatureTitle = new ArrayList<>();
 
     static {
         signatureTitle.add("课长");
@@ -72,86 +73,8 @@ public class PDFUtils {
         signatureTitle.add("担当");
     }
 
-    private static ArrayList<String> titles = new ArrayList<String>();
-
-    static {
-        titles.add("部品名称");
-        titles.add("进货批量");
-        titles.add("进货日期");
-        titles.add("检查日期");
-    }
-
-    // private static ArrayList<Parameter2Bean> mParameter2Beans = new ArrayList<>();
-
-    // private static ArrayList<ResultBean3> pResultBean3s = new ArrayList<>();
-
-    // private static TemplateBean mTemplateBean = new TemplateBean();
-
-    public static void initDatas() {
-//        for (int j = 1; j <= 7; j++) {
-//            Parameter2Bean _bean = new Parameter2Bean();
-//            _bean.setCode_id(1);
-//            _bean.setIndex(j);
-//            _bean.setEnable(true);
-//            _bean.setDescribe("内径" + j);
-//            _bean.setNominal_value(24.0);
-//            _bean.setUpper_tolerance_value(0.04);
-//            _bean.setLower_tolerance_value(0.0);
-//            mParameter2Beans.add(_bean);
-//        }
-
-        for (int i = 0; i < 6; i++) {
-            ResultBean3 _bean = new ResultBean3();
-            _bean.setCodeID(1);
-            _bean.setHandlerAccout("hhb");
-            _bean.setResult("OK");
-            _bean.setWorkid_extra("");
-            ArrayList<String> values = new ArrayList<>();
-            ArrayList<String> picPaths = new ArrayList<>();
-            for (int j = 0; j < 10; j++) {
-                values.add(String.valueOf(j));
-                picPaths.add(String.valueOf(j));
-            }
-            _bean.setMValues(values);
-            _bean.setMPicPaths(picPaths);
-            // pResultBean3s.add(_bean);
-        }
-
-        ArrayList<String> Titles = new ArrayList<>();
-        Titles.add("部品名称");
-        Titles.add("进货批量");
-        Titles.add("进货日期");
-        Titles.add("检查日期");
-        Titles.add("部品代号");
-        Titles.add("尺寸检查");
-        Titles.add("生产日期");
-        Titles.add("部品发送到");
-        Titles.add("材料名称");
-        Titles.add("订单No");
-        Titles.add("检查目的");
-        // Titles.add("供货方名称");
-        ArrayList<String> AQLList = new ArrayList<>();
-        AQLList.add("无毛刺、无异物、无气孔");
-        AQLList.add("无收缩、无裂缝、无缺陷");
-        AQLList.add("毛刺高度控制在0.3以下");
-        AQLList.add("外包装无破损、无变形、无潮湿");
-        AQLList.add("月份标签确认");
-        AQLList.add("供应商数据确认");
-        ArrayList<String> RoHSList = new ArrayList<>();
-        RoHSList.add("RoHS确认频率");
-        RoHSList.add("本批确认");
-        RoHSList.add("上回RoHS确认日");
-        RoHSList.add("确认结果(RoHS检查数据以检查日期追溯)");
-        RoHSList.add("模号:");
-//        mTemplateBean.setAQLList(AQLList);
-//        mTemplateBean.setRoHSList(RoHSList);
-//        mTemplateBean.setTitleList(Titles);
-    }
-
     public static void createNTTable(TemplateBean mTemplateBean, TemplateResultBean pTemplateResultBean,
-                                     List<Parameter2Bean> mParameter2Beans, List<ResultBean3> pResultBean3s, byte[] img) throws IOException, DocumentException {
-
-        initDatas();
+                                     List<ParameterBean2> mParameter2Beans, List<ResultBean3> pResultBean3s, byte[] img) throws IOException, DocumentException {
 
         BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
         Font font = new Font(bf, 8, Font.NORMAL);
@@ -159,8 +82,7 @@ public class PDFUtils {
 
         Document document = new Document();
         // 创建PdfWriter对象
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(DEST));
-
+        // PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(DEST));
         // writer.setPageEvent(new PDFBuilder());
         // 打开文档
         document.open();
@@ -186,8 +108,8 @@ public class PDFUtils {
         cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(cell1);
 
-        for (int i = 0; i < signatureTitle.size(); i++) {
-            PdfPCell cell = getTitleCell(signatureTitle.get(i), titleColor);
+        for (int i = 0; i < mTemplateBean.getSignList().size(); i++) {
+            PdfPCell cell = getTitleCell(mTemplateBean.getSignList().get(i), titleColor);
             cell.setFixedHeight(20);
             // 设置内容水平居中显示
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -277,47 +199,47 @@ public class PDFUtils {
             }
         }
 
-        android.util.Log.d("wlDebug", "_maxs = " + _maxs);
-        android.util.Log.d("wlDebug", "_mins = " + _mins);
-        android.util.Log.d("wlDebug", "_results = " + _results);
+//        android.util.Log.d("wlDebug", "_maxs = " + _maxs);
+//        android.util.Log.d("wlDebug", "_mins = " + _mins);
+//        android.util.Log.d("wlDebug", "_results = " + _results);
         for (int i = 0; i < pageSum; i++) {
             // i * 3 + 0 > mParameter2Beans.size() -1  ? String.valueOf(mParameter2Beans.get(i * 3 + 0).getIndex()) : " ";
 
-            Parameter2Bean rol1Bean = i * 3 + 0 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 0) : null;
-            Parameter2Bean rol2Bean = i * 3 + 1 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 1) : null;
-            Parameter2Bean rol3Bean = i * 3 + 2 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 2) : null;
+            ParameterBean2 rol1Bean = i * 3 + 0 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 0) : null;
+            ParameterBean2 rol2Bean = i * 3 + 1 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 1) : null;
+            ParameterBean2 rol3Bean = i * 3 + 2 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 2) : null;
             // 绘制数据列第一行
             table.addCell(getDataCell("记号", 1, 1, dataTitleColor));
-            table.addCell(getDataCell(rol1Bean != null ? String.valueOf(rol1Bean.getIndex()) : " ", 1, 5, dataTitleColor));
-            table.addCell(getDataCell(rol2Bean != null ? String.valueOf(rol2Bean.getIndex()) : " ", 1, 5, dataTitleColor));
-            table.addCell(getDataCell(rol3Bean != null ? String.valueOf(rol3Bean.getIndex()) : " ", 1, 5, dataTitleColor));
+            table.addCell(getDataCell(rol1Bean != null ? String.valueOf(rol1Bean.getSequenceNumber()) : " ", 1, 5, dataTitleColor));
+            table.addCell(getDataCell(rol2Bean != null ? String.valueOf(rol2Bean.getSequenceNumber()) : " ", 1, 5, dataTitleColor));
+            table.addCell(getDataCell(rol3Bean != null ? String.valueOf(rol3Bean.getSequenceNumber()) : " ", 1, 5, dataTitleColor));
 
             // 绘制上限值;
             table.addCell(getDataCell("上限值", 1, 1, dataTitleColor));
             table.addCell(getDataCell(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominal_value() + rol1Bean.getUpper_tolerance_value()) : " ", 1, 5, dataLineOneColor));
+                    String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", 1, 5, dataLineOneColor));
             table.addCell(getDataCell(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominal_value() + rol2Bean.getUpper_tolerance_value()) : " ", 1, 5, dataLineOneColor));
+                    String.valueOf(rol2Bean.getNominalValue() + rol2Bean.getUpperToleranceValue()) : " ", 1, 5, dataLineOneColor));
             table.addCell(getDataCell(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominal_value() + rol3Bean.getUpper_tolerance_value()) : " ", 1, 5, dataLineOneColor));
+                    String.valueOf(rol3Bean.getNominalValue() + rol3Bean.getUpperToleranceValue()) : " ", 1, 5, dataLineOneColor));
 
             // 绘制下限值;
             table.addCell(getDataCell("下限值", 1, 1, dataTitleColor));
             table.addCell(getDataCell(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominal_value() + rol1Bean.getLower_tolerance_value()) : " ", 1, 5, dataLineTwoColor));
+                    String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", 1, 5, dataLineTwoColor));
             table.addCell(getDataCell(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominal_value() + rol2Bean.getLower_tolerance_value()) : " ", 1, 5, dataLineTwoColor));
+                    String.valueOf(rol2Bean.getNominalValue() + rol2Bean.getLowerToleranceValue()) : " ", 1, 5, dataLineTwoColor));
             table.addCell(getDataCell(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominal_value() + rol3Bean.getLower_tolerance_value()) : " ", 1, 5, dataLineTwoColor));
+                    String.valueOf(rol3Bean.getNominalValue() + rol3Bean.getLowerToleranceValue()) : " ", 1, 5, dataLineTwoColor));
 
             // 绘制中间值;
             table.addCell(getDataCell("中间值", 1, 1, dataTitleColor));
             table.addCell(getDataCell(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominal_value()) : " ", 1, 5, dataLineOneColor));
+                    String.valueOf(rol1Bean.getNominalValue()) : " ", 1, 5, dataLineOneColor));
             table.addCell(getDataCell(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominal_value()) : " ", 1, 5, dataLineOneColor));
+                    String.valueOf(rol2Bean.getNominalValue()) : " ", 1, 5, dataLineOneColor));
             table.addCell(getDataCell(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominal_value()) : " ", 1, 5, dataLineOneColor));
+                    String.valueOf(rol3Bean.getNominalValue()) : " ", 1, 5, dataLineOneColor));
 
             // 数据；
             for (int j = 0; j < pResultBean3s.size(); j++) {

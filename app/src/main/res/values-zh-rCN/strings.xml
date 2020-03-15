@@ -32,6 +32,7 @@
     <string name="lower_limit">下\u3000\u3000限</string>
     <string name="upper_limit">上\u3000\u3000限</string>
     <string name="set">设\u3000\u3000置</string>
+    <string name="set_only">设置</string>
     <string name="small_part_standard">小标准件</string>
     <string name="big_part_standard">大标准件</string>
     <string name="upper_limit_of_information_rate">倍率上限</string>
@@ -135,4 +136,5 @@
     <string name="edit">编辑</string>
     <string name="exprot">导出PDF</string>
     <string name="hint">请输入</string>
+    <string name="add_code">添加程序</string>
 </resources>

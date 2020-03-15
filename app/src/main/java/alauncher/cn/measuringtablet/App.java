@@ -250,6 +250,7 @@ public class App extends MultiDexApplication {
             getDaoSession().getForceCalibrationBeanDao().insert(_bean);
         }
 
+        /*
         if (getDaoSession().getStoreBeanDao().load(SETTING_ID) == null) {
             for (int i = 1; i < Constants.defaultCodeBeans.size(); i++) {
                 CodeBean _bean = Constants.defaultCodeBeans.get(i);
@@ -268,6 +269,7 @@ public class App extends MultiDexApplication {
             _bean.setDelayTime(1);
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
+         */
         //
         for (int i = 1; i < Constants.defaultCodeBeans.size(); i++) {
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {

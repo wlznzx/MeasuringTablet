@@ -22,6 +22,7 @@ import java.util.List;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.ViewHolder;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
+import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 
@@ -42,12 +43,12 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
     private OnItemClickListener mOnItemClickListener;
     public List<ResultBean3> datas;
 
-    private List<Parameter2Bean> mParameterBean;
+    private List<ParameterBean2> mParameterBean;
 
     private List<Integer> mValueIDs = new ArrayList<>();
     private List<Integer> mPicIDs = new ArrayList<>();
 
-    public DataAdapter2(Context context, List<ResultBean3> pDatas, List<Parameter2Bean> parameterBeans) {
+    public DataAdapter2(Context context, List<ResultBean3> pDatas, List<ParameterBean2> parameterBeans) {
         this.mContext = context;
         datas = pDatas;
         mParameterBean = parameterBeans;

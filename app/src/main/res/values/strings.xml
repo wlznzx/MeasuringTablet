@@ -33,6 +33,7 @@
     <string name="lower_limit">Lower limit</string>
     <string name="upper_limit">Upper limit</string>
     <string name="set">Set</string>
+    <string name="set_only">设置</string>
     <string name="small_part_standard">Small part standard</string>
     <string name="big_part_standard">Big part standard</string>
     <string name="upper_limit_of_information_rate">Upper limit of information rate</string>
@@ -319,5 +320,14 @@
     <string name="edit">编辑</string>
     <string name="exprot">导出PDF</string>
     <string name="hint">请输入</string>
-
+    <string name="edit_parameter">编辑参数</string>
+    <string name="is_enable">是否启用</string>
+    <string name="add_parameter">添加参数</string>
+    <string name="upper_limit_not_space">上限</string>
+    <string name="lower_limit_not_space">下限</string>
+    <string name="add_group">添加分组</string>
+    <string name="group_name">分组名称</string>
+    <string name="export_excel">编辑/导出</string>
+    <string name="ok">确定</string>
+    <string name="add_code">添加程序</string>
 </resources>

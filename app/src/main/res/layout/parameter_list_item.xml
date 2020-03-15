@@ -2,63 +2,73 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/data_layout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/m_item_height"
+    android:layout_height="70dp"
+    android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <FrameLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/is_enable_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-        <CheckBox
-            android:id="@+id/m_enable"
-            style="@style/BaseTabletTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+        android:text="是" />
 
     <TextView
-        android:id="@+id/m_index_tv"
-        style="@style/BaseTabletTextStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/m1"/>
+        android:id="@+id/m_title_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent" />
 
-    <EditText
-        android:id="@+id/parameter_name_edt"
-        style="@style/BaseTabletTextStyle"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/describe_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:hint="@string/parameter_name" />
+        android:text="@string/handler" />
 
-    <EditText
-        android:id="@+id/nominal_value_edt"
-        style="@style/BaseTabletTextStyle"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/nominal_value_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/nominal_value" />
+        android:text="@string/time" />
 
-    <EditText
-        android:id="@+id/upper_tolerance_edt"
-        style="@style/BaseTabletTextStyle"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/upper_tolerance_value_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/upper_tolerance_value" />
+        android:text="@string/workpiece_id" />
 
-    <EditText
-        android:id="@+id/lower_tolerance_edt"
-        style="@style/BaseTabletTextStyle"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/lower_tolerance_value_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:inputType="numberSigned|numberDecimal"
-        android:hint="@string/lower_tolerance_value" />
+        android:text="@string/event" />
+
+    <TextView
+        android:id="@+id/deviation_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:text="@string/result" />
+
+    <TextView
+        android:id="@+id/resolution_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:text="@string/m1" />
+
+    <TextView
+        android:id="@+id/formula_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:visibility="gone"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

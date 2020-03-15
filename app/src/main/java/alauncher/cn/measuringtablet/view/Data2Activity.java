@@ -1,6 +1,5 @@
 package alauncher.cn.measuringtablet.view;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.database.Cursor;
@@ -8,7 +7,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +32,10 @@ import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.FilterBean;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
+import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.utils.CommonUtil;
 import alauncher.cn.measuringtablet.utils.DateUtils;
@@ -102,9 +102,14 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
 
-        List<Parameter2Bean> _datas = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
+        // List<Parameter2Bean> _datas = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
+
+        List<ParameterBean2> mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()))
+                .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
+
         mDataAdapter = new DataAdapter2(Data2Activity.this, App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean3Dao.Properties.Id).list(),
-                _datas);
+                mParameterBean2s);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Data2Activity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mDataAdapter);
@@ -125,19 +130,19 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         titleLinearLayout = findViewById(R.id.data_title_layout);
         final float scale = getResources().getDisplayMetrics().density;
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) (70 * scale + 0.5f), ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) (130 * scale + 0.5f), ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(10, 15, 10, 15);
         layoutParams.gravity = Gravity.CENTER_VERTICAL;
-        for (int i = 0; i < _datas.size(); i++) {
+        for (int i = 0; i < mParameterBean2s.size(); i++) {
             TextView titleView = new TextView(this);
             titleView.setGravity(Gravity.CENTER);
             titleView.setTextAppearance(this, R.style.TextStyle);
-            titleView.setText("M" + (i + 1));
+            titleView.setText("M" + (mParameterBean2s.get(i).getSequenceNumber() + 1));
             titleView.setLayoutParams(layoutParams);
             TextView picView = new TextView(this);
             picView.setGravity(Gravity.CENTER);
             picView.setTextAppearance(this, R.style.TextStyle);
-            picView.setText("M" + (i + 1) + "图片");
+            picView.setText("M" + (mParameterBean2s.get(i).getSequenceNumber() + 1) + "图片");
             titleLinearLayout.addView(titleView);
             titleLinearLayout.addView(picView, layoutParams);
         }

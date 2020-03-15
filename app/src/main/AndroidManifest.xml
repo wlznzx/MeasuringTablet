@@ -196,6 +196,14 @@
         </activity>
 
         <activity
+            android:name=".view.MGroup2Activity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".view.InputActivity"
             android:windowSoftInputMode="adjustUnspecified|adjustResize|stateHidden">
             <intent-filter>

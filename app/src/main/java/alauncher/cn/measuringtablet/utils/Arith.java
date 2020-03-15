@@ -96,7 +96,7 @@ public class Arith {
             throw new IllegalArgumentException(
                     "The scale must be a positive integer or zero");
         }
-        BigDecimal b = new BigDecimal(Double.toString(v));
+        BigDecimal b = new BigDecimal(String.valueOf(v));
         BigDecimal one = new BigDecimal("1");
         return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -120,4 +120,24 @@ public class Arith {
         return standardDeviation;
     }
 
+    /**
+     * Double 转string 去除科学记数法显示
+     *
+     * @param d
+     * @return
+     */
+    public static String double2Str(Double d) {
+        if (d == null) {
+            return "";
+        }
+        int a = (d + "").length() - (d + "").indexOf(".") - 1;
+        if (a >= 4) {
+            // 四舍五入,保留2位小数
+            BigDecimal d1 = new BigDecimal(Double.toString(d));
+            BigDecimal d2 = new BigDecimal(Integer.toString(1));
+            return d1.divide(d2, 4, BigDecimal.ROUND_HALF_UP).toString();
+        } else {
+            return String.valueOf(d);
+        }
+    }
 };

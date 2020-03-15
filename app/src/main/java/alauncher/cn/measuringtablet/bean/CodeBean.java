@@ -3,6 +3,9 @@ package alauncher.cn.measuringtablet.bean;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Index;
+
+import java.util.Arrays;
 
 /**
  * 日期：2019/8/5 0025 9:27
@@ -13,7 +16,9 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class CodeBean {
 
-    @Id
+    @Id(autoincrement = true)
+    public Long id;
+
     public long codeID;
 
     public String name;
@@ -26,9 +31,10 @@ public class CodeBean {
 
     public byte[] workpiecePic;
 
-    @Generated(hash = 912941288)
-    public CodeBean(long codeID, String name, String machineTool, String parts,
-            boolean isEnableStep, byte[] workpiecePic) {
+    @Generated(hash = 23474324)
+    public CodeBean(Long id, long codeID, String name, String machineTool,
+            String parts, boolean isEnableStep, byte[] workpiecePic) {
+        this.id = id;
         this.codeID = codeID;
         this.name = name;
         this.machineTool = machineTool;
@@ -41,12 +47,12 @@ public class CodeBean {
     public CodeBean() {
     }
 
-    public CodeBean(long codeID, String name, String machineTool, String parts, boolean isEnableStep) {
-        this.codeID = codeID;
-        this.name = name;
-        this.machineTool = machineTool;
-        this.parts = parts;
-        this.isEnableStep = isEnableStep;
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public long getCodeID() {
@@ -96,4 +102,6 @@ public class CodeBean {
     public void setWorkpiecePic(byte[] workpiecePic) {
         this.workpiecePic = workpiecePic;
     }
+    
+
 }

@@ -45,11 +45,11 @@ import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
-import alauncher.cn.measuringtablet.bean.Parameter2Bean;
+import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
-import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.pdf.PDFUtils;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
@@ -68,7 +68,9 @@ public class Input2Activity extends BaseOActivity {
 
     public TemplateResultBean mTemplateResultBean;
 
-    private List<Parameter2Bean> mParameter2Beans;
+    // private List<Parameter2Bean> mParameterBean2s;
+
+    private List<ParameterBean2> mParameterBean2s;
 
     private List<ResultBean3> mResultBean3s = new ArrayList<>();
 
@@ -122,7 +124,10 @@ public class Input2Activity extends BaseOActivity {
     protected void initView() {
 
         mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
-        mParameter2Beans = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
+        // mParameterBean2s = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
+        mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
+                .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
         mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
 
@@ -188,44 +193,44 @@ public class Input2Activity extends BaseOActivity {
         //每页显示的记录数
         int pageSize = 3;
         //页数
-        int pageSum = (int) Math.ceil((double) mParameter2Beans.size() / (double) pageSize);
+        int pageSum = (int) Math.ceil((double) mParameterBean2s.size() / (double) pageSize);
 
         for (int i = 0; i < pageSum; i++) {
 
-            Parameter2Bean rol1Bean = i * 3 + 0 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 0) : null;
-            Parameter2Bean rol2Bean = i * 3 + 1 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 1) : null;
-            Parameter2Bean rol3Bean = i * 3 + 2 <= mParameter2Beans.size() - 1 ? mParameter2Beans.get(i * 3 + 2) : null;
+            ParameterBean2 rol1Bean = i * 3 + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 0) : null;
+            ParameterBean2 rol2Bean = i * 3 + 1 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 1) : null;
+            ParameterBean2 rol3Bean = i * 3 + 2 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 2) : null;
             // 绘制数据列第一行
             LinearLayout __layout = new LinearLayout(this);
             __layout.addView(getInfoTV("记号", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
             __layout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getIndex()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol1Bean.getSequenceNumber()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             __layout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getIndex()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getSequenceNumber()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             __layout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getIndex()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getSequenceNumber()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             mainLayout.addView(__layout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制上限值;
             LinearLayout upperLayout = new LinearLayout(this);
             upperLayout.addView(getInfoTV("上限值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
             upperLayout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominal_value() + rol1Bean.getUpper_tolerance_value()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             upperLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominal_value() + rol1Bean.getUpper_tolerance_value()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             upperLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominal_value() + rol1Bean.getUpper_tolerance_value()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(upperLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制下限值;
             LinearLayout lowerLayout = new LinearLayout(this);
-            lowerLayout.addView(getInfoTV("上限值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+            lowerLayout.addView(getInfoTV("下限值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
             lowerLayout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominal_value() + rol1Bean.getLower_tolerance_value()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
             lowerLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominal_value() + rol1Bean.getLower_tolerance_value()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
             lowerLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominal_value() + rol1Bean.getLower_tolerance_value()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
             mainLayout.addView(lowerLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
 
@@ -233,11 +238,11 @@ public class Input2Activity extends BaseOActivity {
             LinearLayout nominalLayout = new LinearLayout(this);
             nominalLayout.addView(getInfoTV("中间值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
             nominalLayout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominal_value()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol1Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             nominalLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominal_value()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             nominalLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominal_value()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(nominalLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             for (int j = 0; j < 5; j++) {
@@ -245,7 +250,7 @@ public class Input2Activity extends BaseOActivity {
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
 
 
-                if (results.get(j).size() < mParameter2Beans.size()) {
+                if (results.get(j).size() < mParameterBean2s.size()) {
                     EditText _edt1 = getInputEditView(true);
                     dataLayout.addView(_edt1, getItemLayoutParams(2, 1));
                     results.get(j).add(_edt1);
@@ -259,7 +264,7 @@ public class Input2Activity extends BaseOActivity {
                 }
 
 
-                if (results.get(j).size() < mParameter2Beans.size()) {
+                if (results.get(j).size() < mParameterBean2s.size()) {
                     EditText _edt2 = getInputEditView(true);
                     dataLayout.addView(_edt2, getItemLayoutParams(2, 1));
                     results.get(j).add(_edt2);
@@ -272,7 +277,7 @@ public class Input2Activity extends BaseOActivity {
                 }
 
 
-                if (results.get(j).size() < mParameter2Beans.size()) {
+                if (results.get(j).size() < mParameterBean2s.size()) {
                     EditText _edt3 = getInputEditView(true);
                     dataLayout.addView(_edt3, getItemLayoutParams(2, 1));
                     results.get(j).add(_edt3);
@@ -315,9 +320,9 @@ public class Input2Activity extends BaseOActivity {
             maxLayout.addView(maxTV2, getItemLayoutParams(5, 1));
             TextView maxTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
             maxLayout.addView(maxTV3, getItemLayoutParams(5, 1));
-            if (maxEdts.size() < mParameter2Beans.size()) maxEdts.add(maxTV1);
-            if (maxEdts.size() < mParameter2Beans.size()) maxEdts.add(maxTV2);
-            if (maxEdts.size() < mParameter2Beans.size()) maxEdts.add(maxTV3);
+            if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV1);
+            if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV2);
+            if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV3);
             mainLayout.addView(maxLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 最小值；
@@ -329,9 +334,9 @@ public class Input2Activity extends BaseOActivity {
             minLayout.addView(minTV2, getItemLayoutParams(5, 1));
             TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
             minLayout.addView(minTV3, getItemLayoutParams(5, 1));
-            if (minEdts.size() < mParameter2Beans.size()) minEdts.add(minTV1);
-            if (minEdts.size() < mParameter2Beans.size()) minEdts.add(minTV2);
-            if (minEdts.size() < mParameter2Beans.size()) minEdts.add(minTV3);
+            if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV1);
+            if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV2);
+            if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV3);
             mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             /*
@@ -353,9 +358,9 @@ public class Input2Activity extends BaseOActivity {
             judgeLayout.addView(judgeTV2, getItemLayoutParams(5, 1));
             TextView judgeTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
             judgeLayout.addView(judgeTV3, getItemLayoutParams(5, 1));
-            if (judgeEdts.size() < mParameter2Beans.size()) judgeEdts.add(judgeTV1);
-            if (judgeEdts.size() < mParameter2Beans.size()) judgeEdts.add(judgeTV2);
-            if (judgeEdts.size() < mParameter2Beans.size()) judgeEdts.add(judgeTV3);
+            if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV1);
+            if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV2);
+            if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV3);
             mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
         }
 
@@ -567,7 +572,7 @@ public class Input2Activity extends BaseOActivity {
         @Override
         protected String doInBackground(String... params) {
             //处理耗时操作
-            for (int i = 0; i < mParameter2Beans.size(); i++) {
+            for (int i = 0; i < mParameterBean2s.size(); i++) {
                 for (int j = 0; j < 5; j++) {
                     try {
                         double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
@@ -577,8 +582,8 @@ public class Input2Activity extends BaseOActivity {
                         if (_value > maxs.get(i)) {
                             maxs.set(i, _value);
                         }
-                        if (_value > mParameter2Beans.get(i).getUpper_tolerance_value()
-                                || _value < mParameter2Beans.get(i).getLower_tolerance_value()) {
+                        if (_value > mParameterBean2s.get(i).getUpperToleranceValue()
+                                || _value < mParameterBean2s.get(i).getLowerToleranceValue()) {
                             judges.set(i, "NG");
                             allJudge = "NG";
                         } else {
@@ -600,7 +605,7 @@ public class Input2Activity extends BaseOActivity {
         @Override
         protected void onPostExecute(String result) {
             dialog.dismiss();
-            for (int i = 0; i < mParameter2Beans.size(); i++) {
+            for (int i = 0; i < mParameterBean2s.size(); i++) {
                 maxEdts.get(i).setText(String.valueOf(maxs.get(i)));
                 minEdts.get(i).setText(String.valueOf(maxs.get(i)));
                 judgeEdts.get(i).setText(judges.get(i));
@@ -644,7 +649,7 @@ public class Input2Activity extends BaseOActivity {
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-            for (int i = 0; i < mParameter2Beans.size(); i++) {
+            for (int i = 0; i < mParameterBean2s.size(); i++) {
                 for (int j = 0; j < 5; j++) {
                     try {
                         double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
@@ -654,8 +659,8 @@ public class Input2Activity extends BaseOActivity {
                         if (_value > maxs.get(i)) {
                             maxs.set(i, _value);
                         }
-                        if (_value > mParameter2Beans.get(i).getUpper_tolerance_value()
-                                || _value < mParameter2Beans.get(i).getLower_tolerance_value()) {
+                        if (_value > mParameterBean2s.get(i).getUpperToleranceValue()
+                                || _value < mParameterBean2s.get(i).getLowerToleranceValue()) {
                             judges.set(i, "NG");
                             allJudge = "NG";
                         } else {
@@ -674,6 +679,7 @@ public class Input2Activity extends BaseOActivity {
                     Bitmap bitmap = BitmapFactory.decodeResource(Input2Activity.this.getResources(), R.drawable.workspice);
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    img = baos.toByteArray();
                 } else {
                     img = mCodeBean.getWorkpiecePic();
                 }
@@ -717,7 +723,7 @@ public class Input2Activity extends BaseOActivity {
                 File file = new File(PDFUtils.DEST);
                 if (file.exists()) file.delete();
                 file.getParentFile().mkdirs();
-                PDFUtils.createNTTable(mTemplateBean, mTemplateResultBean, mParameter2Beans, mResultBean3s, img);
+                PDFUtils.createNTTable(mTemplateBean, mTemplateResultBean, mParameterBean2s, mResultBean3s, img);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -761,11 +767,11 @@ public class Input2Activity extends BaseOActivity {
             _workpiece1Bean.setTimeStamp(System.currentTimeMillis());
 
             List<String> values = new ArrayList();
-            for (int j = 0; j < mParameter2Beans.size(); j++) {
+            for (int j = 0; j < mParameterBean2s.size(); j++) {
                 values.add(results.get(i).get(j).getText().toString().trim());
             }
             List<String> paths = new ArrayList();
-            for (int j = 0; j < mParameter2Beans.size(); j++) {
+            for (int j = 0; j < mParameterBean2s.size(); j++) {
                 paths.add((String) resultImgs.get(i).get(j).getTag());
             }
             _workpiece1Bean.setMValues(values);
@@ -802,13 +808,13 @@ public class Input2Activity extends BaseOActivity {
     public void openPDFInNative(Context context, String FILE_NAME) {
         File file = new File(context.getExternalCacheDir(), FILE_NAME);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(file);
+        Uri uri = FileProvider.getUriForFile(this, "alauncher.cn.measuringtablet.fileProvider", file);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(uri, "application/pdf");
         try {
             context.startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Log.w("URLSpan", "Activity was not found for intent, " + intent.toString());
+        } catch (Exception e) {
+            Log.w("URLSpan", "Activity was not found for intent, " + intent.toString(), e);
         }
     }
 

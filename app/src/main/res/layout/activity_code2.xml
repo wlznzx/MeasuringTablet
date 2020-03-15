@@ -36,13 +36,13 @@
         android:id="@+id/lv_text_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="12"></ListView>
+        android:layout_weight="13"></ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
@@ -93,7 +93,25 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:drawableTop="@drawable/settings_24px"
-                android:text="@string/set"
+                android:text="@string/set_only"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/add_code_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:drawableTop="@drawable/add_circle_24px"
+                android:text="@string/add_code"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </FrameLayout>

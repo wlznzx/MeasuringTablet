@@ -14,21 +14,23 @@ import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.User;
+import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.view.adapter.CodeListAdapter;
+import alauncher.cn.measuringtablet.widget.CodeEditDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class Code2Activity extends BaseOActivity {
+public class Code2Activity extends BaseOActivity implements DataUpdateInterface {
 
     @BindView(R.id.lv_text_view)
     public ListView listView;
 
-    private List<String> listText;
+    public int codeID = 1;
 
-    int codeID = 1;
+    public CodeListAdapter adapter;
 
-    CodeListAdapter adapter;
+    public List<CodeBean> codeBeans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class Code2Activity extends BaseOActivity {
     @Override
     protected void initView() {
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
-        List<CodeBean> codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
+        codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
         codeID = App.getSetupBean().getCodeID();
         states.put(String.valueOf(codeID - 1), true);
         adapter = new CodeListAdapter(codeBeans, states, codeID, this);
@@ -55,7 +57,7 @@ public class Code2Activity extends BaseOActivity {
         super.onPause();
     }
 
-    @OnClick({R.id.set_btn, R.id.set_as_btn})
+    @OnClick({R.id.set_btn, R.id.set_as_btn, R.id.add_code_btn})
     public void onSetBtnClick(View v) {
         switch (v.getId()) {
             case R.id.set_btn:
@@ -81,6 +83,10 @@ public class Code2Activity extends BaseOActivity {
                 InputActivity.datas.clear();
                 InputActivity.updates.clear();
                 break;
+            case R.id.add_code_btn:
+                CodeEditDialog codeEditDialog = new CodeEditDialog(Code2Activity.this, null);
+                codeEditDialog.show();
+                break;
         }
     }
 
@@ -88,4 +94,9 @@ public class Code2Activity extends BaseOActivity {
         return 1;
     }
 
+    @Override
+    public void dataUpdate() {
+        codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
+        adapter.notifyDataSetChanged();
+    }
 }
