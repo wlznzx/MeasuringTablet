@@ -36,12 +36,12 @@ public class DaoMaster extends AbstractDaoMaster {
         SetupBeanDao.createTable(db, ifNotExists);
         StepBeanDao.createTable(db, ifNotExists);
         StoreBeanDao.createTable(db, ifNotExists);
-        TemplateBeanDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
+        TemplateBeanDao.createTable(db, ifNotExists);
         RoleBeanDao.createTable(db, ifNotExists);
         TemplateResultBeanDao.createTable(db, ifNotExists);
-        GroupBean2Dao.createTable(db, ifNotExists);
         ParameterBean2Dao.createTable(db, ifNotExists);
+        GroupBean2Dao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -61,12 +61,12 @@ public class DaoMaster extends AbstractDaoMaster {
         SetupBeanDao.dropTable(db, ifExists);
         StepBeanDao.dropTable(db, ifExists);
         StoreBeanDao.dropTable(db, ifExists);
-        TemplateBeanDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
+        TemplateBeanDao.dropTable(db, ifExists);
         RoleBeanDao.dropTable(db, ifExists);
         TemplateResultBeanDao.dropTable(db, ifExists);
-        GroupBean2Dao.dropTable(db, ifExists);
         ParameterBean2Dao.dropTable(db, ifExists);
+        GroupBean2Dao.dropTable(db, ifExists);
     }
 
     /**
@@ -100,12 +100,12 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(SetupBeanDao.class);
         registerDaoClass(StepBeanDao.class);
         registerDaoClass(StoreBeanDao.class);
-        registerDaoClass(TemplateBeanDao.class);
         registerDaoClass(UserDao.class);
+        registerDaoClass(TemplateBeanDao.class);
         registerDaoClass(RoleBeanDao.class);
         registerDaoClass(TemplateResultBeanDao.class);
-        registerDaoClass(GroupBean2Dao.class);
         registerDaoClass(ParameterBean2Dao.class);
+        registerDaoClass(GroupBean2Dao.class);
     }
 
     public DaoSession newSession() {
