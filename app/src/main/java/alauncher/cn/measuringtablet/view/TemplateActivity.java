@@ -6,17 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.cuiweiyou.numberpickerdialog.NumberPickerDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.widget.StringEditDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -62,6 +65,8 @@ public class TemplateActivity extends BaseOActivity {
 
     public View[] views = new View[2];
 
+    public Button dataNumBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +86,7 @@ public class TemplateActivity extends BaseOActivity {
     @Override
     protected void initView() {
 
-       mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
+        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
 
         views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, null);
         leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
@@ -94,6 +99,25 @@ public class TemplateActivity extends BaseOActivity {
         signSP1 = views[0].findViewById(R.id.sign_sp1);
         signSP2 = views[0].findViewById(R.id.sign_sp2);
         signSP3 = views[0].findViewById(R.id.sign_sp3);
+        dataNumBtn = views[0].findViewById(R.id.data_num_btn);
+        dataNumBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new NumberPickerDialog(
+                        TemplateActivity.this,
+                        new NumberPicker.OnValueChangeListener() {
+                            @Override
+                            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                                dataNumBtn.setText(newVal + "");
+                            }
+                        },
+                        20, // 最大值
+                        1, // 最小值
+                        5) // 默认值
+                        .setCurrentValue(5) // 更新默认值
+                        .show();
+            }
+        });
         addListHeaderBtn = views[0].findViewById(R.id.add_list_header);
         addListHeaderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,7 +240,7 @@ public class TemplateActivity extends BaseOActivity {
         mTemplateBean.setFooterLeft(leftFooterEdt.getText().toString().trim());
         mTemplateBean.setFooterMid(midFooterEdt.getText().toString().trim());
         mTemplateBean.setFooterRight(rightFooterEdt.getText().toString().trim());
-
+        mTemplateBean.setDataNum(Integer.valueOf(dataNumBtn.getText().toString().trim()));
         mTemplateBean.setTitle(titleEdt.getText().toString().trim());
 
         List<String> signs = new ArrayList<>();
@@ -225,11 +249,12 @@ public class TemplateActivity extends BaseOActivity {
         signs.add((String) signSP3.getSelectedItem());
         mTemplateBean.setSignList(signs);
 
-
         //
         App.getDaoSession().getTemplateBeanDao().insertOrReplace(mTemplateBean);
 
-        Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show();
+
+        DialogUtils.showDialog(this, getResources().getString(R.string.save_success), getResources().getString(R.string.save_success));
     }
 
 

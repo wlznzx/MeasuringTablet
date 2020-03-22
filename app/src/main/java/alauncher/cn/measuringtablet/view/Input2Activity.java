@@ -21,10 +21,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import com.bumptech.glide.Glide;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,7 +83,10 @@ public class Input2Activity extends BaseOActivity {
     private List<EditText> titleEdts = new ArrayList<>();
 
     // aql
-    private List<EditText> aqlEdts = new ArrayList<>();
+    // private List<EditText> aqlEdts = new ArrayList<>();
+
+    // aql
+    private List<Object> aqlObjects = new ArrayList<>();
 
     // rosh
     private List<EditText> roshEdts = new ArrayList<>();
@@ -97,6 +103,12 @@ public class Input2Activity extends BaseOActivity {
     // min
     private List<TextView> minEdts = new ArrayList<>();
 
+    // avg
+    private List<TextView> avgEdts = new ArrayList<>();
+
+    // range
+    private List<TextView> rangeEdts = new ArrayList<>();
+
     // judge
     private List<TextView> judgeEdts = new ArrayList<>();
 
@@ -109,6 +121,8 @@ public class Input2Activity extends BaseOActivity {
 
     private List<Double> maxs = new ArrayList<>();
     private List<Double> mins = new ArrayList<>();
+    private List<Double> avgs = new ArrayList<>();
+    private List<Double> ranges = new ArrayList<>();
     private List<String> judges = new ArrayList<>();
     private String allJudge = "OK";
 
@@ -133,11 +147,13 @@ public class Input2Activity extends BaseOActivity {
         mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
             results.add(new ArrayList<>());
             resultImgs.add(new ArrayList<>());
             maxs.add(Double.valueOf(-100000));
             mins.add(Double.valueOf(1000000));
+            avgs.add(Double.valueOf(1000000));
+            ranges.add(Double.valueOf(1000000));
             judges.add("OK");
         }
 
@@ -247,7 +263,7 @@ public class Input2Activity extends BaseOActivity {
                     String.valueOf(rol3Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(nominalLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
                 LinearLayout dataLayout = new LinearLayout(this);
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
 
@@ -314,32 +330,70 @@ public class Input2Activity extends BaseOActivity {
             */
 
             // 最大值;
-            LinearLayout maxLayout = new LinearLayout(this);
-            maxLayout.addView(getInfoTV("最大值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            TextView maxTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
-            maxLayout.addView(maxTV1, getItemLayoutParams(5, 1));
-            TextView maxTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
-            maxLayout.addView(maxTV2, getItemLayoutParams(5, 1));
-            TextView maxTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
-            maxLayout.addView(maxTV3, getItemLayoutParams(5, 1));
-            if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV1);
-            if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV2);
-            if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV3);
-            mainLayout.addView(maxLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            if (mTemplateBean.getMaximumEnable()) {
+                LinearLayout maxLayout = new LinearLayout(this);
+                maxLayout.addView(getInfoTV("最大值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+                TextView maxTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
+                maxLayout.addView(maxTV1, getItemLayoutParams(5, 1));
+                TextView maxTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
+                maxLayout.addView(maxTV2, getItemLayoutParams(5, 1));
+                TextView maxTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
+                maxLayout.addView(maxTV3, getItemLayoutParams(5, 1));
+                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV1);
+                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV2);
+                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV3);
+                mainLayout.addView(maxLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            }
+
 
             // 最小值；
-            LinearLayout minLayout = new LinearLayout(this);
-            minLayout.addView(getInfoTV("最小值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
-            minLayout.addView(minTV1, getItemLayoutParams(5, 1));
-            TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
-            minLayout.addView(minTV2, getItemLayoutParams(5, 1));
-            TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
-            minLayout.addView(minTV3, getItemLayoutParams(5, 1));
-            if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV1);
-            if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV2);
-            if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV3);
-            mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            if (mTemplateBean.getMinimumEnable()) {
+                LinearLayout minLayout = new LinearLayout(this);
+                minLayout.addView(getInfoTV("最小值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
+                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
+                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
+                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV1);
+                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV2);
+                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV3);
+                mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            }
+
+            // 平均值；
+            if (mTemplateBean.getAverageEnable()) {
+                LinearLayout minLayout = new LinearLayout(this);
+                minLayout.addView(getInfoTV("平均值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
+                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
+                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
+                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV1);
+                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV2);
+                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV3);
+                mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            }
+
+            // 极差值；
+            if (mTemplateBean.getRangeEnable()) {
+                LinearLayout minLayout = new LinearLayout(this);
+                minLayout.addView(getInfoTV("极差值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
+                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
+                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
+                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
+                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV1);
+                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV2);
+                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV3);
+                mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            }
+
 
             /*
             table.addCell(getDataCell("最小值", 1, 1, dataTitleColor));
@@ -352,18 +406,20 @@ public class Input2Activity extends BaseOActivity {
             */
 
             // 判定;
-            LinearLayout judgeLayout = new LinearLayout(this);
-            judgeLayout.addView(getInfoTV("判定", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            TextView judgeTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
-            judgeLayout.addView(judgeTV1, getItemLayoutParams(5, 1));
-            TextView judgeTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
-            judgeLayout.addView(judgeTV2, getItemLayoutParams(5, 1));
-            TextView judgeTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
-            judgeLayout.addView(judgeTV3, getItemLayoutParams(5, 1));
-            if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV1);
-            if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV2);
-            if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV3);
-            mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            if (mTemplateBean.getJudgeEnable()) {
+                LinearLayout judgeLayout = new LinearLayout(this);
+                judgeLayout.addView(getInfoTV("判定", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
+                TextView judgeTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
+                judgeLayout.addView(judgeTV1, getItemLayoutParams(5, 1));
+                TextView judgeTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
+                judgeLayout.addView(judgeTV2, getItemLayoutParams(5, 1));
+                TextView judgeTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
+                judgeLayout.addView(judgeTV3, getItemLayoutParams(5, 1));
+                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV1);
+                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV2);
+                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV3);
+                mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
+            }
         }
 
         int bottomRow = Math.max(Math.max(mTemplateBean.getAQLList().size(), mTemplateBean.getRoHSList().size()), 5);
@@ -376,16 +432,16 @@ public class Input2Activity extends BaseOActivity {
         for (int j = 0; j < bottomRow; j++) {
             aqlLayout.addView(getInfoTV(mTemplateBean.getAQLList().size() > j ? mTemplateBean.getAQLList().get(j) : " ", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
         }
-        bottomLayout.addView(aqlLayout, getItemLayoutParams(1, 1 * bottomRow));
+        bottomLayout.addView(aqlLayout, getItemLayoutParams(2, 1 * bottomRow));
 
         // aql result
         LinearLayout aqlResultLayout = new LinearLayout(this);
         aqlResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
-            if (aqlEdts.size() < mTemplateBean.getAQLList().size()) {
-                EditText _edt = getInputEditView(false);
+            if (aqlObjects.size() < mTemplateBean.getAQLList().size()) {
+                Spinner _edt = getInputSpinner();
                 aqlResultLayout.addView(_edt, getItemVLayoutParams(1, 1));
-                aqlEdts.add(_edt);
+                aqlObjects.add(_edt);
             } else {
                 aqlResultLayout.addView(getInfoTV("", Color.WHITE), getItemVLayoutParams(1, 1));
             }
@@ -399,7 +455,7 @@ public class Input2Activity extends BaseOActivity {
         for (int j = 0; j < bottomRow; j++) {
             roshLayout.addView(getInfoTV(mTemplateBean.getRoHSList().size() > j ? mTemplateBean.getRoHSList().get(j) : " ", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
         }
-        bottomLayout.addView(roshLayout, getItemLayoutParams(1, 1 * bottomRow));
+        bottomLayout.addView(roshLayout, getItemLayoutParams(2, 1 * bottomRow));
 
 
         // RoSH Result;
@@ -420,9 +476,9 @@ public class Input2Activity extends BaseOActivity {
         // Judge Result;
         LinearLayout judgeResultLayout = new LinearLayout(this);
         judgeResultLayout.setOrientation(LinearLayout.VERTICAL);
-        judgeResultLayout.addView(getInfoTV("综合判断", ColorConstants.titleColor), getItemVLayoutParams(4, 1 * (bottomRow - 2)));
-        allResultTV = getInfoTV("OK", ColorConstants.titleColor);
-        judgeResultLayout.addView(allResultTV, getItemVLayoutParams(4, 1 * 2));
+        judgeResultLayout.addView(getInfoTV("综合判断", ColorConstants.titleColor), getItemVLayoutParams(4, 1 * (bottomRow - 3)));
+        allResultTV = getInfoTV("- -", ColorConstants.titleColor);
+        judgeResultLayout.addView(allResultTV, getItemVLayoutParams(4, 1 * 3));
         bottomLayout.addView(judgeResultLayout, getItemLayoutParams(1, 1 * bottomRow));
 
         mainLayout.addView(bottomLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1 * bottomRow, 1));
@@ -494,6 +550,16 @@ public class Input2Activity extends BaseOActivity {
         return et;
     }
 
+    public Spinner getInputSpinner() {
+        Spinner sp = new Spinner(this);
+        sp.setGravity(Gravity.CENTER);
+        ArrayAdapter array_adapter = new ArrayAdapter(this, R.layout.spinner_item, getResources().getStringArray(R.array.input_result));
+        array_adapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(array_adapter);
+        return sp;
+    }
+
     @OnClick(R.id.btn_save)
     public void onSave(View v) {
         if (getIsEmpty()) {
@@ -547,7 +613,7 @@ public class Input2Activity extends BaseOActivity {
     }
 
     private boolean getIsEmpty() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
             for (EditText edt : results.get(i)) {
                 if (edt.getText().toString().equals("")) return true;
             }
@@ -588,7 +654,9 @@ public class Input2Activity extends BaseOActivity {
             dialog.dismiss();
             for (int i = 0; i < mParameterBean2s.size(); i++) {
                 maxEdts.get(i).setText(String.valueOf(maxs.get(i)));
-                minEdts.get(i).setText(String.valueOf(maxs.get(i)));
+                minEdts.get(i).setText(String.valueOf(mins.get(i)));
+                avgEdts.get(i).setText(String.valueOf(avgs.get(i)));
+                rangeEdts.get(i).setText(String.valueOf(ranges.get(i)));
                 judgeEdts.get(i).setText(judges.get(i));
                 judgeEdts.get(i).setBackgroundColor(judges.get(i).equals("OK")
                         ? ColorConstants.dataOKColor : ColorConstants.dataNGColor);
@@ -605,16 +673,27 @@ public class Input2Activity extends BaseOActivity {
     }
 
     public void doJudges() {
+        double sum = 0;
+        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
+            maxs.set(i, Double.valueOf(-100000));
+            mins.set(i, Double.valueOf(1000000));
+            judges.set(i, "OK");
+        }
+        allJudge = "OK";
         for (int i = 0; i < mParameterBean2s.size(); i++) {
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
                 try {
                     double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                    android.util.Log.d("wlDebug", "do _value = " + _value);
+                    sum += _value;
                     if (_value < mins.get(i)) {
                         mins.set(i, _value);
                     }
                     if (_value > maxs.get(i)) {
                         maxs.set(i, _value);
                     }
+                    android.util.Log.d("wlDebug", "do getUpperToleranceValue = " + mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue());
+                    android.util.Log.d("wlDebug", "do getLowerToleranceValue = " + mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue());
                     if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
                             || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
                         judges.set(i, "NG");
@@ -626,6 +705,16 @@ public class Input2Activity extends BaseOActivity {
 
                 }
             }
+            for (Object obj : aqlObjects) {
+                if (obj instanceof Spinner) {
+                    String re = ((Spinner) obj).getSelectedItem().toString();
+                    if (re.equals("NG")) {
+                        allJudge = "NG";
+                    }
+                }
+            }
+            avgs.set(i, BigDecimal.valueOf(sum / mTemplateBean.getDataNum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+            ranges.set(i, BigDecimal.valueOf(maxs.get(i) - mins.get(i)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
         }
     }
 
@@ -633,7 +722,7 @@ public class Input2Activity extends BaseOActivity {
 
         private ProgressDialog dialog;
 
-        private String path = "/mnt/sdcard/ETGate/";
+        private String path = "/mnt/sdcard/NTGate/";
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override
@@ -678,8 +767,12 @@ public class Input2Activity extends BaseOActivity {
                 mTemplateResultBean.setTitleList(titleLists);
 
                 List<String> aqlLists = new ArrayList<>();
-                for (EditText edt : aqlEdts) {
-                    aqlLists.add(edt.getText().toString().trim());
+                for (Object obj : aqlObjects) {
+                    if (obj instanceof Spinner) {
+                        aqlLists.add(((Spinner) obj).getSelectedItem().toString());
+                    } else if (obj instanceof EditText) {
+                        aqlLists.add(((EditText) obj).getText().toString().trim());
+                    }
                 }
                 mTemplateResultBean.setAQLList(aqlLists);
 
@@ -749,7 +842,7 @@ public class Input2Activity extends BaseOActivity {
     public void doSave() {
         List<ResultBean3> updateBeans = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
             // 1
             ResultBean3 _workpiece1Bean = new ResultBean3();
 

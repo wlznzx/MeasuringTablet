@@ -395,6 +395,7 @@ public class App extends MultiDexApplication {
             if (getDaoSession().getTemplateBeanDao().load((long) i) == null) {
                 TemplateBean mTemplateBean = new TemplateBean();
                 mTemplateBean.setCodeID(i);
+                mTemplateBean.setDataNum(5);
                 ArrayList<String> Titles = new ArrayList<>();
                 Titles.add("部品名称");
                 Titles.add("进货批量");

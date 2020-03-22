@@ -139,6 +139,11 @@
         <item>30</item>
     </string-array>
 
+    <string-array name="input_result" translatable="false">
+        <item>OK</item>
+        <item>NG</item>
+    </string-array>
+
     <string-array name="result2" translatable="false">
         <item></item>
         <item>OK</item>
