@@ -1,7 +1,5 @@
 package alauncher.cn.measuringtablet.bean;
 
-import android.widget.Switch;
-
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 

@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
@@ -150,12 +149,16 @@ public class Input2Activity extends BaseOActivity {
         for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
             results.add(new ArrayList<>());
             resultImgs.add(new ArrayList<>());
+            judges.add("OK");
+        }
+
+        for (int i = 0; i < mParameterBean2s.size(); i++) {
             maxs.add(Double.valueOf(-100000));
             mins.add(Double.valueOf(1000000));
             avgs.add(Double.valueOf(1000000));
             ranges.add(Double.valueOf(1000000));
-            judges.add("OK");
         }
+
 
         // 标题 + 签名栏;
         LinearLayout _layout = new LinearLayout(this);
@@ -653,13 +656,19 @@ public class Input2Activity extends BaseOActivity {
         protected void onPostExecute(String result) {
             dialog.dismiss();
             for (int i = 0; i < mParameterBean2s.size(); i++) {
-                maxEdts.get(i).setText(String.valueOf(maxs.get(i)));
-                minEdts.get(i).setText(String.valueOf(mins.get(i)));
-                avgEdts.get(i).setText(String.valueOf(avgs.get(i)));
-                rangeEdts.get(i).setText(String.valueOf(ranges.get(i)));
-                judgeEdts.get(i).setText(judges.get(i));
-                judgeEdts.get(i).setBackgroundColor(judges.get(i).equals("OK")
-                        ? ColorConstants.dataOKColor : ColorConstants.dataNGColor);
+                if (mTemplateBean.getMaximumEnable())
+                    maxEdts.get(i).setText(String.valueOf(maxs.get(i)));
+                if (mTemplateBean.getMinimumEnable())
+                    minEdts.get(i).setText(String.valueOf(mins.get(i)));
+                if (mTemplateBean.getAverageEnable())
+                    avgEdts.get(i).setText(String.valueOf(avgs.get(i)));
+                if (mTemplateBean.getRangeEnable())
+                    rangeEdts.get(i).setText(String.valueOf(ranges.get(i)));
+                if (mTemplateBean.getJudgeEnable()) {
+                    judgeEdts.get(i).setText(judges.get(i));
+                    judgeEdts.get(i).setBackgroundColor(judges.get(i).equals("OK")
+                            ? ColorConstants.dataOKColor : ColorConstants.dataNGColor);
+                }
                 allResultTV.setText(allJudge);
                 allResultTV.setBackgroundColor(allJudge.equals("OK")
                         ? ColorConstants.dataOKColor : ColorConstants.dataNGColor);
@@ -674,9 +683,11 @@ public class Input2Activity extends BaseOActivity {
 
     public void doJudges() {
         double sum = 0;
-        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
+        for (int i = 0; i < mParameterBean2s.size(); i++) {
             maxs.set(i, Double.valueOf(-100000));
             mins.set(i, Double.valueOf(1000000));
+        }
+        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
             judges.set(i, "OK");
         }
         allJudge = "OK";
@@ -684,7 +695,6 @@ public class Input2Activity extends BaseOActivity {
             for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
                 try {
                     double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
-                    android.util.Log.d("wlDebug", "do _value = " + _value);
                     sum += _value;
                     if (_value < mins.get(i)) {
                         mins.set(i, _value);
@@ -692,8 +702,6 @@ public class Input2Activity extends BaseOActivity {
                     if (_value > maxs.get(i)) {
                         maxs.set(i, _value);
                     }
-                    android.util.Log.d("wlDebug", "do getUpperToleranceValue = " + mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue());
-                    android.util.Log.d("wlDebug", "do getLowerToleranceValue = " + mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue());
                     if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
                             || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
                         judges.set(i, "NG");
@@ -746,7 +754,7 @@ public class Input2Activity extends BaseOActivity {
 //                e.printStackTrace();
 //            }
             doJudges();
-            doSave();
+            // doSave();
 
             try {
                 byte[] img = null;
@@ -760,11 +768,50 @@ public class Input2Activity extends BaseOActivity {
                 }
 
                 mTemplateResultBean = new TemplateResultBean();
+
+                mTemplateResultBean.setTitle(mTemplateBean.getTitle());
+                mTemplateResultBean.setTitleList(mTemplateBean.getTitleList());
+                mTemplateResultBean.setSignList(mTemplateBean.getSignList());
+                mTemplateResultBean.setAQLList(mTemplateBean.getAQLList());
+                mTemplateResultBean.setRoHSList(mTemplateBean.getRoHSList());
+                mTemplateResultBean.setHeaderLeft(mTemplateBean.getHeaderLeft());
+                mTemplateResultBean.setHeaderMid(mTemplateBean.getHeaderMid());
+                mTemplateResultBean.setHeaderRight(mTemplateBean.getHeaderRight());
+                mTemplateResultBean.setFooterLeft(mTemplateBean.getFooterLeft());
+                mTemplateResultBean.setFooterMid(mTemplateBean.getFooterMid());
+                mTemplateResultBean.setFooterRight(mTemplateBean.getFooterRight());
+
+                mTemplateResultBean.setMaximumEnable(mTemplateBean.getMaximumEnable());
+                mTemplateResultBean.setMinimumEnable(mTemplateBean.getMinimumEnable());
+                mTemplateResultBean.setAverageEnable(mTemplateBean.getAverageEnable());
+                mTemplateResultBean.setRangeEnable(mTemplateBean.getRangeEnable());
+                mTemplateResultBean.setJudgeEnable(mTemplateBean.getJudgeEnable());
+                mTemplateResultBean.setFactoryCode(mDeviceInfoBean.getFactoryCode());
+                mTemplateResultBean.setDeviceCode(mDeviceInfoBean.getDeviceCode());
+                mTemplateResultBean.setCodeID(App.getSetupBean().getCodeID());
+                mTemplateResultBean.setTimeStamp(System.currentTimeMillis());
+
+                List<String> indexLists = new ArrayList<>();
+                List<String> nominalValue = new ArrayList<>();
+                List<String> upperLists = new ArrayList<>();
+                List<String> lowerLists = new ArrayList<>();
+                for (int j = 0; j < mParameterBean2s.size(); j++) {
+                    ParameterBean2 _bean = mParameterBean2s.get(j);
+                    indexLists.add(String.valueOf(_bean.getSequenceNumber() + 1));
+                    nominalValue.add(String.valueOf(_bean.getNominalValue()));
+                    upperLists.add(String.valueOf(_bean.getNominalValue() + _bean.getUpperToleranceValue()));
+                    lowerLists.add(String.valueOf(_bean.getNominalValue() + _bean.getLowerToleranceValue()));
+                }
+                mTemplateResultBean.setValueIndexs(indexLists);
+                mTemplateResultBean.setNominalValues(nominalValue);
+                mTemplateResultBean.setUpperToleranceValues(upperLists);
+                mTemplateResultBean.setLowerToleranceValues(lowerLists);
+
                 List<String> titleLists = new ArrayList<>();
                 for (EditText edt : titleEdts) {
                     titleLists.add(edt.getText().toString().trim());
                 }
-                mTemplateResultBean.setTitleList(titleLists);
+                mTemplateResultBean.setTitleResultList(titleLists);
 
                 List<String> aqlLists = new ArrayList<>();
                 for (Object obj : aqlObjects) {
@@ -774,21 +821,24 @@ public class Input2Activity extends BaseOActivity {
                         aqlLists.add(((EditText) obj).getText().toString().trim());
                     }
                 }
-                mTemplateResultBean.setAQLList(aqlLists);
+                mTemplateResultBean.setAQLResultList(aqlLists);
 
                 List<String> roshLists = new ArrayList<>();
                 for (EditText edt : roshEdts) {
                     roshLists.add(edt.getText().toString().trim());
                 }
-                mTemplateResultBean.setRoHSList(roshLists);
-
+                mTemplateResultBean.setRoHSResultList(roshLists);
                 mTemplateResultBean.setAllJudge(allJudge);
+                Long templateID = App.getDaoSession().getTemplateResultBeanDao().insert(mTemplateResultBean);
 
                 mResultBean3s.clear();
                 for (int i = 0; i < results.size(); i++) {
                     ResultBean3 _bean = new ResultBean3();
+                    _bean.setTemplateID(templateID);
+                    _bean.setCodeID(App.getSetupBean().getCodeID());
                     ArrayList<String> values = new ArrayList<>();
                     ArrayList<String> picPaths = new ArrayList<>();
+                    ArrayList<String> indexs = new ArrayList<>();
                     for (EditText edt : results.get(i)) {
                         values.add(edt.getText().toString().trim());
                     }
@@ -797,17 +847,27 @@ public class Input2Activity extends BaseOActivity {
                     }
                     _bean.setMValues(values);
                     _bean.setMPicPaths(picPaths);
-                    _bean.setHandlerAccout("hhb");
+                    _bean.setHandlerAccout(App.handlerAccout);
                     _bean.setResult(judges.get(i));
                     _bean.setWorkid_extra("");
+                    _bean.setTimeStamp(System.currentTimeMillis());
                     mResultBean3s.add(_bean);
+                    App.getDaoSession().getResultBean3Dao().insert(_bean);
                     android.util.Log.d("wlDebug", _bean.toString());
+                }
+
+                for (ResultBean3 _b3 : mResultBean3s) {
+                    try {
+                        // JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 File file = new File(path);
                 if (file.exists()) file.delete();
                 file.getParentFile().mkdirs();
-                PDFUtils.createNTTable(mTemplateBean, mTemplateResultBean, mParameterBean2s, mResultBean3s, img, path);
+                PDFUtils.createNTTable(mTemplateResultBean, mResultBean3s, img, path);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -858,7 +918,7 @@ public class Input2Activity extends BaseOActivity {
             List<String> paths = new ArrayList();
             for (int j = 0; j < mParameterBean2s.size(); j++) {
                 paths.add((String) resultImgs.get(i).get(j).getTag());
-                if (j == 0) paths.set(j, "/mnt/sdcard/e0bfe5aa51336f4508397adc87992263.jpg");
+                // if (j == 0) paths.set(j, "/mnt/sdcard/e0bfe5aa51336f4508397adc87992263.jpg");
             }
             _workpiece1Bean.setMValues(values);
             _workpiece1Bean.setMPicPaths(paths);
