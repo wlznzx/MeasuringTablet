@@ -80,6 +80,7 @@ public class CodeEditDialog extends Dialog {
         if (App.getDaoSession().getTemplateBeanDao().load((long) codeID) == null) {
             TemplateBean mTemplateBean = new TemplateBean();
             mTemplateBean.setCodeID(codeID);
+            mTemplateBean.setDataNum(5);
             ArrayList<String> Titles = new ArrayList<>();
             Titles.add("部品名称");
             Titles.add("进货批量");

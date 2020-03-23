@@ -1,7 +1,5 @@
 package alauncher.cn.measuringtablet.bean;
 
-import android.widget.Switch;
-
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 
@@ -48,14 +46,16 @@ public class TemplateBean {
 
     public String title;
 
+    public int dataNum;
+
     public boolean maximumEnable, minimumEnable, averageEnable, rangeEnable, judgeEnable;
 
-    @Generated(hash = 1733318951)
+    @Generated(hash = 1371267202)
     public TemplateBean(long codeID, List<String> titleList, List<String> signList,
             List<String> AQLList, List<String> RoHSList, String headerLeft, String headerMid,
             String headerRight, String footerLeft, String footerMid, String footerRight,
-            String title, boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
-            boolean rangeEnable, boolean judgeEnable) {
+            String title, int dataNum, boolean maximumEnable, boolean minimumEnable,
+            boolean averageEnable, boolean rangeEnable, boolean judgeEnable) {
         this.codeID = codeID;
         this.titleList = titleList;
         this.signList = signList;
@@ -68,6 +68,7 @@ public class TemplateBean {
         this.footerMid = footerMid;
         this.footerRight = footerRight;
         this.title = title;
+        this.dataNum = dataNum;
         this.maximumEnable = maximumEnable;
         this.minimumEnable = minimumEnable;
         this.averageEnable = averageEnable;
@@ -93,6 +94,14 @@ public class TemplateBean {
 
     public void setTitleList(List<String> titleList) {
         this.titleList = titleList;
+    }
+
+    public List<String> getSignList() {
+        return this.signList;
+    }
+
+    public void setSignList(List<String> signList) {
+        this.signList = signList;
     }
 
     public List<String> getAQLList() {
@@ -167,6 +176,14 @@ public class TemplateBean {
         this.title = title;
     }
 
+    public int getDataNum() {
+        return this.dataNum;
+    }
+
+    public void setDataNum(int dataNum) {
+        this.dataNum = dataNum;
+    }
+
     public boolean getMaximumEnable() {
         return this.maximumEnable;
     }
@@ -207,13 +224,6 @@ public class TemplateBean {
         this.judgeEnable = judgeEnable;
     }
 
-    public List<String> getSignList() {
-        return this.signList;
-    }
-
-    public void setSignList(List<String> signList) {
-        this.signList = signList;
-    }
-
+    
 
 }

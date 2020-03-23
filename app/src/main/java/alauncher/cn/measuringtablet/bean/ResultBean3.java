@@ -18,6 +18,8 @@ public class ResultBean3 {
 
     public long codeID;
 
+    public long templateID;
+
     public String handlerAccout;
 
     public long timeStamp;
@@ -41,12 +43,14 @@ public class ResultBean3 {
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> mPicPaths;
 
-    @Generated(hash = 255719245)
-    public ResultBean3(Long id, long codeID, String handlerAccout, long timeStamp,
-                       String workid, String workid_extra, String eventid, String event,
-                       String result, List<String> mValues, List<String> mPicPaths) {
+    @Generated(hash = 769650356)
+    public ResultBean3(Long id, long codeID, long templateID, String handlerAccout,
+            long timeStamp, String workid, String workid_extra, String eventid,
+            String event, String result, List<String> mValues,
+            List<String> mPicPaths) {
         this.id = id;
         this.codeID = codeID;
+        this.templateID = templateID;
         this.handlerAccout = handlerAccout;
         this.timeStamp = timeStamp;
         this.workid = workid;
@@ -76,6 +80,14 @@ public class ResultBean3 {
 
     public void setCodeID(long codeID) {
         this.codeID = codeID;
+    }
+
+    public long getTemplateID() {
+        return this.templateID;
+    }
+
+    public void setTemplateID(long templateID) {
+        this.templateID = templateID;
     }
 
     public String getHandlerAccout() {
@@ -156,23 +168,5 @@ public class ResultBean3 {
 
     public void setSelect(boolean select) {
         isSelect = select;
-    }
-
-    @Override
-    public String toString() {
-        return "ResultBean3{" +
-                "id=" + id +
-                ", codeID=" + codeID +
-                ", handlerAccout='" + handlerAccout + '\'' +
-                ", timeStamp=" + timeStamp +
-                ", workid='" + workid + '\'' +
-                ", workid_extra='" + workid_extra + '\'' +
-                ", eventid='" + eventid + '\'' +
-                ", event='" + event + '\'' +
-                ", result='" + result + '\'' +
-                ", isSelect=" + isSelect +
-                ", mValues=" + mValues +
-                ", mPicPaths=" + mPicPaths +
-                '}';
     }
 }

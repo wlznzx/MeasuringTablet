@@ -183,7 +183,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/template_margin_left">
+        android:layout_marginLeft="@dimen/template_margin_left"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -210,6 +212,21 @@
                 android:maxLines="1"
                 android:textColor="@color/colorPrimary" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/template_margin_left"
+            android:text="@string/data_num"
+            android:textSize="18sp"></TextView>
+
+        <Button
+            android:id="@+id/data_num_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="5"></Button>
+
     </LinearLayout>
 
     <View
