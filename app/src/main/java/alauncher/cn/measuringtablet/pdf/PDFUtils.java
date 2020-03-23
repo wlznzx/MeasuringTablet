@@ -8,25 +8,18 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
-import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 
 
@@ -151,7 +144,7 @@ public class PDFUtils {
         }
 
         // Image cellIMG = Image.getInstance(FOX);
-        Image cellIMG = Image.getInstance(img);
+        Image cellIMG = Image.getInstance(pTemplateResultBean.getImg());
         PdfPCell cell4 = new PdfPCell(cellIMG, true);
         cell4.setRowspan(10);
         cell4.setColspan(16);
@@ -262,15 +255,23 @@ public class PDFUtils {
                 String path3 = i * 3 + 2 <= (pResultBean3s.get(j).getMPicPaths().size() - 1) ? pResultBean3s.get(j).getMPicPaths().get(i * 3 + 2) : " ";
                 table.addCell(getDataCell(String.valueOf((j + 1)), 1, 1, dataHeader));
                 table.addCell(getDataCell(value1, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
-                if (path1 == null || path1.equals(" ")) {
-                    table.addCell(getDataCell(path1, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
+                if (path1 == null || path1.equals(" ") || path1.equals("null")) {
+                    table.addCell(getDataCell("", 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
                 } else {
                     table.addCell(getDataImgCell(path1, 1, 3));
                 }
                 table.addCell(getDataCell(value2, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
-                table.addCell(getDataCell(path2, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
+                if (path2 == null || path2.equals(" ") || path2.equals("null")) {
+                    table.addCell(getDataCell("", 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
+                } else {
+                    table.addCell(getDataImgCell(path2, 1, 3));
+                }
                 table.addCell(getDataCell(value3, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
-                table.addCell(getDataCell(path3, 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
+                if (path3 == null || path3.equals(" ") || path3.equals("null")) {
+                    table.addCell(getDataCell("", 1, 3, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));
+                } else {
+                    table.addCell(getDataImgCell(path3, 1, 3));
+                }
             }
 
             // 最大值；

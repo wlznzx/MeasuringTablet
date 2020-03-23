@@ -39,6 +39,12 @@
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
+                    android:text="@string/save_batch" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
                     android:text="@string/handler" />
 
                 <TextView
@@ -64,7 +70,7 @@
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/result" />
-                
+
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -155,12 +161,25 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/btn_pdf"
+                android:layout_width="120dp"
+                android:layout_height="33dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/btn_excel"
+                android:background="@drawable/bg_selete_all"
+                android:gravity="center"
+                android:text="@string/export_pdf"
+                android:textColor="#000001"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/btn_quit"
                 android:layout_width="80dp"
                 android:layout_height="33dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/btn_excel"
+                android:layout_toLeftOf="@+id/btn_pdf"
                 android:background="@drawable/bg_selete_all"
                 android:gravity="center"
                 android:text="取消"

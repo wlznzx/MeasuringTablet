@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.provider.Browser;
 import android.provider.MediaStore;
 import android.text.method.DigitsKeyListener;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -737,8 +738,8 @@ public class Input2Activity extends BaseOActivity {
         protected void onPreExecute() {
             path = path + "table_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".pdf";
             dialog = new ProgressDialog(Input2Activity.this);
-            dialog.setTitle("导出");
-            dialog.setMessage("正在导出数据 , 请稍等.");
+            dialog.setTitle("保存");
+            dialog.setMessage("保存数据 , 请稍等.");
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
             dialog.show();
@@ -768,7 +769,7 @@ public class Input2Activity extends BaseOActivity {
                 }
 
                 mTemplateResultBean = new TemplateResultBean();
-
+                mTemplateResultBean.setImg(img);
                 mTemplateResultBean.setTitle(mTemplateBean.getTitle());
                 mTemplateResultBean.setTitleList(mTemplateBean.getTitleList());
                 mTemplateResultBean.setSignList(mTemplateBean.getSignList());
@@ -858,16 +859,16 @@ public class Input2Activity extends BaseOActivity {
 
                 for (ResultBean3 _b3 : mResultBean3s) {
                     try {
-                        // JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
+                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
-                File file = new File(path);
-                if (file.exists()) file.delete();
-                file.getParentFile().mkdirs();
-                PDFUtils.createNTTable(mTemplateResultBean, mResultBean3s, img, path);
+//                File file = new File(path);
+//                if (file.exists()) file.delete();
+//                file.getParentFile().mkdirs();
+//                PDFUtils.createNTTable(mTemplateResultBean, mResultBean3s, img, path);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -888,8 +889,8 @@ public class Input2Activity extends BaseOActivity {
         @Override
         protected void onPostExecute(String result) {
             dialog.dismiss();
-            DialogUtils.showDialog(Input2Activity.this, getResources().getString(R.string.pdf_export_title), getResources().getString(R.string.pdf_export_msg) + path);
-            openPDFInNative(Input2Activity.this, path);
+            DialogUtils.showDialog(Input2Activity.this, getResources().getString(R.string.save), getResources().getString(R.string.save_success));
+            // openPDFInNative(Input2Activity.this, path);
         }
 
         //onCancelled方法用于在取消执行中的任务时更改UI

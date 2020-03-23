@@ -142,4 +142,10 @@
     <string name="pdf_export_title">PDF导出</string>
     <string name="pdf_export_msg">PDF导出成功，路径位于:</string>
     <string name="data_num">数据个数:</string>
+    <string name="export_pdf">导出PDF</string>
+    <string name="save_batch">保存批次</string>
+    <string name="no_select_title">无选中项</string>
+    <string name="no_select_msg">必须有选中数据才能导出.</string>
+    <string name="tips">提示</string>
+    <string name="id_not_same">数据批次必须一致才能导出PDF模板.</string>
 </resources>

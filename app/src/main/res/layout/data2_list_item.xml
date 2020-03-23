@@ -23,6 +23,12 @@
         android:layout_height="match_parent" />
 
     <TextView
+        android:id="@+id/save_batch"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent" />
+
+    <TextView
         android:id="@+id/data_handler"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"

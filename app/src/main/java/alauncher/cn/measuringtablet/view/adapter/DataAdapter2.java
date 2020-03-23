@@ -117,6 +117,7 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         });
 
         holder.setText(R.id.data_num, "" + (position + 1));
+        holder.setText(R.id.save_batch, "" + datas.get(position).getTemplateID());
         holder.setText(R.id.data_handler, "" + datas.get(position).getHandlerAccout());
         holder.setText(R.id.data_workpiece_id, "- -");
         holder.setText(R.id.data_event, "- -");

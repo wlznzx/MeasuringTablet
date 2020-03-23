@@ -39,6 +39,12 @@
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
+                    android:text="@string/save_batch" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
                     android:text="@string/handler" />
 
                 <TextView
