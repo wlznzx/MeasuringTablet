@@ -124,6 +124,7 @@ public class Input2Activity extends BaseOActivity {
     private List<Double> avgs = new ArrayList<>();
     private List<Double> ranges = new ArrayList<>();
     private List<String> judges = new ArrayList<>();
+    private List<String> dataJudges = new ArrayList<>();
     private String allJudge = "OK";
 
     @Override
@@ -150,7 +151,7 @@ public class Input2Activity extends BaseOActivity {
         for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
             results.add(new ArrayList<>());
             resultImgs.add(new ArrayList<>());
-            judges.add("OK");
+            dataJudges.add("OK");
         }
 
         for (int i = 0; i < mParameterBean2s.size(); i++) {
@@ -158,6 +159,7 @@ public class Input2Activity extends BaseOActivity {
             mins.add(Double.valueOf(1000000));
             avgs.add(Double.valueOf(1000000));
             ranges.add(Double.valueOf(1000000));
+            judges.add("OK");
         }
 
 
@@ -687,11 +689,23 @@ public class Input2Activity extends BaseOActivity {
         for (int i = 0; i < mParameterBean2s.size(); i++) {
             maxs.set(i, Double.valueOf(-100000));
             mins.set(i, Double.valueOf(1000000));
-        }
-        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
             judges.set(i, "OK");
         }
+        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
+            dataJudges.set(i, "OK");
+        }
         allJudge = "OK";
+
+        for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
+            for (int i = 0; i < mParameterBean2s.size(); i++) {
+                double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
+                        || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
+                    dataJudges.set(j, "NG");
+                }
+            }
+        }
+
         for (int i = 0; i < mParameterBean2s.size(); i++) {
             for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
                 try {
@@ -748,12 +762,7 @@ public class Input2Activity extends BaseOActivity {
         //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
         @Override
         protected String doInBackground(String... params) {
-            //处理耗时操作
-//            try {
-//                Thread.sleep(5 * 1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+
             doJudges();
             // doSave();
 
@@ -849,7 +858,7 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setMValues(values);
                     _bean.setMPicPaths(picPaths);
                     _bean.setHandlerAccout(App.handlerAccout);
-                    _bean.setResult(judges.get(i));
+                    _bean.setResult(dataJudges.get(i));
                     _bean.setWorkid_extra("");
                     _bean.setTimeStamp(System.currentTimeMillis());
                     mResultBean3s.add(_bean);
