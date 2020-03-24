@@ -2,23 +2,33 @@ package alauncher.cn.measuringtablet.view;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,17 +38,21 @@ import java.util.List;
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
+import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.FilterBean;
 import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
+import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
+import alauncher.cn.measuringtablet.pdf.PDFUtils;
 import alauncher.cn.measuringtablet.utils.CommonUtil;
 import alauncher.cn.measuringtablet.utils.DateUtils;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.utils.ExcelUtil;
 import alauncher.cn.measuringtablet.view.adapter.DataAdapter2;
 import alauncher.cn.measuringtablet.widget.FilterDialog;
@@ -63,6 +77,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
     TextView quitBtn;
     @BindView(R.id.btn_excel)
     TextView excelBtn;
+    @BindView(R.id.btn_pdf)
+    TextView pdfBtn;
     @BindView(R.id.btn_filter)
     TextView filterBtn;
     @BindView(R.id.ll_mycollection_bottom_dialog)
@@ -79,9 +95,11 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     private DeviceInfoBean mDeviceInfoBean;
 
-    private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M1", "M1分组", "M2", "M2分组", "M3", "M3分组", "M4", "M4分组"};
+    private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M(描述)(分组)测量值"};
 
     private LinearLayout titleLinearLayout;
+
+    private CodeBean mCodeBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +126,10 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
 
-        mDataAdapter = new DataAdapter2(Data2Activity.this, App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean3Dao.Properties.Id).list(),
+        mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+
+        mDataAdapter = new DataAdapter2(Data2Activity.this,
+                App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean3Dao.Properties.Id).list(),
                 mParameterBean2s);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Data2Activity.this);
         rv.setLayoutManager(layoutManager);
@@ -127,6 +148,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         quitBtn.setOnClickListener(this);
         excelBtn.setOnClickListener(this);
         filterBtn.setOnClickListener(this);
+        pdfBtn.setOnClickListener(this);
 
         titleLinearLayout = findViewById(R.id.data_title_layout);
         final float scale = getResources().getDisplayMetrics().density;
@@ -148,6 +170,15 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (editorStatus) {
+            updataEditMode();
+            return;
+        }
+        super.onBackPressed();//注释掉这行,back键不退出activity
+    }
+
     /**
      * 全选和反选
      */
@@ -159,6 +190,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             }
             index = mDataAdapter.getMyLiveList().size();
             mBtnDelete.setEnabled(true);
+            excelBtn.setEnabled(true);
             mSelectAll.setText("取消全选");
             isSelectAll = true;
         } else {
@@ -233,7 +265,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
      */
     private void excelDatas() {
         if (index == 0) {
-            excelBtn.setEnabled(false);
+            DialogUtils.showDialog(this, getResources().getString(R.string.tips), getResources().getString(R.string.no_select_msg));
+            // excelBtn.setEnabled(false);
             return;
         }
         final AlertDialog builder = new AlertDialog.Builder(this)
@@ -241,17 +274,17 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         builder.show();
         if (builder.getWindow() == null) return;
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
-        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
-        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
-        Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
+        TextView msg = builder.findViewById(R.id.tv_msg);
+        Button cancel = builder.findViewById(R.id.btn_cancle);
+        Button sure = builder.findViewById(R.id.btn_sure);
+        if (msg == null || cancel == null || sure == null) return;
 
         if (index == 1) {
             msg.setText("是否导出这个条目");
         } else {
             msg.setText("是否导出这" + index + "个条目？");
         }
-        cancle.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 builder.dismiss();
@@ -318,7 +351,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     public void onItemClickListener(int pos, List<ResultBean3> myLiveList) {
-        android.util.Log.d("wlDebug", "pos = " + pos);
         if (editorStatus) {
             ResultBean3 _bean = myLiveList.get(pos);
             boolean isSelect = _bean.isSelect();
@@ -361,6 +393,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             case R.id.btn_excel:
                 excelDatas();
                 break;
+            case R.id.btn_pdf:
+                pdfDatas();
+                break;
             case R.id.btn_filter:
                 FilterDialog mFilterDialog = new FilterDialog(this, this);
                 mFilterDialog.show();
@@ -369,7 +404,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 break;
         }
     }
-
 
     public class DeleteTask extends AsyncTask<String, Integer, String> {
 
@@ -431,6 +465,122 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         }
     }
 
+
+    private void pdfDatas() {
+        if (index == 0) {
+            DialogUtils.showDialog(this, getResources().getString(R.string.tips), getResources().getString(R.string.no_select_msg));
+            return;
+        }
+        long templateID = -1;
+        List<ResultBean3> selectedList = new ArrayList<>();
+        for (int i = mDataAdapter.getMyLiveList().size(), j = 0; i > j; i--) {
+            ResultBean3 _bean = mDataAdapter.getMyLiveList().get(i - 1);
+            if (_bean.isSelect()) {
+                if (templateID == -1) templateID = _bean.getTemplateID();
+                if (templateID != _bean.getTemplateID()) {
+                    DialogUtils.showDialog(this, getResources().getString(R.string.tips), getResources().getString(R.string.id_not_same));
+                    return;
+                }
+                selectedList.add(_bean);
+                index--;
+            }
+        }
+
+        TemplateResultBean _templateResultBean = App.getDaoSession().getTemplateResultBeanDao().load(templateID);
+        new ExportedTask(_templateResultBean, selectedList).execute();
+    }
+
+    public class ExportedTask extends AsyncTask<String, Integer, String> {
+
+        private ProgressDialog dialog;
+
+        private String path = "/mnt/sdcard/NTGate/";
+
+        private TemplateResultBean mTemplateResultBean;
+
+        private List<ResultBean3> datas;
+
+        public ExportedTask(TemplateResultBean pTemplateResultBean, List<ResultBean3> pDatas) {
+            mTemplateResultBean = pTemplateResultBean;
+            datas = pDatas;
+        }
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            path = path + "table_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".pdf";
+            dialog = new ProgressDialog(Data2Activity.this);
+            dialog.setTitle("导出");
+            dialog.setMessage("正在导出数据 , 请稍等.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
+        @Override
+        protected String doInBackground(String... params) {
+            //处理耗时操作
+
+            try {
+                byte[] img = null;
+                if (mCodeBean.getWorkpiecePic() == null) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(Data2Activity.this.getResources(), R.drawable.workspice);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    img = baos.toByteArray();
+                } else {
+                    img = mCodeBean.getWorkpiecePic();
+                }
+
+                File file = new File(path);
+                if (file.exists()) file.delete();
+                file.getParentFile().mkdirs();
+                PDFUtils.createNTTable(mTemplateResultBean, datas, img, path);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "后台任务执行完毕";
+        }
+
+        /*这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
+         但是这里取到的是一个数组,所以要用progesss[0]来取值
+         第n个参数就用progress[n]来取值*/
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+            //"loading..." + progresses[0] + "%"
+        }
+
+        /*doInBackground返回时触发，换句话说，就是doInBackground执行完后触发
+        这里的result就是上面doInBackground执行后的返回值，所以这里是"后台任务执行完毕"  */
+        @Override
+        protected void onPostExecute(String result) {
+            dialog.dismiss();
+            DialogUtils.showDialog(Data2Activity.this, getResources().getString(R.string.pdf_export_title), getResources().getString(R.string.pdf_export_msg) + path);
+            openPDFInNative(Data2Activity.this, path);
+        }
+
+        //onCancelled方法用于在取消执行中的任务时更改UI
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
+
+    public void openPDFInNative(Context context, String FILE_NAME) {
+        File file = new File(context.getExternalCacheDir(), FILE_NAME);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = FileProvider.getUriForFile(this, "alauncher.cn.measuringtablet.fileProvider", file);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(uri, "application/pdf");
+        try {
+            context.startActivity(intent);
+        } catch (Exception e) {
+        }
+    }
+
+
     /*
      *
      * 导出Excel Task.
@@ -467,10 +617,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 ResultBean3 _baen = mDataAdapter.getMyLiveList().get(i - 1);
                 if (_baen.isSelect()) {
                     selectedList.add(_baen);
-                    index--;
+                    // index--;
                 }
             }
-
             path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
             ExcelUtil.initExcel(path, "data", title);
             ExcelUtil.writeObjListToExcel(selectedList, path, Data2Activity.this);
