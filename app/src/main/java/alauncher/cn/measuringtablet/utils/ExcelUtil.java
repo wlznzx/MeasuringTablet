@@ -140,16 +140,16 @@ public class ExcelUtil {
                     List<String> list = new ArrayList<>();
                     list.add(demoBean.getHandlerAccout());
                     list.add(DateUtils.getDate(demoBean.getTimeStamp()));
-                    list.add("" + demoBean.getWorkid());
-                    list.add("" + demoBean.getEvent());
+                    list.add((demoBean.getWorkid() == null || demoBean.getWorkid().equals("null")) ? "- -" : demoBean.getWorkid());
+                    list.add((demoBean.getEvent() == null || demoBean.getEvent().equals("null")) ? "- -" : demoBean.getEvent());
                     list.add("" + demoBean.getResult());
                     String _data = "";
                     for (int i = 0; i < demoBean.getMValues().size(); i++) {
-                        _data = _data + demoBean.getMPicPaths().get(i)
+                        _data += "M" + demoBean.getMItems().get(i)
                                 + "(" + demoBean.getMValues().get(i) + ")"
                                 + "\n";
                     }
-                    list.add("" + _data);
+                    list.add(_data);
                     for (int i = 0; i < list.size(); i++) {
                         sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
                         if (list.get(i).length() <= 4) {

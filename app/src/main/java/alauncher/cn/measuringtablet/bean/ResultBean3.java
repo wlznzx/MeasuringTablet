@@ -43,11 +43,14 @@ public class ResultBean3 {
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> mPicPaths;
 
-    @Generated(hash = 769650356)
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> mItems;
+
+    @Generated(hash = 960487014)
     public ResultBean3(Long id, long codeID, long templateID, String handlerAccout,
-            long timeStamp, String workid, String workid_extra, String eventid,
-            String event, String result, List<String> mValues,
-            List<String> mPicPaths) {
+                       long timeStamp, String workid, String workid_extra, String eventid,
+                       String event, String result, List<String> mValues,
+                       List<String> mPicPaths, List<String> mItems) {
         this.id = id;
         this.codeID = codeID;
         this.templateID = templateID;
@@ -60,6 +63,7 @@ public class ResultBean3 {
         this.result = result;
         this.mValues = mValues;
         this.mPicPaths = mPicPaths;
+        this.mItems = mItems;
     }
 
     @Generated(hash = 1867049585)
@@ -160,6 +164,14 @@ public class ResultBean3 {
 
     public void setMPicPaths(List<String> mPicPaths) {
         this.mPicPaths = mPicPaths;
+    }
+
+    public List<String> getMItems() {
+        return this.mItems;
+    }
+
+    public void setMItems(List<String> mItems) {
+        this.mItems = mItems;
     }
 
     public boolean isSelect() {

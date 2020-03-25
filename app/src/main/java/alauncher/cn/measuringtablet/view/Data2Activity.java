@@ -95,7 +95,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     private DeviceInfoBean mDeviceInfoBean;
 
-    private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M(描述)(分组)测量值"};
+    private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M(测量值)"};
 
     private LinearLayout titleLinearLayout;
 

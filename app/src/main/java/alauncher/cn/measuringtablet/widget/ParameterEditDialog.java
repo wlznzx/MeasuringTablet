@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
@@ -134,7 +136,18 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
         });
 
         resolutionSP.setSelection(6, true);
-        showItemSP.setSelection(mDatas.size() >= 8 ? 7 : mDatas.size());
+
+
+        List<String> mItems = new ArrayList<>();
+        for (int i = 0; i < (mDatas.size() + 10); i++) {
+            mItems.add("M" + (i + 1));
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_item, mItems);
+        showItemSP.setAdapter(adapter);
+        adapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        showItemSP.setSelection(mDatas.size());
         if (_bean != null) {
             showItemSP.setSelection(_bean.getSequenceNumber());
             resolutionSP.setSelection(_bean.getResolution());

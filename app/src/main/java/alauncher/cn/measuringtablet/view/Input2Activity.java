@@ -228,11 +228,11 @@ public class Input2Activity extends BaseOActivity {
             LinearLayout __layout = new LinearLayout(this);
             __layout.addView(getInfoTV("记号", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
             __layout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getSequenceNumber()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol1Bean.getSequenceNumber() + 1) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             __layout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getSequenceNumber()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getSequenceNumber() + 1) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             __layout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getSequenceNumber()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getSequenceNumber() + 1) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             mainLayout.addView(__layout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制上限值;
@@ -848,13 +848,13 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setCodeID(App.getSetupBean().getCodeID());
                     ArrayList<String> values = new ArrayList<>();
                     ArrayList<String> picPaths = new ArrayList<>();
-                    ArrayList<String> indexs = new ArrayList<>();
                     for (EditText edt : results.get(i)) {
                         values.add(edt.getText().toString().trim());
                     }
                     for (int j = 0; j < mParameterBean2s.size(); j++) {
                         picPaths.add((String) resultImgs.get(i).get(j).getTag());
                     }
+                    _bean.setMItems(indexLists);
                     _bean.setMValues(values);
                     _bean.setMPicPaths(picPaths);
                     _bean.setHandlerAccout(App.handlerAccout);
