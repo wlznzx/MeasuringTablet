@@ -219,9 +219,9 @@ public class MainActivity extends BaseOActivity {
         builder.show();
         if (builder.getWindow() == null) return;
         builder.getWindow().setContentView(R.layout.exit_dialog);//设置弹出框加载的布局
-        TextView cancellationTV = (TextView) builder.findViewById(R.id.cancellation_btn);
-        TextView exitTV = (TextView) builder.findViewById(R.id.exit_btn);
-        TextView quitTV = (TextView) builder.findViewById(R.id.quit_btn);
+        TextView cancellationTV = builder.findViewById(R.id.cancellation_btn);
+        TextView exitTV = builder.findViewById(R.id.exit_btn);
+        TextView quitTV = builder.findViewById(R.id.quit_btn);
         cancellationTV.setOnClickListener(this::onClick);
         exitTV.setOnClickListener(this::onClick);
         quitTV.setOnClickListener(this::onClick);

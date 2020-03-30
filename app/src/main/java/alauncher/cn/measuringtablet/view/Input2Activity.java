@@ -1,6 +1,7 @@
 package alauncher.cn.measuringtablet.view;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -20,19 +21,25 @@ import android.text.method.DigitsKeyListener;
 
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
+import com.cuiweiyou.numberpickerdialog.NumberPickerDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,7 +48,9 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
@@ -50,14 +59,15 @@ import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
+import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
-import alauncher.cn.measuringtablet.pdf.PDFUtils;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
+import alauncher.cn.measuringtablet.utils.NumberUtils;
 import alauncher.cn.measuringtablet.widget.BorderEditView;
 import alauncher.cn.measuringtablet.widget.BorderImageView;
 import alauncher.cn.measuringtablet.widget.BorderTextView;
@@ -68,6 +78,9 @@ public class Input2Activity extends BaseOActivity {
 
     @BindView(R.id.input_main_layout)
     public ViewGroup mainLayout;
+
+    @BindView(R.id.data_num_btn)
+    public TextView dataNumBtn;
 
     public TemplateBean mTemplateBean;
 
@@ -127,6 +140,8 @@ public class Input2Activity extends BaseOActivity {
     private List<String> dataJudges = new ArrayList<>();
     private String allJudge = "OK";
 
+    private static int dataNumber = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +163,7 @@ public class Input2Activity extends BaseOActivity {
         mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
 
-        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
+        for (int i = 0; i < dataNumber; i++) {
             results.add(new ArrayList<>());
             resultImgs.add(new ArrayList<>());
             dataJudges.add("OK");
@@ -162,6 +177,7 @@ public class Input2Activity extends BaseOActivity {
             judges.add("OK");
         }
 
+        dataNumBtn.setText(getResources().getString(R.string.data_num) + dataNumber);
 
         // 标题 + 签名栏;
         LinearLayout _layout = new LinearLayout(this);
@@ -269,7 +285,7 @@ public class Input2Activity extends BaseOActivity {
                     String.valueOf(rol3Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(nominalLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
-            for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
+            for (int j = 0; j < dataNumber; j++) {
                 LinearLayout dataLayout = new LinearLayout(this);
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
 
@@ -477,7 +493,7 @@ public class Input2Activity extends BaseOActivity {
             }
         }
         bottomLayout.addView(roshResultLayout, getItemLayoutParams(1, 1 * bottomRow));
-        android.util.Log.d("wlDebug", "roshEdts.size() = " + roshEdts.size());
+//        android.util.Log.d("wlDebug", "roshEdts.size() = " + roshEdts.size());
 
         // Judge Result;
         LinearLayout judgeResultLayout = new LinearLayout(this);
@@ -602,6 +618,26 @@ public class Input2Activity extends BaseOActivity {
         new judgeTask().execute();
     }
 
+    @OnClick(R.id.data_num_btn)
+    public void dataNum() {
+        new NumberPickerDialog(
+                Input2Activity.this,
+                new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        if (newVal > 0 && oldVal != newVal) {
+                            dataNumber = newVal;
+                            clear();
+                        }
+                    }
+                },
+                20, // 最大值
+                1, // 最小值
+                5) // 默认值
+                .setCurrentValue(dataNumber > 0 ? dataNumber : 1) // 更新默认值
+                .show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -618,8 +654,56 @@ public class Input2Activity extends BaseOActivity {
         }
     }
 
+    @OnClick(R.id.btn_clear)
+    public void clear() {
+        // 刷新;
+        recreate();
+    }
+
+    @OnClick({R.id.swap_btn})
+    public void btnClick(View view) {
+        switch (view.getId()) {
+            case R.id.swap_btn:
+
+                showClassDialog();
+                break;
+        }
+    }
+
+    private void showClassDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
+        GridView gridview = view.findViewById(R.id.gridview);
+        final Dialog dialog = new Dialog(this, R.style.common_dialog);
+        dialog.setContentView(view);
+        dialog.show();
+
+        List<CodeBean> _lists = App.getDaoSession().getCodeBeanDao().loadAll();
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+        for (CodeBean _bean : _lists) {
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("itemName", _bean.getName());
+            items.add(item);
+        }
+
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, items, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
+        gridview.setAdapter(simpleAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int ar, long arg3) {
+                CodeBean _CodeBean = _lists.get(ar);
+                SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                _bean.setCodeID(_CodeBean.getCodeID().intValue());
+                App.getDaoSession().getSetupBeanDao().update(_bean);
+                dialog.dismiss();
+                clear();
+            }
+        });
+
+    }
+
     private boolean getIsEmpty() {
-        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
+        for (int i = 0; i < dataNumber; i++) {
             for (EditText edt : results.get(i)) {
                 if (edt.getText().toString().equals("")) return true;
             }
@@ -664,9 +748,10 @@ public class Input2Activity extends BaseOActivity {
                 if (mTemplateBean.getMinimumEnable())
                     minEdts.get(i).setText(String.valueOf(mins.get(i)));
                 if (mTemplateBean.getAverageEnable())
-                    avgEdts.get(i).setText(String.valueOf(avgs.get(i)));
-                if (mTemplateBean.getRangeEnable())
-                    rangeEdts.get(i).setText(String.valueOf(ranges.get(i)));
+                    avgEdts.get(i).setText(NumberUtils.notScience(avgs.get(i)));
+                if (mTemplateBean.getRangeEnable()) {
+                    rangeEdts.get(i).setText(NumberUtils.notScience(ranges.get(i)));
+                }
                 if (mTemplateBean.getJudgeEnable()) {
                     judgeEdts.get(i).setText(judges.get(i));
                     judgeEdts.get(i).setBackgroundColor(judges.get(i).equals("OK")
@@ -691,12 +776,12 @@ public class Input2Activity extends BaseOActivity {
             mins.set(i, Double.valueOf(1000000));
             judges.set(i, "OK");
         }
-        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
+        for (int i = 0; i < dataNumber; i++) {
             dataJudges.set(i, "OK");
         }
         allJudge = "OK";
 
-        for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
+        for (int j = 0; j < dataNumber; j++) {
             for (int i = 0; i < mParameterBean2s.size(); i++) {
                 double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
                 if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
@@ -707,7 +792,8 @@ public class Input2Activity extends BaseOActivity {
         }
 
         for (int i = 0; i < mParameterBean2s.size(); i++) {
-            for (int j = 0; j < mTemplateBean.getDataNum(); j++) {
+            sum = 0;
+            for (int j = 0; j < dataNumber; j++) {
                 try {
                     double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
                     sum += _value;
@@ -736,8 +822,8 @@ public class Input2Activity extends BaseOActivity {
                     }
                 }
             }
-            avgs.set(i, BigDecimal.valueOf(sum / mTemplateBean.getDataNum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-            ranges.set(i, BigDecimal.valueOf(maxs.get(i) - mins.get(i)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+            avgs.set(i, BigDecimal.valueOf(sum / dataNumber).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
+            ranges.set(i, BigDecimal.valueOf(maxs.get(i) - mins.get(i)).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
         }
     }
 
@@ -912,7 +998,7 @@ public class Input2Activity extends BaseOActivity {
     public void doSave() {
         List<ResultBean3> updateBeans = new ArrayList<>();
 
-        for (int i = 0; i < mTemplateBean.getDataNum(); i++) {
+        for (int i = 0; i < dataNumber; i++) {
             // 1
             ResultBean3 _workpiece1Bean = new ResultBean3();
 

@@ -172,11 +172,11 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
     @OnClick(R.id.add_parameter_btn)
     public void addParameterBtn(View v) {
         // 目前参数数量限制为8个;
-        int size = mDates.size();
-        if (size >= 8) {
-            showMsgDialog(this, "无法添加", "当前参数数量上限为8个。");
-            return;
-        }
+//        int size = mDates.size();
+//        if (size >= 8) {
+//            showMsgDialog(this, "无法添加", "当前参数数量上限为8个。");
+//            return;
+//        }
         ParameterEditDialog _dialog = new ParameterEditDialog(this, null);
         _dialog.setDataUpdateInterface(ParameterManagement2Activity.this);
         _dialog.show();

@@ -69,8 +69,8 @@
 
     <string-array name="result" translatable="false">
         <item></item>
-        <item>合格</item>
-        <item>不合格</item>
+        <item>OK</item>
+        <item>NG</item>
     </string-array>
 
     <string-array name="class_array" translatable="false">

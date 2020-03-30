@@ -218,6 +218,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/template_margin_left"
             android:text="@string/data_num"
+            android:visibility="gone"
             android:textSize="18sp"></TextView>
 
         <Button
@@ -225,6 +226,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:visibility="gone"
             android:text="5"></Button>
 
     </LinearLayout>

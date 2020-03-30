@@ -23,8 +23,6 @@ import java.util.List;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseActivity;
 import alauncher.cn.measuringtablet.view.fragment.CodeBaseInfoFragment;
-import alauncher.cn.measuringtablet.view.fragment.CodeStepFragment;
-import alauncher.cn.measuringtablet.view.fragment.ForceCalibrationFragment;
 import alauncher.cn.measuringtablet.view.fragment.WorkpieceFragment;
 import butterknife.BindView;
 
@@ -56,39 +54,27 @@ public class CodeDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
         CodeBaseInfoFragment codeBaseInfoFragment = null;
-        ForceCalibrationFragment forceCalibrationFragment = null;
-        CodeStepFragment launcherFragment = null;
         WorkpieceFragment mWorkpieceFragment = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof CodeBaseInfoFragment) {
                 codeBaseInfoFragment = (CodeBaseInfoFragment) fragment;
-            } else if (fragment instanceof alauncher.cn.measuringtablet.view.fragment.CodeBaseInfoFragment) {
-                forceCalibrationFragment = (ForceCalibrationFragment) fragment;
-            } else if (fragment instanceof CodeStepFragment) {
-                launcherFragment = (CodeStepFragment) fragment;
             } else if (fragment instanceof WorkpieceFragment) {
                 mWorkpieceFragment = (WorkpieceFragment) fragment;
             }
         }
         if (codeBaseInfoFragment == null)
             codeBaseInfoFragment = new CodeBaseInfoFragment();
-        if (forceCalibrationFragment == null)
-            forceCalibrationFragment = new ForceCalibrationFragment();
-        if (launcherFragment == null)
-            launcherFragment = new CodeStepFragment();
         if (mWorkpieceFragment == null) {
             mWorkpieceFragment = new WorkpieceFragment();
         }
 
 
         String[] mTitles = new String[]{getString(R.string.code_base_info),
-                getString(R.string.workpiece_pic),
-                getString(R.string.code_force_cailbration),
-                getString(R.string.code_step)};
+                getString(R.string.workpiece_pic)};
         mTitleList = Arrays.asList(mTitles);
 
 
-        mFragmentList = Arrays.asList(codeBaseInfoFragment, mWorkpieceFragment, forceCalibrationFragment, launcherFragment);
+        mFragmentList = Arrays.asList(codeBaseInfoFragment, mWorkpieceFragment);
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);

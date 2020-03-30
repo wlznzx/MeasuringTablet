@@ -20,6 +20,10 @@ public class TemplateBean {
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> titleList;
 
+    // 标题;
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    public List<String> titleTypeList;
+
     // 签名;
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> signList;
@@ -28,9 +32,15 @@ public class TemplateBean {
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> AQLList;
 
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    public List<String> AQLTypeList;
+
     // RoHS
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> RoHSList;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    public List<String> RoHSTypeList;
 
     public String headerLeft;
 
@@ -52,10 +62,10 @@ public class TemplateBean {
 
     @Generated(hash = 1371267202)
     public TemplateBean(long codeID, List<String> titleList, List<String> signList,
-            List<String> AQLList, List<String> RoHSList, String headerLeft, String headerMid,
-            String headerRight, String footerLeft, String footerMid, String footerRight,
-            String title, int dataNum, boolean maximumEnable, boolean minimumEnable,
-            boolean averageEnable, boolean rangeEnable, boolean judgeEnable) {
+                        List<String> AQLList, List<String> RoHSList, String headerLeft, String headerMid,
+                        String headerRight, String footerLeft, String footerMid, String footerRight,
+                        String title, int dataNum, boolean maximumEnable, boolean minimumEnable,
+                        boolean averageEnable, boolean rangeEnable, boolean judgeEnable) {
         this.codeID = codeID;
         this.titleList = titleList;
         this.signList = signList;
@@ -224,6 +234,5 @@ public class TemplateBean {
         this.judgeEnable = judgeEnable;
     }
 
-    
 
 }
