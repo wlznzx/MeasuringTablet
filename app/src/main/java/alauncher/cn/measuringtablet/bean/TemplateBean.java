@@ -60,17 +60,20 @@ public class TemplateBean {
 
     public boolean maximumEnable, minimumEnable, averageEnable, rangeEnable, judgeEnable;
 
-    @Generated(hash = 1371267202)
-    public TemplateBean(long codeID, List<String> titleList, List<String> signList,
-                        List<String> AQLList, List<String> RoHSList, String headerLeft, String headerMid,
-                        String headerRight, String footerLeft, String footerMid, String footerRight,
-                        String title, int dataNum, boolean maximumEnable, boolean minimumEnable,
-                        boolean averageEnable, boolean rangeEnable, boolean judgeEnable) {
+    @Generated(hash = 109588544)
+    public TemplateBean(long codeID, List<String> titleList, List<String> titleTypeList, List<String> signList,
+            List<String> AQLList, List<String> AQLTypeList, List<String> RoHSList, List<String> RoHSTypeList,
+            String headerLeft, String headerMid, String headerRight, String footerLeft, String footerMid,
+            String footerRight, String title, int dataNum, boolean maximumEnable, boolean minimumEnable,
+            boolean averageEnable, boolean rangeEnable, boolean judgeEnable) {
         this.codeID = codeID;
         this.titleList = titleList;
+        this.titleTypeList = titleTypeList;
         this.signList = signList;
         this.AQLList = AQLList;
+        this.AQLTypeList = AQLTypeList;
         this.RoHSList = RoHSList;
+        this.RoHSTypeList = RoHSTypeList;
         this.headerLeft = headerLeft;
         this.headerMid = headerMid;
         this.headerRight = headerRight;
@@ -232,6 +235,30 @@ public class TemplateBean {
 
     public void setJudgeEnable(boolean judgeEnable) {
         this.judgeEnable = judgeEnable;
+    }
+
+    public List<String> getTitleTypeList() {
+        return this.titleTypeList;
+    }
+
+    public void setTitleTypeList(List<String> titleTypeList) {
+        this.titleTypeList = titleTypeList;
+    }
+
+    public List<String> getAQLTypeList() {
+        return this.AQLTypeList;
+    }
+
+    public void setAQLTypeList(List<String> AQLTypeList) {
+        this.AQLTypeList = AQLTypeList;
+    }
+
+    public List<String> getRoHSTypeList() {
+        return this.RoHSTypeList;
+    }
+
+    public void setRoHSTypeList(List<String> RoHSTypeList) {
+        this.RoHSTypeList = RoHSTypeList;
     }
 
 

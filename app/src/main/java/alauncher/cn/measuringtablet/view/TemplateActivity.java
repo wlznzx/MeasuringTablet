@@ -29,7 +29,8 @@ import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
-import alauncher.cn.measuringtablet.widget.StringEditDialog;
+import alauncher.cn.measuringtablet.widget.ItemEditDialog;
+import alauncher.cn.measuringtablet.widget.ItemEditDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -66,6 +67,7 @@ public class TemplateActivity extends BaseOActivity {
     public View[] views = new View[2];
 
     public Button dataNumBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,15 +124,18 @@ public class TemplateActivity extends BaseOActivity {
         addListHeaderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new StringEditDialog(TemplateActivity.this, new StringEditDialog.OnStringDialogCallBack() {
+                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
                     @Override
-                    public void doString(String str) {
+                    public void doString(String str, String type) {
                         ArrayList<String> _list = new ArrayList<>(mTemplateBean.getTitleList());
                         _list.add(str);
+                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getTitleTypeList());
+                        _typeList.add(type);
                         mTemplateBean.setTitleList(_list);
+                        mTemplateBean.setTitleTypeList(_typeList);
                         mListHeaderAdapter.notifyDataSetChanged();
                     }
-                }, "").show();
+                }, "", "0").show();
             }
         });
         listHeaderRV = views[0].findViewById(R.id.title_p_rv);
@@ -145,30 +150,36 @@ public class TemplateActivity extends BaseOActivity {
         addAQLBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new StringEditDialog(TemplateActivity.this, new StringEditDialog.OnStringDialogCallBack() {
+                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
                     @Override
-                    public void doString(String str) {
+                    public void doString(String str, String type) {
                         ArrayList<String> _list = new ArrayList<>(mTemplateBean.getAQLList());
                         _list.add(str);
+                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getAQLTypeList());
+                        _typeList.add(type);
                         mTemplateBean.setAQLList(_list);
+                        mTemplateBean.setAQLTypeList(_typeList);
                         mAQLHeaderAdapter.notifyDataSetChanged();
                     }
-                }, "").show();
+                }, "", "0").show();
             }
         });
         addRoSHBtn = views[1].findViewById(R.id.add_rosh);
         addRoSHBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new StringEditDialog(TemplateActivity.this, new StringEditDialog.OnStringDialogCallBack() {
+                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
                     @Override
-                    public void doString(String str) {
+                    public void doString(String str, String type) {
                         ArrayList<String> _list = new ArrayList<>(mTemplateBean.getRoHSList());
                         _list.add(str);
+                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getRoHSTypeList());
+                        _typeList.add(type);
                         mTemplateBean.setRoHSList(_list);
+                        mTemplateBean.setRoHSTypeList(_typeList);
                         mListHeaderAdapter.notifyDataSetChanged();
                     }
-                }, "").show();
+                }, "", "0").show();
             }
         });
         AQLRV = views[1].findViewById(R.id.aql_rv);
@@ -281,18 +292,22 @@ public class TemplateActivity extends BaseOActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String str = mTemplateBean.getTitleList().get(position);
             holder.setText(R.id.tv, getString(R.string.list_header) + (position + 1) + "            " + str);
+            holder.setText(R.id.input_type_tv, getInputType(mTemplateBean.getTitleTypeList().get(position)));
             holder.setOnClickListener(R.id.str_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new StringEditDialog(TemplateActivity.this, new StringEditDialog.OnStringDialogCallBack() {
+                    new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
                         @Override
-                        public void doString(String str) {
+                        public void doString(String str, String type) {
                             ArrayList<String> _list = new ArrayList<>(mTemplateBean.getTitleList());
                             _list.set(position, str);
+                            ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getTitleTypeList());
+                            _typeList.set(position, type);
                             mTemplateBean.setTitleList(_list);
+                            mTemplateBean.setTitleTypeList(_typeList);
                             mListHeaderAdapter.notifyDataSetChanged();
                         }
-                    }, str).show();
+                    }, str, mTemplateBean.getTitleTypeList().get(position)).show();
                 }
             });
             holder.setOnLongClickListener(R.id.str_item, new View.OnLongClickListener() {
@@ -316,10 +331,12 @@ public class TemplateActivity extends BaseOActivity {
                     sure.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            /**/
-                            ArrayList<String> _list = new ArrayList<String>(mTemplateBean.getTitleList());
+                            ArrayList<String> _list = new ArrayList<>(mTemplateBean.getTitleList());
                             _list.remove(position);
+                            ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getTitleTypeList());
+                            _typeList.remove(position);
                             mTemplateBean.setTitleList(_list);
+                            mTemplateBean.setTitleTypeList(_typeList);
                             builder.dismiss();
                             mListHeaderAdapter.notifyDataSetChanged();
                         }
@@ -347,18 +364,22 @@ public class TemplateActivity extends BaseOActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String str = mTemplateBean.getAQLList().get(position);
             holder.setText(R.id.tv, getString(R.string.aql_title) + (position + 1) + "            " + str);
+            holder.setText(R.id.input_type_tv, getInputType(mTemplateBean.getAQLTypeList().get(position)));
             holder.setOnClickListener(R.id.str_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new StringEditDialog(TemplateActivity.this, new StringEditDialog.OnStringDialogCallBack() {
+                    new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
                         @Override
-                        public void doString(String str) {
+                        public void doString(String str, String type) {
                             ArrayList<String> _list = new ArrayList<>(mTemplateBean.getAQLList());
                             _list.set(position, str);
+                            ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getAQLTypeList());
+                            _typeList.set(position, type);
                             mTemplateBean.setAQLList(_list);
+                            mTemplateBean.setAQLTypeList(_typeList);
                             mAQLHeaderAdapter.notifyDataSetChanged();
                         }
-                    }, str).show();
+                    }, str, mTemplateBean.getAQLTypeList().get(position)).show();
                 }
             });
             holder.setOnLongClickListener(R.id.str_item, new View.OnLongClickListener() {
@@ -382,10 +403,12 @@ public class TemplateActivity extends BaseOActivity {
                     sure.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            /**/
                             ArrayList<String> _list = new ArrayList<String>(mTemplateBean.getAQLList());
                             _list.remove(position);
+                            ArrayList<String> _typeList = new ArrayList<String>(mTemplateBean.getAQLTypeList());
+                            _typeList.remove(position);
                             mTemplateBean.setAQLList(_list);
+                            mTemplateBean.setAQLTypeList(_typeList);
                             builder.dismiss();
                             mAQLHeaderAdapter.notifyDataSetChanged();
                         }
@@ -393,7 +416,6 @@ public class TemplateActivity extends BaseOActivity {
                     return false;
                 }
             });
-
         }
 
         @Override
@@ -414,18 +436,22 @@ public class TemplateActivity extends BaseOActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String str = mTemplateBean.getRoHSList().get(position);
             holder.setText(R.id.tv, getString(R.string.info_item) + (position + 1) + "            " + str);
+            holder.setText(R.id.input_type_tv, getInputType(mTemplateBean.getRoHSTypeList().get(position)));
             holder.setOnClickListener(R.id.str_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new StringEditDialog(TemplateActivity.this, new StringEditDialog.OnStringDialogCallBack() {
+                    new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
                         @Override
-                        public void doString(String str) {
+                        public void doString(String str, String type) {
                             ArrayList<String> _list = new ArrayList<>(mTemplateBean.getRoHSList());
                             _list.set(position, str);
+                            ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getRoHSTypeList());
+                            _typeList.set(position, type);
                             mTemplateBean.setRoHSList(_list);
+                            mTemplateBean.setRoHSTypeList(_typeList);
                             mRoHSHeaderAdapter.notifyDataSetChanged();
                         }
-                    }, str).show();
+                    }, str, mTemplateBean.getRoHSTypeList().get(position)).show();
                 }
             });
             holder.setOnLongClickListener(R.id.str_item, new View.OnLongClickListener() {
@@ -449,10 +475,12 @@ public class TemplateActivity extends BaseOActivity {
                     sure.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            /**/
                             ArrayList<String> _list = new ArrayList<String>(mTemplateBean.getRoHSList());
                             _list.remove(position);
+                            ArrayList<String> _typeList = new ArrayList<String>(mTemplateBean.getRoHSTypeList());
+                            _typeList.remove(position);
                             mTemplateBean.setRoHSList(_list);
+                            mTemplateBean.setRoHSTypeList(_typeList);
                             builder.dismiss();
                             mRoHSHeaderAdapter.notifyDataSetChanged();
                         }
@@ -467,4 +495,9 @@ public class TemplateActivity extends BaseOActivity {
             return mTemplateBean.getRoHSList().size();
         }
     }
+
+    private String getInputType(String index) {
+        return getResources().getStringArray(R.array.input_type)[Integer.valueOf(index)];
+    }
+
 }

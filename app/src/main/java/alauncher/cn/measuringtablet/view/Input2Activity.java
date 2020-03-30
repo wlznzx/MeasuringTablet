@@ -93,7 +93,7 @@ public class Input2Activity extends BaseOActivity {
     private List<ResultBean3> mResultBean3s = new ArrayList<>();
 
     // 表头;
-    private List<EditText> titleEdts = new ArrayList<>();
+    private List<Object> titleEdts = new ArrayList<>();
 
     // aql
     // private List<EditText> aqlEdts = new ArrayList<>();
@@ -199,6 +199,8 @@ public class Input2Activity extends BaseOActivity {
         // 每行显示个数;
         int colSize = 4;
         int colTitleSize = (int) Math.ceil((double) mTemplateBean.getTitleList().size() / (double) colSize);
+        android.util.Log.d("wlDebug", "titleEdts.size() = " + mTemplateBean.getTitleList().size());
+        android.util.Log.d("wlDebug", "titleEdts.getTitleTypeList() = " + mTemplateBean.getTitleTypeList().size());
         // 绘制标题栏;
         for (int i = 0; i < colTitleSize; i++) {
             LinearLayout __layout = new LinearLayout(this);
@@ -206,9 +208,31 @@ public class Input2Activity extends BaseOActivity {
                 __layout.addView(getInfoTV((i * 4 + j) < mTemplateBean.getTitleList().size() ?
                         mTemplateBean.getTitleList().get(i * 4 + j) : "", ColorConstants.titleColor), getItemLayoutParams(1, 1));
                 if (titleEdts.size() < mTemplateBean.getTitleList().size()) {
-                    EditText _edt = getInputEditView(false);
-                    __layout.addView(_edt, getItemLayoutParams(1, 1));
-                    titleEdts.add(_edt);
+                    switch (mTemplateBean.getTitleTypeList().get(i * 4 + j)) {
+                        case "0":
+                            EditText _edt = getInputEditView(false);
+                            __layout.addView(_edt, getItemLayoutParams(1, 1));
+                            titleEdts.add(_edt);
+                            break;
+                        case "1":
+                            Spinner _sp = getInputSpinner();
+                            __layout.addView(_sp, getItemLayoutParams(1, 1));
+                            titleEdts.add(_sp);
+                            break;
+                        case "2":
+
+                            break;
+                        case "3":
+                            Spinner _sp2 = getInputSpinner2();
+                            __layout.addView(_sp2, getItemLayoutParams(1, 1));
+                            titleEdts.add(_sp2);
+                            break;
+                        default:
+                            EditText __edt = getInputEditView(false);
+                            __layout.addView(__edt, getItemLayoutParams(1, 1));
+                            titleEdts.add(__edt);
+                            break;
+                    }
                 } else {
                     __layout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(1, 1));
                 }
@@ -582,6 +606,16 @@ public class Input2Activity extends BaseOActivity {
         return sp;
     }
 
+    public Spinner getInputSpinner2() {
+        Spinner sp = new Spinner(this);
+        sp.setGravity(Gravity.CENTER);
+        ArrayAdapter array_adapter = new ArrayAdapter(this, R.layout.spinner_item, getResources().getStringArray(R.array.quantity_items));
+        array_adapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(array_adapter);
+        return sp;
+    }
+
     @OnClick(R.id.btn_save)
     public void onSave(View v) {
         if (getIsEmpty()) {
@@ -904,8 +938,8 @@ public class Input2Activity extends BaseOActivity {
                 mTemplateResultBean.setLowerToleranceValues(lowerLists);
 
                 List<String> titleLists = new ArrayList<>();
-                for (EditText edt : titleEdts) {
-                    titleLists.add(edt.getText().toString().trim());
+                for (Object edt : titleEdts) {
+                    // titleLists.add(edt.getText().toString().trim());
                 }
                 mTemplateResultBean.setTitleResultList(titleLists);
 

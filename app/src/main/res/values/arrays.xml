@@ -161,4 +161,17 @@
         <item>部长</item>
     </string-array>
 
+    <string-array name="input_type" translatable="false">
+        <item>文本</item>
+        <item>布尔</item>
+        <item>日期</item>
+        <item>单选</item>
+    </string-array>
+
+
+    <string-array name="quantity_items" translatable="false">
+        <item>量试</item>
+        <item>批量</item>
+    </string-array>
+
 </resources>

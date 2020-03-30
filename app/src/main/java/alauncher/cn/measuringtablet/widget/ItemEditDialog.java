@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class StringEditDialog extends Dialog {
+public class ItemEditDialog extends Dialog {
 
     private final Context mContext;
 
@@ -28,11 +28,14 @@ public class StringEditDialog extends Dialog {
     @BindView(R.id.input_type_spinner)
     public Spinner inputTypeSP;
 
-    public StringEditDialog(Context context, OnStringDialogCallBack pOnStringDialogCallBack, String str) {
+    private String typeStr;
+
+    public ItemEditDialog(Context context, OnStringDialogCallBack pOnStringDialogCallBack, String str, String type) {
         super(context);
         mContext = context;
         mOnStringDialogCallBack = pOnStringDialogCallBack;
         defaultStr = str;
+        typeStr = type;
         initView();
     }
 
@@ -41,6 +44,7 @@ public class StringEditDialog extends Dialog {
         setContentView(contentView);
         ButterKnife.bind(this);
         strEDT.setText(defaultStr);
+        inputTypeSP.setSelection(Integer.valueOf(typeStr));
     }
 
     @Override
@@ -68,9 +72,8 @@ public class StringEditDialog extends Dialog {
                 dismiss();
                 break;
             case R.id.yes:
-                // doAddUser();
                 if (mOnStringDialogCallBack != null)
-                    mOnStringDialogCallBack.doString(strEDT.getText().toString().trim());
+                    mOnStringDialogCallBack.doString(strEDT.getText().toString().trim(), String.valueOf(inputTypeSP.getSelectedItemPosition()));
                 dismiss();
                 break;
             default:
@@ -79,6 +82,10 @@ public class StringEditDialog extends Dialog {
     }
 
     public interface OnStringDialogCallBack {
-        void doString(String str);
+        void doString(String str, String type);
+    }
+
+    private String getInputType(String index) {
+        return mContext.getResources().getStringArray(R.array.input_type)[Integer.valueOf(index)];
     }
 }

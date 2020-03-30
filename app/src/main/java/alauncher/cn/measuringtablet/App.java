@@ -1,22 +1,18 @@
 package alauncher.cn.measuringtablet;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.widget.Toast;
 
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import alauncher.cn.measuringtablet.bean.CalibrationBean;
 import alauncher.cn.measuringtablet.bean.CodeBean;
@@ -29,7 +25,6 @@ import alauncher.cn.measuringtablet.bean.RememberPasswordBean;
 import alauncher.cn.measuringtablet.bean.ResultBean;
 import alauncher.cn.measuringtablet.bean.RoleBean;
 import alauncher.cn.measuringtablet.bean.SetupBean;
-import alauncher.cn.measuringtablet.bean.StoreBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoMaster;
@@ -397,31 +392,56 @@ public class App extends MultiDexApplication {
                 mTemplateBean.setCodeID(i);
                 mTemplateBean.setDataNum(5);
                 ArrayList<String> Titles = new ArrayList<>();
+                ArrayList<String> TitleTypes = new ArrayList<>();
                 Titles.add("部品名称");
+                TitleTypes.add("0");
                 Titles.add("进货批量");
+                TitleTypes.add("0");
                 Titles.add("进货日期");
+                TitleTypes.add("2");
                 Titles.add("检查日期");
+                TitleTypes.add("2");
                 Titles.add("部品代号");
+                TitleTypes.add("0");
                 Titles.add("尺寸检查");
+                TitleTypes.add("0");
                 Titles.add("生产日期");
+                TitleTypes.add("2");
                 Titles.add("部品发送到");
+                TitleTypes.add("0");
                 Titles.add("材料名称");
+                TitleTypes.add("0");
                 Titles.add("订单No");
+                TitleTypes.add("0");
                 Titles.add("检查目的");
+                TitleTypes.add("0");
                 // Titles.add("供货方名称");
                 ArrayList<String> AQLList = new ArrayList<>();
+                ArrayList<String> AQLTypeList = new ArrayList<>();
                 AQLList.add("无毛刺、无异物、无气孔");
+                AQLTypeList.add("1");
                 AQLList.add("无收缩、无裂缝、无缺陷");
+                AQLTypeList.add("1");
                 AQLList.add("毛刺高度控制在0.3以下");
+                AQLTypeList.add("1");
                 AQLList.add("外包装无破损、无变形、无潮湿");
+                AQLTypeList.add("1");
                 AQLList.add("月份标签确认");
+                AQLTypeList.add("1");
                 AQLList.add("供应商数据确认");
+                AQLTypeList.add("1");
                 ArrayList<String> RoHSList = new ArrayList<>();
+                ArrayList<String> RoHSTypeList = new ArrayList<>();
                 RoHSList.add("RoHS确认频率");
+                RoHSTypeList.add("0");
                 RoHSList.add("本批确认");
+                RoHSTypeList.add("0");
                 RoHSList.add("上回RoHS确认日");
+                RoHSTypeList.add("2");
                 RoHSList.add("确认结果(RoHS检查数据以检查日期追溯)");
+                RoHSTypeList.add("1");
                 RoHSList.add("模号:");
+                RoHSTypeList.add("0");
                 ArrayList<String> signList = new ArrayList<>();
                 signList.add("课长");
                 signList.add("系长");
@@ -437,6 +457,9 @@ public class App extends MultiDexApplication {
                 mTemplateBean.setRoHSList(RoHSList);
                 mTemplateBean.setTitleList(Titles);
                 mTemplateBean.setSignList(signList);
+                mTemplateBean.setTitleTypeList(TitleTypes);
+                mTemplateBean.setAQLTypeList(AQLTypeList);
+                mTemplateBean.setRoHSTypeList(RoHSTypeList);
                 getDaoSession().getTemplateBeanDao().insert(mTemplateBean);
             }
 
