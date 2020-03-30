@@ -562,6 +562,7 @@ public class App extends MultiDexApplication {
                 CodeBean _bean = Constants.defaultCodeBeans.get(i);
                 _bean.setMachineTool(getResources().getString(R.string.machine_tool));
                 _bean.setParts(getResources().getString(R.string.spare_parts));
+                _bean.setDefaultTitles(new ArrayList<>());
                 getDaoSession().getCodeBeanDao().insert(_bean);
             }
 

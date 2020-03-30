@@ -1,6 +1,7 @@
 package alauncher.cn.measuringtablet.view;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -47,6 +49,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +105,7 @@ public class Input2Activity extends BaseOActivity {
     private List<Object> aqlObjects = new ArrayList<>();
 
     // rosh
-    private List<EditText> roshEdts = new ArrayList<>();
+    private List<Object> roshEdts = new ArrayList<>();
 
     // result;
     private List<List<EditText>> results = new ArrayList<>();
@@ -199,40 +202,19 @@ public class Input2Activity extends BaseOActivity {
         // 每行显示个数;
         int colSize = 4;
         int colTitleSize = (int) Math.ceil((double) mTemplateBean.getTitleList().size() / (double) colSize);
-        android.util.Log.d("wlDebug", "titleEdts.size() = " + mTemplateBean.getTitleList().size());
-        android.util.Log.d("wlDebug", "titleEdts.getTitleTypeList() = " + mTemplateBean.getTitleTypeList().size());
         // 绘制标题栏;
         for (int i = 0; i < colTitleSize; i++) {
             LinearLayout __layout = new LinearLayout(this);
             for (int j = 0; j < colSize; j++) {
                 __layout.addView(getInfoTV((i * 4 + j) < mTemplateBean.getTitleList().size() ?
                         mTemplateBean.getTitleList().get(i * 4 + j) : "", ColorConstants.titleColor), getItemLayoutParams(1, 1));
-                if (titleEdts.size() < mTemplateBean.getTitleList().size()) {
-                    switch (mTemplateBean.getTitleTypeList().get(i * 4 + j)) {
-                        case "0":
-                            EditText _edt = getInputEditView(false);
-                            __layout.addView(_edt, getItemLayoutParams(1, 1));
-                            titleEdts.add(_edt);
-                            break;
-                        case "1":
-                            Spinner _sp = getInputSpinner();
-                            __layout.addView(_sp, getItemLayoutParams(1, 1));
-                            titleEdts.add(_sp);
-                            break;
-                        case "2":
-
-                            break;
-                        case "3":
-                            Spinner _sp2 = getInputSpinner2();
-                            __layout.addView(_sp2, getItemLayoutParams(1, 1));
-                            titleEdts.add(_sp2);
-                            break;
-                        default:
-                            EditText __edt = getInputEditView(false);
-                            __layout.addView(__edt, getItemLayoutParams(1, 1));
-                            titleEdts.add(__edt);
-                            break;
+                if ((i * 4 + j) < mTemplateBean.getTitleList().size()) {
+                    View view = (View) getInputViewByType(mTemplateBean.getTitleTypeList().get(i * 4 + j));
+                    __layout.addView(view, getItemLayoutParams(1, 1));
+                    if (mCodeBean.getDefaultTitles().size() > (i * 4 + j) && view instanceof EditText) {
+                        ((EditText) view).setText(mCodeBean.getDefaultTitles().get(i * 4 + j));
                     }
+                    titleEdts.add(view);
                 } else {
                     __layout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(1, 1));
                 }
@@ -485,9 +467,9 @@ public class Input2Activity extends BaseOActivity {
         aqlResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (aqlObjects.size() < mTemplateBean.getAQLList().size()) {
-                Spinner _edt = getInputSpinner();
-                aqlResultLayout.addView(_edt, getItemVLayoutParams(1, 1));
-                aqlObjects.add(_edt);
+                View view = (View) getInputViewByType(mTemplateBean.getAQLTypeList().get(j));
+                aqlResultLayout.addView(view, getItemVLayoutParams(1, 1));
+                aqlObjects.add(view);
             } else {
                 aqlResultLayout.addView(getInfoTV("", Color.WHITE), getItemVLayoutParams(1, 1));
             }
@@ -509,9 +491,9 @@ public class Input2Activity extends BaseOActivity {
         roshResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (roshEdts.size() < mTemplateBean.getRoHSList().size()) {
-                EditText _edt = getInputEditView(false);
-                roshResultLayout.addView(_edt, getItemVLayoutParams(1, 1));
-                roshEdts.add(_edt);
+                View view = (View) getInputViewByType(mTemplateBean.getRoHSTypeList().get(j));
+                roshResultLayout.addView(view, getItemVLayoutParams(1, 1));
+                roshEdts.add(view);
             } else {
                 roshResultLayout.addView(getInfoTV("", Color.WHITE), getItemVLayoutParams(1, 1));
             }
@@ -551,6 +533,27 @@ public class Input2Activity extends BaseOActivity {
         return params;
     }
 
+    public Object getInputViewByType(String type) {
+        Object view = null;
+        switch (type) {
+            case "0":
+                view = getInputEditView(false);
+                break;
+            case "1":
+                view = getInputSpinner();
+                break;
+            case "2":
+                view = getDataTV("", Color.WHITE);
+                break;
+            case "3":
+                view = getInputSpinner2();
+                break;
+            default:
+                break;
+        }
+        return view;
+    }
+
 
     public ImageView currentImg = null;
 
@@ -573,6 +576,54 @@ public class Input2Activity extends BaseOActivity {
         TextView tv = new BorderTextView(this);
         tv.setMaxLines(1);
         tv.setText(msg);
+        tv.setTextSize(18);
+        tv.setGravity(Gravity.CENTER);
+        tv.setBackgroundColor(color);
+        return tv;
+    }
+
+    public TextView getDataTV(String msg, int color) {
+        TextView tv = new BorderTextView(this);
+        Calendar ca = Calendar.getInstance();
+        int year = ca.get(Calendar.YEAR);
+        int month = ca.get(Calendar.MONTH);
+        int day = ca.get(Calendar.DAY_OF_MONTH);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(Input2Activity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int mYear, int mMonth, int mDay) {
+                        String days;
+                        if (mMonth + 1 < 10) {
+                            if (mDay < 10) {
+                                days = new StringBuffer().append(mYear).append("/").append("0").
+                                        append(mMonth + 1).append("/").append("0").append(mDay).append("").toString();
+                            } else {
+                                days = new StringBuffer().append(mYear).append("/").append("0").
+                                        append(mMonth + 1).append("/").append(mDay).append("").toString();
+                            }
+
+                        } else {
+                            if (mDay < 10) {
+                                days = new StringBuffer().append(mYear).append("/").
+                                        append(mMonth + 1).append("/").append("0").append(mDay).append("").toString();
+                            } else {
+                                days = new StringBuffer().append(mYear).append("/").
+                                        append(mMonth + 1).append("/").append(mDay).append("").toString();
+                            }
+
+                        }
+                        tv.setText(days);
+                    }
+                }, year, month, day).show();
+            }
+        });
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        String t = format.format(new Date());
+        tv.setText(t);
+        tv.setMaxLines(1);
+//        tv.setText(msg);
         tv.setTextSize(18);
         tv.setGravity(Gravity.CENTER);
         tv.setBackgroundColor(color);
@@ -938,24 +989,21 @@ public class Input2Activity extends BaseOActivity {
                 mTemplateResultBean.setLowerToleranceValues(lowerLists);
 
                 List<String> titleLists = new ArrayList<>();
-                for (Object edt : titleEdts) {
+                for (Object obj : titleEdts) {
                     // titleLists.add(edt.getText().toString().trim());
+                    titleLists.add(getTextByInputType(obj));
                 }
                 mTemplateResultBean.setTitleResultList(titleLists);
 
                 List<String> aqlLists = new ArrayList<>();
                 for (Object obj : aqlObjects) {
-                    if (obj instanceof Spinner) {
-                        aqlLists.add(((Spinner) obj).getSelectedItem().toString());
-                    } else if (obj instanceof EditText) {
-                        aqlLists.add(((EditText) obj).getText().toString().trim());
-                    }
+                    aqlLists.add(getTextByInputType(obj));
                 }
                 mTemplateResultBean.setAQLResultList(aqlLists);
 
                 List<String> roshLists = new ArrayList<>();
-                for (EditText edt : roshEdts) {
-                    roshLists.add(edt.getText().toString().trim());
+                for (Object obj : roshEdts) {
+                    roshLists.add(getTextByInputType(obj));
                 }
                 mTemplateResultBean.setRoHSResultList(roshLists);
                 mTemplateResultBean.setAllJudge(allJudge);
@@ -1027,6 +1075,18 @@ public class Input2Activity extends BaseOActivity {
         protected void onCancelled() {
 
         }
+    }
+
+    private String getTextByInputType(Object obj) {
+        String str = "";
+        if (obj instanceof Spinner) {
+            str = String.valueOf(((Spinner) obj).getSelectedItem());
+        } else if (obj instanceof EditText) {
+            str = ((EditText) obj).getText().toString().trim();
+        } else if (obj instanceof TextView) {
+            str = ((TextView) obj).getText().toString().trim();
+        }
+        return str;
     }
 
     public void doSave() {

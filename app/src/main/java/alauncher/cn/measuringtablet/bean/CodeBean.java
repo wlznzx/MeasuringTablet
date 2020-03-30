@@ -1,11 +1,15 @@
 package alauncher.cn.measuringtablet.bean;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Index;
 
 import java.util.Arrays;
+import java.util.List;
+
+import alauncher.cn.measuringtablet.utils.StringConverter;
 
 /**
  * 日期：2019/8/5 0025 9:27
@@ -29,15 +33,16 @@ public class CodeBean {
 
     public byte[] workpiecePic;
 
-    @Generated(hash = 1043518827)
+    @Generated(hash = 379354465)
     public CodeBean(Long codeID, String name, String machineTool, String parts,
-                    boolean isEnableStep, byte[] workpiecePic) {
+            boolean isEnableStep, byte[] workpiecePic, List<String> defaultTitles) {
         this.codeID = codeID;
         this.name = name;
         this.machineTool = machineTool;
         this.parts = parts;
         this.isEnableStep = isEnableStep;
         this.workpiecePic = workpiecePic;
+        this.defaultTitles = defaultTitles;
     }
 
     public CodeBean(String name, String machineTool, String parts,
@@ -101,15 +106,16 @@ public class CodeBean {
         this.workpiecePic = workpiecePic;
     }
 
-    @Override
-    public String toString() {
-        return "CodeBean{" +
-                "codeID=" + codeID +
-                ", name='" + name + '\'' +
-                ", machineTool='" + machineTool + '\'' +
-                ", parts='" + parts + '\'' +
-                ", isEnableStep=" + isEnableStep +
-                ", workpiecePic=" + Arrays.toString(workpiecePic) +
-                '}';
+    public List<String> getDefaultTitles() {
+        return this.defaultTitles;
     }
+
+    public void setDefaultTitles(List<String> defaultTitles) {
+        this.defaultTitles = defaultTitles;
+    }
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> defaultTitles;
+
+    
 }
