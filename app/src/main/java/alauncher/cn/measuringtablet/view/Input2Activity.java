@@ -263,9 +263,9 @@ public class Input2Activity extends BaseOActivity {
             upperLayout.addView(getInfoTV(rol1Bean != null ?
                     String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             upperLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getNominalValue() + rol2Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             upperLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getNominalValue() + rol3Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(upperLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制下限值;
@@ -274,9 +274,9 @@ public class Input2Activity extends BaseOActivity {
             lowerLayout.addView(getInfoTV(rol1Bean != null ?
                     String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
             lowerLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getNominalValue() + rol2Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
             lowerLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getNominalValue() + rol3Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
             mainLayout.addView(lowerLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
 
