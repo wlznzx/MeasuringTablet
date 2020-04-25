@@ -28,7 +28,8 @@
 
     <string-array name="m_type" translatable="false">
         <item>双边界</item>
-        <item>单边界</item>
+        <item>上边界</item>
+        <item>下边界</item>
         <item>布尔类型</item>
     </string-array>
 

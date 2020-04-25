@@ -69,6 +69,9 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
     @BindView(R.id.show_item_sp)
     public Spinner showItemSP;
 
+    @BindView(R.id.m_type_sp)
+    public Spinner mTypeSP;
+
     ParameterBean2 _bean;
 
     DataUpdateInterface dataUpdateInterface;
@@ -152,6 +155,7 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             showItemSP.setSelection(_bean.getSequenceNumber());
             resolutionSP.setSelection(_bean.getResolution());
             describeEdt.setText(_bean.getDescribe());
+            mTypeSP.setSelection(_bean.getType());
             nominalValueEdt.setText(Arith.double2Str(_bean.getNominalValue()));
             upperToleranceValueEdt.setText(Arith.double2Str(_bean.getUpperToleranceValue()));
             lowerToleranceValueEdt.setText(Arith.double2Str(_bean.getLowerToleranceValue()));
@@ -182,6 +186,7 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             _bean.setDeviation(Double.valueOf(deviationEdt.getText().toString().trim()));
             _bean.setEnable(isEnableSwitch.isChecked());
             _bean.setCode(formulaBtn.getText().toString());
+            _bean.setType((int) mTypeSP.getSelectedItemId());
 
             // 如果是新加数据;
             if (isAdd) {

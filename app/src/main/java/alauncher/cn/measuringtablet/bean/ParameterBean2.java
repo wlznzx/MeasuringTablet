@@ -41,11 +41,13 @@ public class ParameterBean2 {
     // 使能
     public boolean enable;
 
-    @Generated(hash = 411981944)
+    public int type;
+
+    @Generated(hash = 300202343)
     public ParameterBean2(Long id, long codeID, int sequenceNumber, String describe,
-                          double nominalValue, double upperToleranceValue,
-                          double lowerToleranceValue, double deviation, int resolution,
-                          double scale, String code, boolean enable) {
+            double nominalValue, double upperToleranceValue,
+            double lowerToleranceValue, double deviation, int resolution,
+            double scale, String code, boolean enable, int type) {
         this.id = id;
         this.codeID = codeID;
         this.sequenceNumber = sequenceNumber;
@@ -58,6 +60,7 @@ public class ParameterBean2 {
         this.scale = scale;
         this.code = code;
         this.enable = enable;
+        this.type = type;
     }
 
     @Generated(hash = 1020281904)
@@ -160,21 +163,13 @@ public class ParameterBean2 {
         this.enable = enable;
     }
 
-    @Override
-    public String toString() {
-        return "ParameterBean2{" +
-                "id=" + id +
-                ", codeID=" + codeID +
-                ", sequenceNumber=" + sequenceNumber +
-                ", describe='" + describe + '\'' +
-                ", nominalValue=" + nominalValue +
-                ", upperToleranceValue=" + upperToleranceValue +
-                ", lowerToleranceValue=" + lowerToleranceValue +
-                ", deviation=" + deviation +
-                ", resolution=" + resolution +
-                ", scale=" + scale +
-                ", code='" + code + '\'' +
-                ", enable=" + enable +
-                '}';
+    public int getType() {
+        return this.type;
     }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+  
 }

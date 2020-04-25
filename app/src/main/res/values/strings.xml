@@ -345,4 +345,5 @@
     <string name="logo_add">添加Logo:</string>
     <string name="confirmation_frequency">确认频率:</string>
     <string name="day">天</string>
+    <string name="m_type_str">参数类型</string>
 </resources>

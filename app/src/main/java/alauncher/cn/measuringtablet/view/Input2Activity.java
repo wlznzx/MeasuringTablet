@@ -732,7 +732,7 @@ public class Input2Activity extends BaseOActivity {
         if (numOnly) {
             DigitsKeyListener numericOnlyListener = new DigitsKeyListener(false, true);
             et.setKeyListener(numericOnlyListener);
-            et.setText("0");
+            et.setText("");
         } else {
             // et.setText("测试");
             et.setHint(R.string.hint);
@@ -771,17 +771,28 @@ public class Input2Activity extends BaseOActivity {
 
     @OnClick(R.id.btn_save)
     public void onSave(View v) {
+        if (mParameterBean2s.size() == 0) {
+            DialogUtils.showDialog(this, "无参数", "无参数，无法保存.");
+            return;
+        }
+
+        if (getLineEmpty() >= 0) {
+            DialogUtils.showDialog(this, "无法保存.", "数据" + (getLineEmpty() + 1) + "所有参数为空，无法保存.");
+            return;
+        }
+
         if (getIsEmpty()) {
             final AlertDialog.Builder normalDialog =
                     new AlertDialog.Builder(Input2Activity.this);
             normalDialog.setIcon(R.drawable.add_circle);
-            normalDialog.setTitle("无法保存");
-            normalDialog.setMessage("还有测量值未输入，无法保存。");
+            normalDialog.setTitle("确认保存");
+            normalDialog.setMessage("还有测量值未输入，是否确认保存。");
             normalDialog.setPositiveButton("确定",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // doSave();
+                            new ExportedTask().execute();
                         }
                     });
             normalDialog.setNegativeButton("取消",
@@ -962,6 +973,17 @@ public class Input2Activity extends BaseOActivity {
         return false;
     }
 
+    private int getLineEmpty() {
+        for (int i = 0; i < dataNumber; i++) {
+            boolean isEmpty = true;
+            for (EditText edt : results.get(i)) {
+                if (!edt.getText().toString().equals("")) isEmpty = false;
+            }
+            if (isEmpty) return i;
+        }
+        return -1;
+    }
+
     public class judgeTask extends AsyncTask<String, Integer, String> {
 
         private ProgressDialog dialog;
@@ -1034,11 +1056,37 @@ public class Input2Activity extends BaseOActivity {
 
         for (int j = 0; j < dataNumber; j++) {
             for (int i = 0; i < mParameterBean2s.size(); i++) {
-                double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
-                if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
-                        || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
-                    dataJudges.set(j, "NG");
+                if (results.get(j).get(i).getText().toString().trim().equals("")) {
+                    continue;
                 }
+                int type = mParameterBean2s.get(i).getType();
+                double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                switch (type) {
+                    case 0:
+                        if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
+                                || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
+                            dataJudges.set(j, "NG");
+                        }
+                        break;
+                    case 1:
+                        if (_value > mParameterBean2s.get(i).getUpperToleranceValue()) {
+                            dataJudges.set(j, "NG");
+                        }
+                        break;
+                    case 2:
+                        if (_value < mParameterBean2s.get(i).getLowerToleranceValue()) {
+                            dataJudges.set(j, "NG");
+                        }
+                        break;
+                    case 3:
+                        if (_value == 0) {
+                            dataJudges.set(j, "NG");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
             }
         }
 
@@ -1054,13 +1102,44 @@ public class Input2Activity extends BaseOActivity {
                     if (_value > maxs.get(i)) {
                         maxs.set(i, _value);
                     }
-                    if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
-                            || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
-                        judges.set(i, "NG");
-                        allJudge = "NG";
-                    } else {
-                        // judge = "OK";
+//                    if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
+//                            || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
+//                        judges.set(i, "NG");
+//                        allJudge = "NG";
+//                    } else {
+//
+//                    }
+                    int type = mParameterBean2s.get(i).getType();
+                    switch (type) {
+                        case 0:
+                            if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
+                                    || _value < mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getLowerToleranceValue()) {
+                                judges.set(i, "NG");
+                                allJudge = "NG";
+                            }
+                            break;
+                        case 1:
+                            if (_value > mParameterBean2s.get(i).getUpperToleranceValue()) {
+                                judges.set(i, "NG");
+                                allJudge = "NG";
+                            }
+                            break;
+                        case 2:
+                            if (_value < mParameterBean2s.get(i).getLowerToleranceValue()) {
+                                judges.set(i, "NG");
+                                allJudge = "NG";
+                            }
+                            break;
+                        case 3:
+                            if (_value == 0) {
+                                judges.set(i, "NG");
+                                allJudge = "NG";
+                            }
+                            break;
+                        default:
+                            break;
                     }
+
                 } catch (Exception e) {
 
                 }
