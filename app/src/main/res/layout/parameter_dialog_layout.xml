@@ -65,6 +65,27 @@
                 <TextView
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
+                    android:text="@string/show_item"
+
+                    android:textColor="@android:color/black" />
+
+                <Spinner
+                    android:id="@+id/m_type_sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:entries="@array/m_type" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="@dimen/dialog_tv_width"
+                    android:layout_height="wrap_content"
                     android:text="@string/describe"
                     android:textColor="@android:color/black" />
 

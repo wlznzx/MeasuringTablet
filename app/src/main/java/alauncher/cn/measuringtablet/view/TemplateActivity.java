@@ -1,11 +1,21 @@
 package alauncher.cn.measuringtablet.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -13,23 +23,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.cuiweiyou.numberpickerdialog.NumberPickerDialog;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
+import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
-import alauncher.cn.measuringtablet.widget.ItemEditDialog;
+import alauncher.cn.measuringtablet.utils.UriToPathUtil;
 import alauncher.cn.measuringtablet.widget.ItemEditDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -52,7 +70,7 @@ public class TemplateActivity extends BaseOActivity {
 
     public Spinner signSP1, signSP2, signSP3;
 
-    public Switch maximumSwitch, minimumSwitch, averageSwitch, rangeSwitch, judgeSwitch;
+    public Switch maximumSwitch, minimumSwitch, averageSwitch, rangeSwitch, judgeSwitch, aqlSwitch, roshSwitch;
 
     public TemplateBean mTemplateBean;
 
@@ -66,8 +84,9 @@ public class TemplateActivity extends BaseOActivity {
 
     public View[] views = new View[2];
 
-    public Button dataNumBtn;
+    public Button confirmationFrequencyBtn;
 
+    public ImageView logoImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +120,18 @@ public class TemplateActivity extends BaseOActivity {
         signSP1 = views[0].findViewById(R.id.sign_sp1);
         signSP2 = views[0].findViewById(R.id.sign_sp2);
         signSP3 = views[0].findViewById(R.id.sign_sp3);
-        dataNumBtn = views[0].findViewById(R.id.data_num_btn);
-        dataNumBtn.setOnClickListener(new View.OnClickListener() {
+        aqlSwitch = views[0].findViewById(R.id.aql_switch);
+        roshSwitch = views[0].findViewById(R.id.rosh_switch);
+        logoImageButton = views[0].findViewById(R.id.logo_btn);
+        logoImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+        confirmationFrequencyBtn = views[0].findViewById(R.id.confirmation_frequency_btn);
+        confirmationFrequencyBtn.setText(String.valueOf(mTemplateBean.getConfirmationFrequency()));
+        confirmationFrequencyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new NumberPickerDialog(
@@ -110,13 +139,13 @@ public class TemplateActivity extends BaseOActivity {
                         new NumberPicker.OnValueChangeListener() {
                             @Override
                             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                                dataNumBtn.setText(newVal + "");
+                                confirmationFrequencyBtn.setText(newVal + "");
                             }
                         },
-                        20, // 最大值
-                        1, // 最小值
-                        5) // 默认值
-                        .setCurrentValue(5) // 更新默认值
+                        10, // 最大值
+                        0, // 最小值
+                        mTemplateBean.getConfirmationFrequency()) // 默认值
+                        .setCurrentValue(mTemplateBean.getConfirmationFrequency()) // 更新默认值
                         .show();
             }
         });
@@ -192,6 +221,8 @@ public class TemplateActivity extends BaseOActivity {
         averageSwitch.setChecked(mTemplateBean.getAverageEnable());
         rangeSwitch.setChecked(mTemplateBean.getRangeEnable());
         judgeSwitch.setChecked(mTemplateBean.getJudgeEnable());
+        aqlSwitch.setChecked(mTemplateBean.getAqlEnable());
+        roshSwitch.setChecked(mTemplateBean.getRoshEnable());
 
         leftHeaderEdt.setText(mTemplateBean.getHeaderLeft());
         midHeaderEdt.setText(mTemplateBean.getHeaderMid());
@@ -227,7 +258,10 @@ public class TemplateActivity extends BaseOActivity {
                 return views[position];
             }
         });
-
+        if(mTemplateBean.getLogoPic() != null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
+            logoImageButton.setImageBitmap(bitmap);
+        }
         listHeaderRV.setAdapter(mListHeaderAdapter);
         AQLRV.setAdapter(mAQLHeaderAdapter);
         RoSHRV.setAdapter(mRoHSHeaderAdapter);
@@ -243,6 +277,8 @@ public class TemplateActivity extends BaseOActivity {
         mTemplateBean.setMinimumEnable(minimumSwitch.isChecked());
         mTemplateBean.setRangeEnable(rangeSwitch.isChecked());
         mTemplateBean.setJudgeEnable(judgeSwitch.isChecked());
+        mTemplateBean.setAqlEnable(aqlSwitch.isChecked());
+        mTemplateBean.setRoshEnable(roshSwitch.isChecked());
 
         mTemplateBean.setHeaderLeft(leftHeaderEdt.getText().toString().trim());
         mTemplateBean.setHeaderMid(midHeaderEdt.getText().toString().trim());
@@ -251,7 +287,8 @@ public class TemplateActivity extends BaseOActivity {
         mTemplateBean.setFooterLeft(leftFooterEdt.getText().toString().trim());
         mTemplateBean.setFooterMid(midFooterEdt.getText().toString().trim());
         mTemplateBean.setFooterRight(rightFooterEdt.getText().toString().trim());
-        mTemplateBean.setDataNum(Integer.valueOf(dataNumBtn.getText().toString().trim()));
+        mTemplateBean.setDataNum(Integer.valueOf(confirmationFrequencyBtn.getText().toString().trim()));
+        mTemplateBean.setConfirmationFrequency(Integer.valueOf(confirmationFrequencyBtn.getText().toString().trim()));
         mTemplateBean.setTitle(titleEdt.getText().toString().trim());
 
         List<String> signs = new ArrayList<>();
@@ -268,6 +305,32 @@ public class TemplateActivity extends BaseOActivity {
         DialogUtils.showDialog(this, getResources().getString(R.string.save_success), getResources().getString(R.string.save_success));
     }
 
+    static final int REQUEST_TAKE_PHOTO = 2;
+
+    private void dispatchTakePictureIntent() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, 1);
+    }
+
+    private String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg", /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
 
     private int getRoleID(String role) {
         String[] roles = getResources().getStringArray(R.array.sign);
@@ -277,6 +340,54 @@ public class TemplateActivity extends BaseOActivity {
             }
         }
         return 0;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {//是否选择，没选择就不会继续
+            Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
+            String _path = UriToPathUtil.getFilePathByUri(this, uri);
+            // _path = getDataColumn(this, uri, null, null);
+            android.util.Log.d("wlDebug", "_path = " + _path);
+
+            File file = new File(_path);
+            if (!file.exists()) return;
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+//设置为true,代表加载器不加载图片,而是把图片的宽高读出来
+            opts.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
+
+            int imageWidth = opts.outWidth;
+            int imageHeight = opts.outHeight;
+//得到屏幕的宽高
+            Display display = getWindowManager().getDefaultDisplay();
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            display.getMetrics(displayMetrics);
+//获得像素大小
+            int screenWidth = displayMetrics.widthPixels;
+            int screenHeight = displayMetrics.heightPixels;
+
+            int widthScale = imageWidth / screenWidth;
+            int heightScale = imageHeight / screenHeight;
+            int scale = widthScale > heightScale ? widthScale : heightScale;
+            opts.inJustDecodeBounds = false;
+            opts.inSampleSize = scale;
+            Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
+            logoImageButton.setImageBitmap(bm);
+            mTemplateBean.setLogoPic(getBitmapByte(bm));
+        }
+    }
+
+    public byte[] getBitmapByte(Bitmap bitmap) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
     }
 
 
@@ -437,6 +548,9 @@ public class TemplateActivity extends BaseOActivity {
             String str = mTemplateBean.getRoHSList().get(position);
             holder.setText(R.id.tv, getString(R.string.info_item) + (position + 1) + "            " + str);
             holder.setText(R.id.input_type_tv, getInputType(mTemplateBean.getRoHSTypeList().get(position)));
+            if (str.equals("RoHS确认频率") || str.equals("本批确认") || str.equals("上回RoHS确认日")) {
+                return;
+            }
             holder.setOnClickListener(R.id.str_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

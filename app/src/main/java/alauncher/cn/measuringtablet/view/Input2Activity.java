@@ -8,6 +8,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -52,8 +54,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
@@ -65,6 +69,8 @@ import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
+import alauncher.cn.measuringtablet.bean.User;
+import alauncher.cn.measuringtablet.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
 import alauncher.cn.measuringtablet.utils.DateUtils;
@@ -135,6 +141,8 @@ public class Input2Activity extends BaseOActivity {
 
     private TextView allResultTV;
 
+    private EditText remarkEdt;
+
     private List<Double> maxs = new ArrayList<>();
     private List<Double> mins = new ArrayList<>();
     private List<Double> avgs = new ArrayList<>();
@@ -143,6 +151,7 @@ public class Input2Activity extends BaseOActivity {
     private List<String> dataJudges = new ArrayList<>();
     private String allJudge = "OK";
 
+    private User user;
     private static int dataNumber = 1;
 
     @Override
@@ -185,14 +194,24 @@ public class Input2Activity extends BaseOActivity {
         // 标题 + 签名栏;
         LinearLayout _layout = new LinearLayout(this);
         _layout.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView logoIV = getImageView();
+        logoIV.setPadding(0, 0, 0, 0);
+        if (mTemplateBean.getLogoPic() != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
+            logoIV.setScaleType(ImageView.ScaleType.FIT_XY);
+            logoIV.setImageBitmap(bitmap);
+        } else {
+            logoIV.setImageResource(R.drawable.et_logo);
+        }
+        _layout.addView(logoIV, getLayoutParams(0, 2, 2));
         _layout.addView(getInfoTV(mTemplateBean.getTitle(), ColorConstants.titleColor), getLayoutParams(0, 2, 10));
+        user = App.getDaoSession().getUserDao().load(App.handlerAccout);
         for (int i = 0; i < mTemplateBean.getSignList().size(); i++) {
             LinearLayout signLayout = new LinearLayout(this);
             signLayout.setOrientation(LinearLayout.VERTICAL);
             signLayout.addView(getInfoTV(mTemplateBean.getSignList().get(i), ColorConstants.titleColor), getItemVLayoutParams(1, 2));
-            signLayout.addView(getInfoTV("", Color.WHITE), getItemVLayoutParams(1, 2));
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
-                    (int) getResources().getDimension(R.dimen.item_height) * 2);
+            signLayout.addView(getInfoTV(mTemplateBean.getSignList().get(i).equals("担当") ? user.getName() : "", Color.WHITE), getItemVLayoutParams(1, 2));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, (int) getResources().getDimension(R.dimen.item_height) * 2);
             params.weight = 2;
             _layout.addView(signLayout, params);
         }
@@ -250,11 +269,11 @@ public class Input2Activity extends BaseOActivity {
             LinearLayout __layout = new LinearLayout(this);
             __layout.addView(getInfoTV("记号", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
             __layout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getSequenceNumber() + 1) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol1Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             __layout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getSequenceNumber() + 1) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol2Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             __layout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getSequenceNumber() + 1) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+                    String.valueOf(rol3Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             mainLayout.addView(__layout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制上限值;
@@ -294,7 +313,6 @@ public class Input2Activity extends BaseOActivity {
             for (int j = 0; j < dataNumber; j++) {
                 LinearLayout dataLayout = new LinearLayout(this);
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
-
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
                     EditText _edt1 = getInputEditView(true);
@@ -337,7 +355,6 @@ public class Input2Activity extends BaseOActivity {
                 mainLayout.addView(dataLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
 
-
             // 数据；
             /*
             for (int j = 0; j < mResultBean3s.size(); j++) {
@@ -372,7 +389,6 @@ public class Input2Activity extends BaseOActivity {
                 if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV3);
                 mainLayout.addView(maxLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
-
 
             // 最小值；
             if (mTemplateBean.getMinimumEnable()) {
@@ -453,12 +469,22 @@ public class Input2Activity extends BaseOActivity {
         int bottomRow = Math.max(Math.max(mTemplateBean.getAQLList().size(), mTemplateBean.getRoHSList().size()), 5);
 
         LinearLayout bottomLayout = new LinearLayout(this);
-        bottomLayout.addView(getInfoTV("外观检查一般I级AQL=0.15", ColorConstants.bottomColor), getItemLayoutParams(1, 1 * bottomRow));
+        if (mTemplateBean.getAqlEnable()) {
+            bottomLayout.addView(getInfoTV("外观检查一般I级AQL=0.15", ColorConstants.bottomColor), getItemLayoutParams(1, 1 * bottomRow));
+        } else {
+            bottomLayout.addView(getInfoTV("", ColorConstants.bottomColor), getItemLayoutParams(1, 1 * bottomRow));
+        }
         // aql title
         LinearLayout aqlLayout = new LinearLayout(this);
         aqlLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
-            aqlLayout.addView(getInfoTV(mTemplateBean.getAQLList().size() > j ? mTemplateBean.getAQLList().get(j) : " ", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
+            if (mTemplateBean.getAqlEnable()) {
+                aqlLayout.addView(getInfoTV(mTemplateBean.getAQLList().size() > j ? mTemplateBean.getAQLList().get(j) : " ", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
+            } else {
+                TextView tv = getInfoTV("", ColorConstants.titleColor);
+                tv.setEnabled(false);
+                aqlLayout.addView(tv, getItemVLayoutParams(1, 1));
+            }
         }
         bottomLayout.addView(aqlLayout, getItemLayoutParams(2, 1 * bottomRow));
 
@@ -467,7 +493,7 @@ public class Input2Activity extends BaseOActivity {
         aqlResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (aqlObjects.size() < mTemplateBean.getAQLList().size()) {
-                View view = (View) getInputViewByType(mTemplateBean.getAQLTypeList().get(j));
+                View view = (View) getInputViewByType(mTemplateBean.getAqlEnable() ? mTemplateBean.getAQLTypeList().get(j) : "4");
                 aqlResultLayout.addView(view, getItemVLayoutParams(1, 1));
                 aqlObjects.add(view);
             } else {
@@ -476,12 +502,20 @@ public class Input2Activity extends BaseOActivity {
         }
         bottomLayout.addView(aqlResultLayout, getItemLayoutParams(1, 1 * bottomRow));
 
-        bottomLayout.addView(getInfoTV("RoHS相关: ", ColorConstants.bottomColor), getItemLayoutParams(1, 1 * bottomRow));
+        if (mTemplateBean.getRoshEnable()) {
+            bottomLayout.addView(getInfoTV("RoHS相关: ", ColorConstants.bottomColor), getItemLayoutParams(1, 1 * bottomRow));
+        } else {
+            bottomLayout.addView(getInfoTV("", ColorConstants.bottomColor), getItemLayoutParams(1, 1 * bottomRow));
+        }
         // RoSH;
         LinearLayout roshLayout = new LinearLayout(this);
         roshLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
-            roshLayout.addView(getInfoTV(mTemplateBean.getRoHSList().size() > j ? mTemplateBean.getRoHSList().get(j) : " ", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
+            if (mTemplateBean.getRoshEnable()) {
+                roshLayout.addView(getInfoTV(mTemplateBean.getRoHSList().size() > j ? mTemplateBean.getRoHSList().get(j) : " ", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
+            } else {
+                roshLayout.addView(getInfoTV("", ColorConstants.titleColor), getItemVLayoutParams(1, 1));
+            }
         }
         bottomLayout.addView(roshLayout, getItemLayoutParams(2, 1 * bottomRow));
 
@@ -491,9 +525,24 @@ public class Input2Activity extends BaseOActivity {
         roshResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (roshEdts.size() < mTemplateBean.getRoHSList().size()) {
-                View view = (View) getInputViewByType(mTemplateBean.getRoHSTypeList().get(j));
+                View view = (View) getInputViewByType(mTemplateBean.getRoshEnable() ? mTemplateBean.getRoHSTypeList().get(j) : "4");
                 roshResultLayout.addView(view, getItemVLayoutParams(1, 1));
                 roshEdts.add(view);
+                if (mTemplateBean.getRoshEnable()) {
+                    if (j == 0) {
+                        ((EditText) view).setText(mTemplateBean.getConfirmationFrequency() + getResources().getString(R.string.day));
+                        ((EditText) view).setEnabled(false);
+                    } else if (j == 1) {
+                        if (getIsNeedConfirm()) {
+
+                        } else {
+                            view.setVisibility(View.INVISIBLE);
+                        }
+                    } else if (j == 2) {
+                        ((TextView) view).setText(DateUtils.getDate(mTemplateBean.getLastConfirmTimeStamp()));
+                        ((TextView) view).setEnabled(false);
+                    }
+                }
             } else {
                 roshResultLayout.addView(getInfoTV("", Color.WHITE), getItemVLayoutParams(1, 1));
             }
@@ -510,6 +559,18 @@ public class Input2Activity extends BaseOActivity {
         bottomLayout.addView(judgeResultLayout, getItemLayoutParams(1, 1 * bottomRow));
 
         mainLayout.addView(bottomLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1 * bottomRow, 1));
+        remarkEdt = getInputEditView();
+        mainLayout.addView(remarkEdt, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 1));
+    }
+
+    public boolean getIsNeedConfirm() {
+        if (mTemplateBean.getConfirmationFrequency() == 0) {
+            return true;
+        }
+        if (System.currentTimeMillis() - mTemplateBean.getLastConfirmTimeStamp() > (mTemplateBean.getConfirmationFrequency() * 1000 * 60 * 60 * 24)) {
+            return true;
+        }
+        return false;
     }
 
     public LinearLayout.LayoutParams getLayoutParams(int width, double row, int weight) {
@@ -548,6 +609,9 @@ public class Input2Activity extends BaseOActivity {
             case "3":
                 view = getInputSpinner2();
                 break;
+            case "4":
+                view = getInfoTV("", -1);
+                break;
             default:
                 break;
         }
@@ -569,6 +633,35 @@ public class Input2Activity extends BaseOActivity {
                 dispatchTakePictureIntent();
             }
         });
+        imgTV.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                final AlertDialog builder = new AlertDialog.Builder(Input2Activity.this)
+                        .create();
+                builder.show();
+                if (builder.getWindow() == null) return false;
+                builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+                TextView msg = builder.findViewById(R.id.tv_msg);
+                Button cancel = builder.findViewById(R.id.btn_cancle);
+                Button sure = builder.findViewById(R.id.btn_sure);
+                msg.setText("是否清除图片？");
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        builder.dismiss();
+                    }
+                });
+                sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        currentImg.setTag(null);
+                        currentImg.setImageResource(R.drawable.add_circle);
+                        builder.dismiss();
+                    }
+                });
+                return false;
+            }
+        });
         return imgTV;
     }
 
@@ -578,7 +671,7 @@ public class Input2Activity extends BaseOActivity {
         tv.setText(msg);
         tv.setTextSize(18);
         tv.setGravity(Gravity.CENTER);
-        tv.setBackgroundColor(color);
+        if (color != -1) tv.setBackgroundColor(color);
         return tv;
     }
 
@@ -644,6 +737,15 @@ public class Input2Activity extends BaseOActivity {
             // et.setText("测试");
             et.setHint(R.string.hint);
         }
+        return et;
+    }
+
+    public EditText getInputEditView() {
+        EditText et = new BorderEditView(this);
+        // et.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+        et.setBackground(null);
+        et.setMaxLines(1);
+        et.setHint(R.string.remarks);
         return et;
     }
 
@@ -750,33 +852,96 @@ public class Input2Activity extends BaseOActivity {
         switch (view.getId()) {
             case R.id.swap_btn:
 
-                showClassDialog();
+                showFristDialog();
                 break;
         }
     }
 
-    private void showClassDialog() {
+    private void showFristDialog() {
         View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
         GridView gridview = view.findViewById(R.id.gridview);
         final Dialog dialog = new Dialog(this, R.style.common_dialog);
         dialog.setContentView(view);
         dialog.show();
 
+
         List<CodeBean> _lists = App.getDaoSession().getCodeBeanDao().loadAll();
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+        Set<String> fristSet = new HashSet<>();
         for (CodeBean _bean : _lists) {
-            Map<String, Object> item = new HashMap<String, Object>();
-            item.put("itemName", _bean.getName());
-            items.add(item);
+            String str = _bean.getName().substring(0, _bean.getName().indexOf("-"));
+            fristSet.add(str);
         }
 
+        for (String key : fristSet) {
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("itemName", key);
+            items.add(item);
+        }
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(this, items, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
         gridview.setAdapter(simpleAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int ar, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
+                TextView tv = view.findViewById(R.id.grid_name);
+                String str = tv.getText().toString();
+                android.util.Log.d("wlDebug", "key = " + str);
+
+//                for (CodeBean _bean : _lists) {
+//                    if (!_bean.getName().contains(str)) _lists.remove(_bean);
+//                }
+                for (int i = _lists.size() - 1; i >= 0; i--) {
+                    CodeBean item = _lists.get(i);
+                    if (!item.getName().contains(str)) {
+                        _lists.remove(item);
+                    }
+                }
+                dialog.dismiss();
+                showChooseDialog(_lists);
+                /*
                 CodeBean _CodeBean = _lists.get(ar);
+                SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                _bean.setCodeID(_CodeBean.getCodeID().intValue());
+                App.getDaoSession().getSetupBeanDao().update(_bean);
+                dialog.dismiss();
+                clear();
+                 */
+            }
+        });
+
+    }
+
+    private void showSecondDialog(String fristPick, List<CodeBean> lists) {
+        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
+        GridView gridview = view.findViewById(R.id.gridview);
+        final Dialog dialog = new Dialog(this, R.style.common_dialog);
+        dialog.setContentView(view);
+        dialog.show();
+
+    }
+
+    private void showChooseDialog(List<CodeBean> lists) {
+        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
+        GridView gridview = view.findViewById(R.id.gridview);
+        final Dialog dialog = new Dialog(this, R.style.common_dialog);
+        dialog.setContentView(view);
+        dialog.show();
+
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+
+        for (int i = 0; i < lists.size(); i++) {
+            Map<String, Object> _item = new HashMap<String, Object>();
+            _item.put("itemName", lists.get(i).getName());
+            items.add(_item);
+        }
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, items, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
+        gridview.setAdapter(simpleAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int i, long arg3) {
+                CodeBean _CodeBean = lists.get(i);
                 SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                 _bean.setCodeID(_CodeBean.getCodeID().intValue());
                 App.getDaoSession().getSetupBeanDao().update(_bean);
@@ -786,6 +951,7 @@ public class Input2Activity extends BaseOActivity {
         });
 
     }
+
 
     private boolean getIsEmpty() {
         for (int i = 0; i < dataNumber; i++) {
@@ -970,7 +1136,13 @@ public class Input2Activity extends BaseOActivity {
                 mTemplateResultBean.setFactoryCode(mDeviceInfoBean.getFactoryCode());
                 mTemplateResultBean.setDeviceCode(mDeviceInfoBean.getDeviceCode());
                 mTemplateResultBean.setCodeID(App.getSetupBean().getCodeID());
+                mTemplateResultBean.setRemarks(remarkEdt.getText().toString().trim());
                 mTemplateResultBean.setTimeStamp(System.currentTimeMillis());
+                mTemplateResultBean.setUser(user.getName());
+                if (getIsNeedConfirm()) {
+                    mTemplateBean.setLastConfirmTimeStamp(System.currentTimeMillis());
+                    App.getDaoSession().getTemplateBeanDao().insertOrReplace(mTemplateBean);
+                }
 
                 List<String> indexLists = new ArrayList<>();
                 List<String> nominalValue = new ArrayList<>();
@@ -1154,7 +1326,7 @@ public class Input2Activity extends BaseOActivity {
         }
     }
 
-    static final int REQUEST_TAKE_PHOTO = 2;
+    private final static int REQUEST_TAKE_PHOTO = 2;
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1179,7 +1351,7 @@ public class Input2Activity extends BaseOActivity {
         }
     }
 
-    String currentPhotoPath;
+    private String currentPhotoPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name

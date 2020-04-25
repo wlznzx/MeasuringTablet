@@ -217,17 +217,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/template_margin_left"
-            android:text="@string/data_num"
-            android:visibility="gone"
-            android:textSize="18sp"></TextView>
+            android:text="@string/logo_add"
+            android:textSize="18sp"
+            android:visibility="visible"></TextView>
 
-        <Button
-            android:id="@+id/data_num_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:visibility="gone"
-            android:text="5"></Button>
+        <ImageView
+            android:id="@+id/logo_btn"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/et_logo"
+            android:text="5"
+            android:visibility="visible"></ImageView>
 
     </LinearLayout>
 
@@ -321,6 +322,90 @@
                     android:textSize="18sp"></Spinner>
             </LinearLayout>
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/template_margin_left"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/sign_part"
+            android:textSize="18sp"
+            android:visibility="gone"></TextView>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/aql_str"
+                android:textSize="18sp"></TextView>
+
+            <Switch
+                android:id="@+id/aql_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:entries="@array/sign"
+                android:textSize="18sp"></Switch>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/data_from_margin_tv"
+                android:text="@string/rosh_str"
+                android:textSize="18sp"></TextView>
+
+            <Switch
+                android:id="@+id/rosh_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:entries="@array/sign"
+                android:textSize="18sp"></Switch>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/template_margin_left"
+            android:text="@string/confirmation_frequency"
+            android:textSize="18sp"
+            android:visibility="visible"></TextView>
+
+        <Button
+            android:id="@+id/confirmation_frequency_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="5"
+            android:visibility="visible"></Button>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/day"
+            android:textSize="18sp"
+            android:visibility="visible"></TextView>
 
     </LinearLayout>
 

@@ -64,6 +64,7 @@ public class PDFUtils {
     static {
         signatureTitle.add("课长");
         signatureTitle.add("系长");
+        signatureTitle.add("部长");
         signatureTitle.add("担当");
     }
 
@@ -97,7 +98,7 @@ public class PDFUtils {
         // 设置跨两行
         cell1.setRowspan(2);
         // 列数;
-        cell1.setColspan(10);
+        cell1.setColspan(8);
         // 设置距左边的距离
         cell1.setPaddingLeft(10);
         // 设置高度
@@ -119,10 +120,15 @@ public class PDFUtils {
         }
         // 绘制签名栏;
         for (int i = 0; i < signatureTitle.size(); i++) {
-            PdfPCell cell = new PdfPCell(new Paragraph(" "));
+            PdfPCell cell;
+            if (i == 3) {
+                cell = new PdfPCell(new Paragraph(pTemplateResultBean.getUser(), getFont(8)));
+            } else {
+                cell = new PdfPCell(new Paragraph(""));
+            }
             cell.setRowspan(1);
             cell.setColspan(2);
-            cell.setPaddingLeft(10);
+            // cell.setPaddingLeft(10);
             // 设置内容水平居中显示
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             // 设置垂直居中
@@ -363,8 +369,19 @@ public class PDFUtils {
             table.addCell(getBottomCell(pTemplateResultBean.getRoHSList().size() > i ? pTemplateResultBean.getRoHSList().get(i) : " ", 1, 4, titleColor));
             table.addCell(getBottomCell(pTemplateResultBean.getRoHSResultList().size() > i ? pTemplateResultBean.getRoHSResultList().get(i) : " ", 1, 1, BaseColor.WHITE));
         }
-        document.add(table);
 
+        // 添加备注
+        PdfPCell remarkCell = new PdfPCell(new Paragraph(pTemplateResultBean.getRemarks(), font));
+        remarkCell.setBorderColor(BaseColor.BLACK);
+        remarkCell.setRowspan(2);
+        remarkCell.setColspan(16);
+        remarkCell.setPaddingLeft(10);
+        remarkCell.setFixedHeight(20);
+        remarkCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        remarkCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        table.addCell(remarkCell);
+
+        document.add(table);
         // 关闭文档
         document.close();
     }

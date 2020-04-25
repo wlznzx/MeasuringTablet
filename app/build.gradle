@@ -7,8 +7,8 @@ android {
         applicationId "alauncher.cn.measuringtablet"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 15
-        versionName "v3.0.6_Bate"
+        versionCode 16
+        versionName "v3.2.6_Bate"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -72,7 +72,8 @@ android {
 }
 
 greendao {
-    schemaVersion 19 //数据库版本号
+    schemaVersion 25 //数据库版本号
+
     daoPackage 'alauncher.cn.measuringtablet.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/

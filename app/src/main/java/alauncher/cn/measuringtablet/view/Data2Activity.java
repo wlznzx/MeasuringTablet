@@ -81,8 +81,13 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
     TextView pdfBtn;
     @BindView(R.id.btn_filter)
     TextView filterBtn;
+    @BindView(R.id.btn_exprot)
+    TextView exportBtn;
     @BindView(R.id.ll_mycollection_bottom_dialog)
     LinearLayout mLlMycollectionBottomDialog;
+    @BindView(R.id.bottom_layout)
+    LinearLayout bottomLayout;
+
 
     public DataAdapter2 mDataAdapter;
 
@@ -149,6 +154,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         quitBtn.setOnClickListener(this);
         excelBtn.setOnClickListener(this);
         filterBtn.setOnClickListener(this);
+        exportBtn.setOnClickListener(this);
         pdfBtn.setOnClickListener(this);
 
         titleLinearLayout = findViewById(R.id.data_title_layout);
@@ -305,12 +311,12 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         if (mEditMode == MYLIVE_MODE_EDIT) {
             // mBtnEditor.setText("取消");
             mLlMycollectionBottomDialog.setVisibility(View.VISIBLE);
-            filterBtn.setVisibility(View.GONE);
+            bottomLayout.setVisibility(View.GONE);
             editorStatus = true;
         } else {
             // mBtnEditor.setText("编辑");
             mLlMycollectionBottomDialog.setVisibility(View.GONE);
-            filterBtn.setVisibility(View.VISIBLE);
+            bottomLayout.setVisibility(View.VISIBLE);
             editorStatus = false;
             clearAll();
         }
@@ -400,6 +406,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             case R.id.btn_filter:
                 FilterDialog mFilterDialog = new FilterDialog(this, this);
                 mFilterDialog.show();
+                break;
+            case R.id.btn_exprot:
+                updataEditMode();
                 break;
             default:
                 break;

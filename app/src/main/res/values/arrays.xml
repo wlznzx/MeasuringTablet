@@ -26,6 +26,12 @@
         <item>M8</item>
     </string-array>
 
+    <string-array name="m_type" translatable="false">
+        <item>双边界</item>
+        <item>单边界</item>
+        <item>布尔类型</item>
+    </string-array>
+
     <string-array name="workids" translatable="false">
         <item>10</item>
         <item>11</item>

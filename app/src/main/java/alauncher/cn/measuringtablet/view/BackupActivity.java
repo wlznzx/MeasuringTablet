@@ -134,7 +134,7 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
+        if (data == null) return;
         android.util.Log.d("wlDebug", "resultCode = " + resultCode);
         android.util.Log.d("wlDebug", "uri = " + data.getData().toString());
 

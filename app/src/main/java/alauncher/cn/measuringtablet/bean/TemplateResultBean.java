@@ -63,6 +63,10 @@ public class TemplateResultBean {
 
     public byte[] img;
 
+    public String remarks;
+
+    public String user;
+
     // 标题;
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> titleResultList;
@@ -88,15 +92,15 @@ public class TemplateResultBean {
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> nominalValues;
 
-    @Generated(hash = 1830060704)
+    @Generated(hash = 319552402)
     public TemplateResultBean(Long id, String factoryCode, String deviceCode, int codeID,
             List<String> titleList, List<String> signList, List<String> AQLList,
             List<String> RoHSList, String headerLeft, String headerMid, String headerRight,
             String footerLeft, String footerMid, String footerRight, String title,
             int dataNum, boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
             boolean rangeEnable, boolean judgeEnable, String allJudge, long timeStamp,
-            byte[] img, List<String> titleResultList, List<String> AQLResultList,
-            List<String> RoHSResultList, List<String> valueIndexs,
+            byte[] img, String remarks, String user, List<String> titleResultList,
+            List<String> AQLResultList, List<String> RoHSResultList, List<String> valueIndexs,
             List<String> upperToleranceValues, List<String> lowerToleranceValues,
             List<String> nominalValues) {
         this.id = id;
@@ -123,6 +127,8 @@ public class TemplateResultBean {
         this.allJudge = allJudge;
         this.timeStamp = timeStamp;
         this.img = img;
+        this.remarks = remarks;
+        this.user = user;
         this.titleResultList = titleResultList;
         this.AQLResultList = AQLResultList;
         this.RoHSResultList = RoHSResultList;
@@ -328,6 +334,14 @@ public class TemplateResultBean {
         this.img = img;
     }
 
+    public String getRemarks() {
+        return this.remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     public List<String> getTitleResultList() {
         return this.titleResultList;
     }
@@ -382,6 +396,14 @@ public class TemplateResultBean {
 
     public void setNominalValues(List<String> nominalValues) {
         this.nominalValues = nominalValues;
+    }
+
+    public String getUser() {
+        return this.user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
     
 

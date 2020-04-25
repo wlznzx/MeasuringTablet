@@ -1,12 +1,11 @@
 package alauncher.cn.measuringtablet.bean;
 
-import org.greenrobot.greendao.annotation.Convert;
-import org.greenrobot.greendao.annotation.Entity;
-
 import java.util.List;
 
 import alauncher.cn.measuringtablet.utils.StringConverter;
 
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
@@ -60,12 +59,23 @@ public class TemplateBean {
 
     public boolean maximumEnable, minimumEnable, averageEnable, rangeEnable, judgeEnable;
 
-    @Generated(hash = 109588544)
-    public TemplateBean(long codeID, List<String> titleList, List<String> titleTypeList, List<String> signList,
-            List<String> AQLList, List<String> AQLTypeList, List<String> RoHSList, List<String> RoHSTypeList,
-            String headerLeft, String headerMid, String headerRight, String footerLeft, String footerMid,
-            String footerRight, String title, int dataNum, boolean maximumEnable, boolean minimumEnable,
-            boolean averageEnable, boolean rangeEnable, boolean judgeEnable) {
+    public boolean aqlEnable, roshEnable;
+
+    public byte[] logoPic;
+
+    public int confirmationFrequency;
+
+    public long lastConfirmTimeStamp;
+
+    @Generated(hash = 1682049459)
+    public TemplateBean(long codeID, List<String> titleList, List<String> titleTypeList,
+            List<String> signList, List<String> AQLList, List<String> AQLTypeList,
+            List<String> RoHSList, List<String> RoHSTypeList, String headerLeft,
+            String headerMid, String headerRight, String footerLeft, String footerMid,
+            String footerRight, String title, int dataNum, boolean maximumEnable,
+            boolean minimumEnable, boolean averageEnable, boolean rangeEnable,
+            boolean judgeEnable, boolean aqlEnable, boolean roshEnable, byte[] logoPic,
+            int confirmationFrequency, long lastConfirmTimeStamp) {
         this.codeID = codeID;
         this.titleList = titleList;
         this.titleTypeList = titleTypeList;
@@ -87,6 +97,11 @@ public class TemplateBean {
         this.averageEnable = averageEnable;
         this.rangeEnable = rangeEnable;
         this.judgeEnable = judgeEnable;
+        this.aqlEnable = aqlEnable;
+        this.roshEnable = roshEnable;
+        this.logoPic = logoPic;
+        this.confirmationFrequency = confirmationFrequency;
+        this.lastConfirmTimeStamp = lastConfirmTimeStamp;
     }
 
     @Generated(hash = 741639705)
@@ -109,6 +124,14 @@ public class TemplateBean {
         this.titleList = titleList;
     }
 
+    public List<String> getTitleTypeList() {
+        return this.titleTypeList;
+    }
+
+    public void setTitleTypeList(List<String> titleTypeList) {
+        this.titleTypeList = titleTypeList;
+    }
+
     public List<String> getSignList() {
         return this.signList;
     }
@@ -125,12 +148,28 @@ public class TemplateBean {
         this.AQLList = AQLList;
     }
 
+    public List<String> getAQLTypeList() {
+        return this.AQLTypeList;
+    }
+
+    public void setAQLTypeList(List<String> AQLTypeList) {
+        this.AQLTypeList = AQLTypeList;
+    }
+
     public List<String> getRoHSList() {
         return this.RoHSList;
     }
 
     public void setRoHSList(List<String> RoHSList) {
         this.RoHSList = RoHSList;
+    }
+
+    public List<String> getRoHSTypeList() {
+        return this.RoHSTypeList;
+    }
+
+    public void setRoHSTypeList(List<String> RoHSTypeList) {
+        this.RoHSTypeList = RoHSTypeList;
     }
 
     public String getHeaderLeft() {
@@ -237,29 +276,44 @@ public class TemplateBean {
         this.judgeEnable = judgeEnable;
     }
 
-    public List<String> getTitleTypeList() {
-        return this.titleTypeList;
+    public boolean getAqlEnable() {
+        return this.aqlEnable;
     }
 
-    public void setTitleTypeList(List<String> titleTypeList) {
-        this.titleTypeList = titleTypeList;
+    public void setAqlEnable(boolean aqlEnable) {
+        this.aqlEnable = aqlEnable;
     }
 
-    public List<String> getAQLTypeList() {
-        return this.AQLTypeList;
+    public boolean getRoshEnable() {
+        return this.roshEnable;
     }
 
-    public void setAQLTypeList(List<String> AQLTypeList) {
-        this.AQLTypeList = AQLTypeList;
+    public void setRoshEnable(boolean roshEnable) {
+        this.roshEnable = roshEnable;
     }
 
-    public List<String> getRoHSTypeList() {
-        return this.RoHSTypeList;
+    public byte[] getLogoPic() {
+        return this.logoPic;
     }
 
-    public void setRoHSTypeList(List<String> RoHSTypeList) {
-        this.RoHSTypeList = RoHSTypeList;
+    public void setLogoPic(byte[] logoPic) {
+        this.logoPic = logoPic;
     }
 
+    public int getConfirmationFrequency() {
+        return this.confirmationFrequency;
+    }
+
+    public void setConfirmationFrequency(int confirmationFrequency) {
+        this.confirmationFrequency = confirmationFrequency;
+    }
+
+    public long getLastConfirmTimeStamp() {
+        return this.lastConfirmTimeStamp;
+    }
+
+    public void setLastConfirmTimeStamp(long lastConfirmTimeStamp) {
+        this.lastConfirmTimeStamp = lastConfirmTimeStamp;
+    }
 
 }
