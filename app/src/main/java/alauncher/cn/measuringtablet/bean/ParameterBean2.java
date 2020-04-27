@@ -45,9 +45,9 @@ public class ParameterBean2 {
 
     @Generated(hash = 300202343)
     public ParameterBean2(Long id, long codeID, int sequenceNumber, String describe,
-            double nominalValue, double upperToleranceValue,
-            double lowerToleranceValue, double deviation, int resolution,
-            double scale, String code, boolean enable, int type) {
+                          double nominalValue, double upperToleranceValue,
+                          double lowerToleranceValue, double deviation, int resolution,
+                          double scale, String code, boolean enable, int type) {
         this.id = id;
         this.codeID = codeID;
         this.sequenceNumber = sequenceNumber;
@@ -171,5 +171,22 @@ public class ParameterBean2 {
         this.type = type;
     }
 
-  
+    @Override
+    public String toString() {
+        return "ParameterBean2{" +
+                "id=" + id +
+                ", codeID=" + codeID +
+                ", sequenceNumber=" + sequenceNumber +
+                ", describe='" + describe + '\'' +
+                ", nominalValue=" + nominalValue +
+                ", upperToleranceValue=" + upperToleranceValue +
+                ", lowerToleranceValue=" + lowerToleranceValue +
+                ", deviation=" + deviation +
+                ", resolution=" + resolution +
+                ", scale=" + scale +
+                ", code='" + code + '\'' +
+                ", enable=" + enable +
+                ", type=" + type +
+                '}';
+    }
 }

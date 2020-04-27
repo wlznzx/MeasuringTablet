@@ -12,8 +12,10 @@ import org.greenrobot.greendao.annotation.Id;
 @Entity
 public class TemplateBean {
 
-    @Id
-    public long codeID;
+    @Id(autoincrement = true)
+    public Long templateID;
+
+    public String name;
 
     // 标题;
     @Convert(columnType = String.class, converter = StringConverter.class)
@@ -67,16 +69,17 @@ public class TemplateBean {
 
     public long lastConfirmTimeStamp;
 
-    @Generated(hash = 1682049459)
-    public TemplateBean(long codeID, List<String> titleList, List<String> titleTypeList,
-            List<String> signList, List<String> AQLList, List<String> AQLTypeList,
-            List<String> RoHSList, List<String> RoHSTypeList, String headerLeft,
-            String headerMid, String headerRight, String footerLeft, String footerMid,
-            String footerRight, String title, int dataNum, boolean maximumEnable,
-            boolean minimumEnable, boolean averageEnable, boolean rangeEnable,
-            boolean judgeEnable, boolean aqlEnable, boolean roshEnable, byte[] logoPic,
-            int confirmationFrequency, long lastConfirmTimeStamp) {
-        this.codeID = codeID;
+    @Generated(hash = 58443959)
+    public TemplateBean(Long templateID, String name, List<String> titleList,
+            List<String> titleTypeList, List<String> signList, List<String> AQLList,
+            List<String> AQLTypeList, List<String> RoHSList, List<String> RoHSTypeList,
+            String headerLeft, String headerMid, String headerRight, String footerLeft,
+            String footerMid, String footerRight, String title, int dataNum,
+            boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
+            boolean rangeEnable, boolean judgeEnable, boolean aqlEnable, boolean roshEnable,
+            byte[] logoPic, int confirmationFrequency, long lastConfirmTimeStamp) {
+        this.templateID = templateID;
+        this.name = name;
         this.titleList = titleList;
         this.titleTypeList = titleTypeList;
         this.signList = signList;
@@ -108,12 +111,20 @@ public class TemplateBean {
     public TemplateBean() {
     }
 
-    public long getCodeID() {
-        return this.codeID;
+    public Long getTemplateID() {
+        return this.templateID;
     }
 
-    public void setCodeID(long codeID) {
-        this.codeID = codeID;
+    public void setTemplateID(Long templateID) {
+        this.templateID = templateID;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<String> getTitleList() {
@@ -315,5 +326,6 @@ public class TemplateBean {
     public void setLastConfirmTimeStamp(long lastConfirmTimeStamp) {
         this.lastConfirmTimeStamp = lastConfirmTimeStamp;
     }
+
 
 }

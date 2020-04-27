@@ -4,7 +4,6 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Index;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +22,8 @@ public class CodeBean {
     @Id(autoincrement = true)
     public Long codeID;
 
+    public Long useTemplateID;
+
     public String name;
 
     public String machineTool;
@@ -33,10 +34,15 @@ public class CodeBean {
 
     public byte[] workpiecePic;
 
-    @Generated(hash = 379354465)
-    public CodeBean(Long codeID, String name, String machineTool, String parts,
-            boolean isEnableStep, byte[] workpiecePic, List<String> defaultTitles) {
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> defaultTitles;
+
+    @Generated(hash = 1909516311)
+    public CodeBean(Long codeID, Long useTemplateID, String name,
+            String machineTool, String parts, boolean isEnableStep,
+            byte[] workpiecePic, List<String> defaultTitles) {
         this.codeID = codeID;
+        this.useTemplateID = useTemplateID;
         this.name = name;
         this.machineTool = machineTool;
         this.parts = parts;
@@ -45,17 +51,20 @@ public class CodeBean {
         this.defaultTitles = defaultTitles;
     }
 
-    public CodeBean(String name, String machineTool, String parts,
-                    boolean isEnableStep, byte[] workpiecePic) {
+    @Generated(hash = 544591002)
+    public CodeBean() {
+    }
+
+    public CodeBean(Long useTemplateID, String name,
+                    String machineTool, String parts, boolean isEnableStep,
+                    byte[] workpiecePic, List<String> defaultTitles) {
+        this.useTemplateID = useTemplateID;
         this.name = name;
         this.machineTool = machineTool;
         this.parts = parts;
         this.isEnableStep = isEnableStep;
         this.workpiecePic = workpiecePic;
-    }
-
-    @Generated(hash = 544591002)
-    public CodeBean() {
+        this.defaultTitles = defaultTitles;
     }
 
     public Long getCodeID() {
@@ -64,6 +73,14 @@ public class CodeBean {
 
     public void setCodeID(Long codeID) {
         this.codeID = codeID;
+    }
+
+    public Long getUseTemplateID() {
+        return this.useTemplateID;
+    }
+
+    public void setUseTemplateID(Long useTemplateID) {
+        this.useTemplateID = useTemplateID;
     }
 
     public String getName() {
@@ -113,9 +130,6 @@ public class CodeBean {
     public void setDefaultTitles(List<String> defaultTitles) {
         this.defaultTitles = defaultTitles;
     }
-
-    @Convert(columnType = String.class, converter = StringConverter.class)
-    private List<String> defaultTitles;
 
     
 }

@@ -388,7 +388,7 @@ public class App extends MultiDexApplication {
             // 默认模板;
             if (getDaoSession().getTemplateBeanDao().load((long) i) == null) {
                 TemplateBean mTemplateBean = getDefaultTemplateBean();
-                mTemplateBean.setCodeID(i);
+                // mTemplateBean.setCodeID(i);
                 getDaoSession().getTemplateBeanDao().insert(mTemplateBean);
             }
 
@@ -501,6 +501,7 @@ public class App extends MultiDexApplication {
 
     public static TemplateBean getDefaultTemplateBean() {
         TemplateBean mTemplateBean = new TemplateBean();
+        mTemplateBean.setName("模板");
         mTemplateBean.setDataNum(5);
         ArrayList<String> Titles = new ArrayList<>();
         ArrayList<String> TitleTypes = new ArrayList<>();

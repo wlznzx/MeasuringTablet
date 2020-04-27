@@ -28,12 +28,13 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
      */
     public static class Properties {
         public final static Property CodeID = new Property(0, Long.class, "codeID", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property MachineTool = new Property(2, String.class, "machineTool", false, "MACHINE_TOOL");
-        public final static Property Parts = new Property(3, String.class, "parts", false, "PARTS");
-        public final static Property IsEnableStep = new Property(4, boolean.class, "isEnableStep", false, "IS_ENABLE_STEP");
-        public final static Property WorkpiecePic = new Property(5, byte[].class, "workpiecePic", false, "WORKPIECE_PIC");
-        public final static Property DefaultTitles = new Property(6, String.class, "defaultTitles", false, "DEFAULT_TITLES");
+        public final static Property UseTemplateID = new Property(1, Long.class, "useTemplateID", false, "USE_TEMPLATE_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property MachineTool = new Property(3, String.class, "machineTool", false, "MACHINE_TOOL");
+        public final static Property Parts = new Property(4, String.class, "parts", false, "PARTS");
+        public final static Property IsEnableStep = new Property(5, boolean.class, "isEnableStep", false, "IS_ENABLE_STEP");
+        public final static Property WorkpiecePic = new Property(6, byte[].class, "workpiecePic", false, "WORKPIECE_PIC");
+        public final static Property DefaultTitles = new Property(7, String.class, "defaultTitles", false, "DEFAULT_TITLES");
     }
 
     private final StringConverter defaultTitlesConverter = new StringConverter();
@@ -51,12 +52,13 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CODE_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: codeID
-                "\"NAME\" TEXT," + // 1: name
-                "\"MACHINE_TOOL\" TEXT," + // 2: machineTool
-                "\"PARTS\" TEXT," + // 3: parts
-                "\"IS_ENABLE_STEP\" INTEGER NOT NULL ," + // 4: isEnableStep
-                "\"WORKPIECE_PIC\" BLOB," + // 5: workpiecePic
-                "\"DEFAULT_TITLES\" TEXT);"); // 6: defaultTitles
+                "\"USE_TEMPLATE_ID\" INTEGER," + // 1: useTemplateID
+                "\"NAME\" TEXT," + // 2: name
+                "\"MACHINE_TOOL\" TEXT," + // 3: machineTool
+                "\"PARTS\" TEXT," + // 4: parts
+                "\"IS_ENABLE_STEP\" INTEGER NOT NULL ," + // 5: isEnableStep
+                "\"WORKPIECE_PIC\" BLOB," + // 6: workpiecePic
+                "\"DEFAULT_TITLES\" TEXT);"); // 7: defaultTitles
     }
 
     /** Drops the underlying database table. */
@@ -74,30 +76,35 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
             stmt.bindLong(1, codeID);
         }
  
+        Long useTemplateID = entity.getUseTemplateID();
+        if (useTemplateID != null) {
+            stmt.bindLong(2, useTemplateID);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String machineTool = entity.getMachineTool();
         if (machineTool != null) {
-            stmt.bindString(3, machineTool);
+            stmt.bindString(4, machineTool);
         }
  
         String parts = entity.getParts();
         if (parts != null) {
-            stmt.bindString(4, parts);
+            stmt.bindString(5, parts);
         }
-        stmt.bindLong(5, entity.getIsEnableStep() ? 1L: 0L);
+        stmt.bindLong(6, entity.getIsEnableStep() ? 1L: 0L);
  
         byte[] workpiecePic = entity.getWorkpiecePic();
         if (workpiecePic != null) {
-            stmt.bindBlob(6, workpiecePic);
+            stmt.bindBlob(7, workpiecePic);
         }
  
         List defaultTitles = entity.getDefaultTitles();
         if (defaultTitles != null) {
-            stmt.bindString(7, defaultTitlesConverter.convertToDatabaseValue(defaultTitles));
+            stmt.bindString(8, defaultTitlesConverter.convertToDatabaseValue(defaultTitles));
         }
     }
 
@@ -110,30 +117,35 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
             stmt.bindLong(1, codeID);
         }
  
+        Long useTemplateID = entity.getUseTemplateID();
+        if (useTemplateID != null) {
+            stmt.bindLong(2, useTemplateID);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String machineTool = entity.getMachineTool();
         if (machineTool != null) {
-            stmt.bindString(3, machineTool);
+            stmt.bindString(4, machineTool);
         }
  
         String parts = entity.getParts();
         if (parts != null) {
-            stmt.bindString(4, parts);
+            stmt.bindString(5, parts);
         }
-        stmt.bindLong(5, entity.getIsEnableStep() ? 1L: 0L);
+        stmt.bindLong(6, entity.getIsEnableStep() ? 1L: 0L);
  
         byte[] workpiecePic = entity.getWorkpiecePic();
         if (workpiecePic != null) {
-            stmt.bindBlob(6, workpiecePic);
+            stmt.bindBlob(7, workpiecePic);
         }
  
         List defaultTitles = entity.getDefaultTitles();
         if (defaultTitles != null) {
-            stmt.bindString(7, defaultTitlesConverter.convertToDatabaseValue(defaultTitles));
+            stmt.bindString(8, defaultTitlesConverter.convertToDatabaseValue(defaultTitles));
         }
     }
 
@@ -146,12 +158,13 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     public CodeBean readEntity(Cursor cursor, int offset) {
         CodeBean entity = new CodeBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // codeID
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // machineTool
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // parts
-            cursor.getShort(offset + 4) != 0, // isEnableStep
-            cursor.isNull(offset + 5) ? null : cursor.getBlob(offset + 5), // workpiecePic
-            cursor.isNull(offset + 6) ? null : defaultTitlesConverter.convertToEntityProperty(cursor.getString(offset + 6)) // defaultTitles
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // useTemplateID
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // machineTool
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // parts
+            cursor.getShort(offset + 5) != 0, // isEnableStep
+            cursor.isNull(offset + 6) ? null : cursor.getBlob(offset + 6), // workpiecePic
+            cursor.isNull(offset + 7) ? null : defaultTitlesConverter.convertToEntityProperty(cursor.getString(offset + 7)) // defaultTitles
         );
         return entity;
     }
@@ -159,12 +172,13 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     @Override
     public void readEntity(Cursor cursor, CodeBean entity, int offset) {
         entity.setCodeID(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setMachineTool(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setParts(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setIsEnableStep(cursor.getShort(offset + 4) != 0);
-        entity.setWorkpiecePic(cursor.isNull(offset + 5) ? null : cursor.getBlob(offset + 5));
-        entity.setDefaultTitles(cursor.isNull(offset + 6) ? null : defaultTitlesConverter.convertToEntityProperty(cursor.getString(offset + 6)));
+        entity.setUseTemplateID(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setMachineTool(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setParts(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setIsEnableStep(cursor.getShort(offset + 5) != 0);
+        entity.setWorkpiecePic(cursor.isNull(offset + 6) ? null : cursor.getBlob(offset + 6));
+        entity.setDefaultTitles(cursor.isNull(offset + 7) ? null : defaultTitlesConverter.convertToEntityProperty(cursor.getString(offset + 7)));
      }
     
     @Override

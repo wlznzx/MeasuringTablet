@@ -258,7 +258,7 @@ public class TemplateActivity extends BaseOActivity {
                 return views[position];
             }
         });
-        if(mTemplateBean.getLogoPic() != null){
+        if (mTemplateBean.getLogoPic() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
             logoImageButton.setImageBitmap(bitmap);
         }
@@ -295,6 +295,7 @@ public class TemplateActivity extends BaseOActivity {
         signs.add((String) signSP1.getSelectedItem());
         signs.add((String) signSP2.getSelectedItem());
         signs.add((String) signSP3.getSelectedItem());
+        signs.add("担当");
         mTemplateBean.setSignList(signs);
 
         //

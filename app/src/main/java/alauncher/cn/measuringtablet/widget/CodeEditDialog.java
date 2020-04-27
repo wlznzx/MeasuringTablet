@@ -70,6 +70,7 @@ public class CodeEditDialog extends Dialog {
             mCodeBean.setParts(getContext().getResources().getString(R.string.spare_parts));
             mCodeBean.setName(codeNameEdt.getText().toString().trim());
             mCodeBean.setDefaultTitles(new ArrayList<>());
+            mCodeBean.setUseTemplateID(0L);
         }
         long id = App.getDaoSession().getCodeBeanDao().insertOrReplace(mCodeBean);
         doTemplateAdd((int) id);
@@ -80,7 +81,7 @@ public class CodeEditDialog extends Dialog {
         // 默认模板;
         if (App.getDaoSession().getTemplateBeanDao().load((long) codeID) == null) {
             TemplateBean mTemplateBean = App.getDefaultTemplateBean();
-            mTemplateBean.setCodeID(codeID);
+            // mTemplateBean.setCodeID(codeID);
             App.getDaoSession().getTemplateBeanDao().insert(mTemplateBean);
         }
     }

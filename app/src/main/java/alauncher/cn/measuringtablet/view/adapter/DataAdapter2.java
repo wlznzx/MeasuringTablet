@@ -243,7 +243,6 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         } else {
             // Toast.makeText(this, "图片不存在", Toast.LENGTH_SHORT).show();
         }
-
     }
 
 

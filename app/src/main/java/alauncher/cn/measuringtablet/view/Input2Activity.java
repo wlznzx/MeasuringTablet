@@ -114,7 +114,7 @@ public class Input2Activity extends BaseOActivity {
     private List<Object> roshEdts = new ArrayList<>();
 
     // result;
-    private List<List<EditText>> results = new ArrayList<>();
+    private List<List<View>> results = new ArrayList<>();
 
     // resultImg;
     private List<List<ImageView>> resultImgs = new ArrayList<>();
@@ -196,6 +196,7 @@ public class Input2Activity extends BaseOActivity {
         _layout.setOrientation(LinearLayout.HORIZONTAL);
         ImageView logoIV = getImageView();
         logoIV.setPadding(0, 0, 0, 0);
+        logoIV.setOnClickListener(null);
         if (mTemplateBean.getLogoPic() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
             logoIV.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -242,16 +243,16 @@ public class Input2Activity extends BaseOActivity {
         }
 
         // 添加工件图;
-        FrameLayout imgLayout = new FrameLayout(this);
-        mainLayout.addView(imgLayout, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 10));
+        ImageView imgView = new ImageView(this);
+        mainLayout.addView(imgView, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 10));
 
-        imgLayout.setBackgroundResource(R.drawable.workspice);
+        imgView.setImageResource(R.drawable.workspice);
         byte[] _pic = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID()).getWorkpiecePic();
         if (_pic != null) {
             Bitmap map = BitmapFactory.decodeByteArray(_pic, 0, _pic.length);
-            imgLayout.setBackground(new BitmapDrawable(map));
+            imgView.setImageBitmap(map);
         } else {
-            imgLayout.setBackgroundResource(R.drawable.workspice);
+            imgView.setImageResource(R.drawable.workspice);
         }
 
         // 秀的操作来了，真是可怕;
@@ -315,9 +316,11 @@ public class Input2Activity extends BaseOActivity {
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
-                    EditText _edt1 = getInputEditView(true);
-                    dataLayout.addView(_edt1, getItemLayoutParams(2, 1));
-                    results.get(j).add(_edt1);
+                    android.util.Log.d("wlDebug", "rol1Bean = " + rol1Bean.toString());
+                    View view = (View) getInputViewByType(rol1Bean.getType() == 3 ? "1" : "0");
+                    // EditText _edt1 = getInputEditView(true);
+                    dataLayout.addView(view, getItemLayoutParams(2, 1));
+                    results.get(j).add(view);
                     // 图片;
                     ImageView img = getImageView();
                     dataLayout.addView(img, getItemLayoutParams(3, 1));
@@ -437,7 +440,6 @@ public class Input2Activity extends BaseOActivity {
                 if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV3);
                 mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
-
 
             /*
             table.addCell(getDataCell("最小值", 1, 1, dataTitleColor));
@@ -629,8 +631,12 @@ public class Input2Activity extends BaseOActivity {
         imgTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentImg = imgTV;
-                dispatchTakePictureIntent();
+                if (imgTV.getTag() != null) {
+                    openImage(String.valueOf(imgTV.getTag()));
+                } else {
+                    currentImg = imgTV;
+                    dispatchTakePictureIntent();
+                }
             }
         });
         imgTV.setOnLongClickListener(new View.OnLongClickListener() {
@@ -654,8 +660,8 @@ public class Input2Activity extends BaseOActivity {
                 sure.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentImg.setTag(null);
-                        currentImg.setImageResource(R.drawable.add_circle);
+                        imgTV.setTag(null);
+                        imgTV.setImageResource(R.drawable.add_circle);
                         builder.dismiss();
                     }
                 });
@@ -663,6 +669,23 @@ public class Input2Activity extends BaseOActivity {
             }
         });
         return imgTV;
+    }
+
+    public void openImage(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            Uri uri = FileProvider.getUriForFile(Input2Activity.this, "alauncher.cn.measuringtablet.fileProvider", file);
+            // Uri uri = Uri.fromFile(file);
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(uri, "image/jpeg");
+            startActivity(intent);
+        } else {
+            // Toast.makeText(this, "图片不存在", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public TextView getInfoTV(String msg, int color) {
@@ -696,7 +719,6 @@ public class Input2Activity extends BaseOActivity {
                                 days = new StringBuffer().append(mYear).append("/").append("0").
                                         append(mMonth + 1).append("/").append(mDay).append("").toString();
                             }
-
                         } else {
                             if (mDay < 10) {
                                 days = new StringBuffer().append(mYear).append("/").
@@ -751,6 +773,7 @@ public class Input2Activity extends BaseOActivity {
 
     public Spinner getInputSpinner() {
         Spinner sp = new Spinner(this);
+        sp.setPadding(2, 2, 2, 2);
         sp.setGravity(Gravity.CENTER);
         ArrayAdapter array_adapter = new ArrayAdapter(this, R.layout.spinner_item, getResources().getStringArray(R.array.input_result));
         array_adapter
@@ -966,8 +989,10 @@ public class Input2Activity extends BaseOActivity {
 
     private boolean getIsEmpty() {
         for (int i = 0; i < dataNumber; i++) {
-            for (EditText edt : results.get(i)) {
-                if (edt.getText().toString().equals("")) return true;
+            for (View edt : results.get(i)) {
+                if (edt instanceof EditText) {
+                    if (((EditText) edt).getText().toString().equals("")) return true;
+                }
             }
         }
         return false;
@@ -976,8 +1001,12 @@ public class Input2Activity extends BaseOActivity {
     private int getLineEmpty() {
         for (int i = 0; i < dataNumber; i++) {
             boolean isEmpty = true;
-            for (EditText edt : results.get(i)) {
-                if (!edt.getText().toString().equals("")) isEmpty = false;
+            for (View edt : results.get(i)) {
+                if (edt instanceof EditText) {
+                    if (!((EditText) edt).getText().toString().equals("")) isEmpty = false;
+                } else if (edt instanceof Spinner) {
+                    isEmpty = false;
+                }
             }
             if (isEmpty) return i;
         }
@@ -1056,11 +1085,19 @@ public class Input2Activity extends BaseOActivity {
 
         for (int j = 0; j < dataNumber; j++) {
             for (int i = 0; i < mParameterBean2s.size(); i++) {
-                if (results.get(j).get(i).getText().toString().trim().equals("")) {
+                View _view = results.get(j).get(i);
+                if (_view instanceof Spinner) {
+                    if (((Spinner) _view).getSelectedItemPosition() == 1) {
+                        dataJudges.set(j, "NG");
+                    }
+                    continue;
+                }
+                if (((EditText) _view).getText().toString().trim().equals("")) {
+                    dataJudges.set(j, "NG");
                     continue;
                 }
                 int type = mParameterBean2s.get(i).getType();
-                double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                double _value = Double.valueOf(((EditText) _view).getText().toString().trim());
                 switch (type) {
                     case 0:
                         if (_value > mParameterBean2s.get(i).getNominalValue() + mParameterBean2s.get(i).getUpperToleranceValue()
@@ -1091,10 +1128,24 @@ public class Input2Activity extends BaseOActivity {
         }
 
         for (int i = 0; i < mParameterBean2s.size(); i++) {
+
             sum = 0;
             for (int j = 0; j < dataNumber; j++) {
                 try {
-                    double _value = Double.valueOf(results.get(j).get(i).getText().toString().trim());
+                    View _view = results.get(j).get(i);
+                    if (_view instanceof Spinner) {
+                        if (((Spinner) _view).getSelectedItemPosition() == 1) {
+                            judges.set(j, "NG");
+                            allJudge = "NG";
+                        }
+                        continue;
+                    }
+                    if (((EditText) _view).getText().toString().trim().equals("")) {
+                        judges.set(i, "NG");
+                        allJudge = "NG";
+                        continue;
+                    }
+                    double _value = Double.valueOf(((EditText) _view).getText().toString().trim());
                     sum += _value;
                     if (_value < mins.get(i)) {
                         mins.set(i, _value);
@@ -1139,9 +1190,9 @@ public class Input2Activity extends BaseOActivity {
                         default:
                             break;
                     }
-
                 } catch (Exception e) {
-
+                    judges.set(i, "NG");
+                    allJudge = "NG";
                 }
             }
             for (Object obj : aqlObjects) {
@@ -1152,6 +1203,10 @@ public class Input2Activity extends BaseOActivity {
                     }
                 }
             }
+            maxs.get(i).equals(-100000);
+            maxs.set(i, 0d);
+            mins.get(i).equals(100000);
+            mins.set(i, 0d);
             avgs.set(i, BigDecimal.valueOf(sum / dataNumber).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
             ranges.set(i, BigDecimal.valueOf(maxs.get(i) - mins.get(i)).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
         }
@@ -1267,8 +1322,13 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setCodeID(App.getSetupBean().getCodeID());
                     ArrayList<String> values = new ArrayList<>();
                     ArrayList<String> picPaths = new ArrayList<>();
-                    for (EditText edt : results.get(i)) {
-                        values.add(edt.getText().toString().trim());
+                    for (View edt : results.get(i)) {
+                        if (edt instanceof EditText) {
+                            values.add(((EditText) edt).getText().toString().trim());
+                        } else if (edt instanceof Spinner) {
+                            Spinner sp = (Spinner) edt;
+                            values.add(sp.getSelectedItemPosition() == 0 ? "1" : "0");
+                        }
                     }
                     for (int j = 0; j < mParameterBean2s.size(); j++) {
                         picPaths.add((String) resultImgs.get(i).get(j).getTag());
@@ -1354,7 +1414,13 @@ public class Input2Activity extends BaseOActivity {
 
             List<String> values = new ArrayList();
             for (int j = 0; j < mParameterBean2s.size(); j++) {
-                values.add(results.get(i).get(j).getText().toString().trim());
+                View edt = results.get(i).get(j);
+                if (edt instanceof EditText) {
+                    values.add(((EditText) edt).getText().toString().trim());
+                } else if (edt instanceof Spinner) {
+                    Spinner sp = (Spinner) edt;
+                    values.add(sp.getSelectedItemPosition() == 0 ? "1" : "0");
+                }
             }
             List<String> paths = new ArrayList();
             for (int j = 0; j < mParameterBean2s.size(); j++) {
