@@ -18,6 +18,7 @@ import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.CodeBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.TemplateBeanDao;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 
@@ -31,7 +32,7 @@ public class TemplateListAdapter extends BaseAdapter {
     // 用于记录每个RadioButton的状态，并保证只可选一个
     public HashMap<String, Boolean> states = new HashMap<String, Boolean>();
 
-    public int currentCodeID;
+    public long currentCodeID;
 
     private DataUpdateInterface mDataUpdateInterface;
 
@@ -78,7 +79,7 @@ public class TemplateListAdapter extends BaseAdapter {
         //单选按钮
         RadioButton radioButton = view.findViewById(R.id.rb_radio_button);
         radioButton.setText(String.valueOf(position + 1));
-        radioText.setText(listText.get(position).getName());
+        radioText.setText(listText.get(position).getTitle());
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +129,7 @@ public class TemplateListAdapter extends BaseAdapter {
                 TextView msg = builder.findViewById(R.id.tv_msg);
                 Button cancel = builder.findViewById(R.id.btn_cancle);
                 Button sure = builder.findViewById(R.id.btn_sure);
-                msg.setText("是否删除 " + listText.get(position).getName() + " ?");
+                msg.setText("是否删除 " + listText.get(position).getTitle() + " ?");
                 cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -138,12 +139,7 @@ public class TemplateListAdapter extends BaseAdapter {
                 sure.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        App.getDaoSession().getCodeBeanDao().queryBuilder().where(CodeBeanDao.Properties.CodeID.eq(listText.get(position).getTemplateID())).buildDelete().executeDeleteWithoutDetachingEntities();
-                        /*
-                         * 还要依次删除其他程序相关;
-                         * */
-                        App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq(listText.get(position).getTemplateID())).buildDelete().executeDeleteWithoutDetachingEntities();
-
+                        App.getDaoSession().getTemplateBeanDao().queryBuilder().where(TemplateBeanDao.Properties.TemplateID.eq(listText.get(position).getTemplateID())).buildDelete().executeDeleteWithoutDetachingEntities();
                         builder.dismiss();
                         if (mDataUpdateInterface != null) {
                             mDataUpdateInterface.dataUpdate();

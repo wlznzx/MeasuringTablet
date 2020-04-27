@@ -111,11 +111,11 @@ public class Constants {
 
 
     public static List<CodeBean> defaultCodeBeans = new ArrayList<>();
-
+    
     static {
-        defaultCodeBeans.add(new CodeBean(0L, "十工位-Block-TRA-100",
+        defaultCodeBeans.add(new CodeBean(1L, "十工位-Block-TRA-100",
                 "", "", false, null, new ArrayList<>()));
-        defaultCodeBeans.add(new CodeBean(0L, "十工位-Block-TRA-100",
+        defaultCodeBeans.add(new CodeBean(1L, "十工位-Block-TRA-100",
                 "", "", false, null, new ArrayList<>()));
         // defaultCodeBeans.add(new CodeBean("TRA100", "", "", false, null));
 //        // 1 ~ 15

@@ -2,6 +2,7 @@ package alauncher.cn.measuringtablet.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,10 +45,10 @@ import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
-import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.utils.UriToPathUtil;
+import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.widget.ItemEditDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -88,6 +89,10 @@ public class TemplateActivity extends BaseOActivity {
 
     public ImageView logoImageButton;
 
+    public Long templateID;
+
+    public DataUpdateInterface dataUpdateInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,10 +109,25 @@ public class TemplateActivity extends BaseOActivity {
         setContentView(R.layout.activity_template);
     }
 
+    public void setDataUpdateInterface(DataUpdateInterface pDataUpdateInterface) {
+        dataUpdateInterface = pDataUpdateInterface;
+        if (dataUpdateInterface != null) dataUpdateInterface.dataUpdate();
+    }
+
     @Override
     protected void initView() {
 
-        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
+        templateID = getIntent().getLongExtra("TEMPLATE_ID", -1);
+        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load(templateID);
+        if (mTemplateBean == null) {
+            mTemplateBean = App.getDefaultTemplateBean();
+        } else {
+            boolean isCopy = getIntent().getBooleanExtra("IS_COPY", false);
+            if (isCopy) {
+                mTemplateBean.setTemplateID(0L);
+            }
+        }
+        android.util.Log.d("wlDebug", "bean = " + mTemplateBean.toString());
 
         views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, null);
         leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
@@ -303,7 +323,13 @@ public class TemplateActivity extends BaseOActivity {
 
         // Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show();
 
-        DialogUtils.showDialog(this, getResources().getString(R.string.save_success), getResources().getString(R.string.save_success));
+        DialogUtils.showDialog(this, getResources().getString(R.string.save_success), getResources().getString(R.string.save_success), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        if (dataUpdateInterface != null) dataUpdateInterface.dataUpdate();
     }
 
     static final int REQUEST_TAKE_PHOTO = 2;

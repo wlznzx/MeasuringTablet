@@ -346,4 +346,6 @@
     <string name="confirmation_frequency">确认频率:</string>
     <string name="day">天</string>
     <string name="m_type_str">参数类型</string>
+    <string name="add_template">新建模板</string>
+    <string name="copy_add_template">复制新建</string>
 </resources>

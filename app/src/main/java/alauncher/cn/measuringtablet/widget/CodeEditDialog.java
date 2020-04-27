@@ -70,10 +70,10 @@ public class CodeEditDialog extends Dialog {
             mCodeBean.setParts(getContext().getResources().getString(R.string.spare_parts));
             mCodeBean.setName(codeNameEdt.getText().toString().trim());
             mCodeBean.setDefaultTitles(new ArrayList<>());
-            mCodeBean.setUseTemplateID(0L);
+            mCodeBean.setUseTemplateID(1L);
         }
         long id = App.getDaoSession().getCodeBeanDao().insertOrReplace(mCodeBean);
-        doTemplateAdd((int) id);
+        // doTemplateAdd((int) id); // 不用新建模板了;
         return true;
     }
 

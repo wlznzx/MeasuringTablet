@@ -1,5 +1,6 @@
 package alauncher.cn.measuringtablet.bean;
 
+import java.util.Arrays;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.utils.StringConverter;
@@ -71,13 +72,13 @@ public class TemplateBean {
 
     @Generated(hash = 58443959)
     public TemplateBean(Long templateID, String name, List<String> titleList,
-            List<String> titleTypeList, List<String> signList, List<String> AQLList,
-            List<String> AQLTypeList, List<String> RoHSList, List<String> RoHSTypeList,
-            String headerLeft, String headerMid, String headerRight, String footerLeft,
-            String footerMid, String footerRight, String title, int dataNum,
-            boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
-            boolean rangeEnable, boolean judgeEnable, boolean aqlEnable, boolean roshEnable,
-            byte[] logoPic, int confirmationFrequency, long lastConfirmTimeStamp) {
+                        List<String> titleTypeList, List<String> signList, List<String> AQLList,
+                        List<String> AQLTypeList, List<String> RoHSList, List<String> RoHSTypeList,
+                        String headerLeft, String headerMid, String headerRight, String footerLeft,
+                        String footerMid, String footerRight, String title, int dataNum,
+                        boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
+                        boolean rangeEnable, boolean judgeEnable, boolean aqlEnable, boolean roshEnable,
+                        byte[] logoPic, int confirmationFrequency, long lastConfirmTimeStamp) {
         this.templateID = templateID;
         this.name = name;
         this.titleList = titleList;
@@ -327,5 +328,36 @@ public class TemplateBean {
         this.lastConfirmTimeStamp = lastConfirmTimeStamp;
     }
 
-
+    @Override
+    public String toString() {
+        return "TemplateBean{" +
+                "templateID=" + templateID +
+                ", name='" + name + '\'' +
+                ", titleList=" + titleList +
+                ", titleTypeList=" + titleTypeList +
+                ", signList=" + signList +
+                ", AQLList=" + AQLList +
+                ", AQLTypeList=" + AQLTypeList +
+                ", RoHSList=" + RoHSList +
+                ", RoHSTypeList=" + RoHSTypeList +
+                ", headerLeft='" + headerLeft + '\'' +
+                ", headerMid='" + headerMid + '\'' +
+                ", headerRight='" + headerRight + '\'' +
+                ", footerLeft='" + footerLeft + '\'' +
+                ", footerMid='" + footerMid + '\'' +
+                ", footerRight='" + footerRight + '\'' +
+                ", title='" + title + '\'' +
+                ", dataNum=" + dataNum +
+                ", maximumEnable=" + maximumEnable +
+                ", minimumEnable=" + minimumEnable +
+                ", averageEnable=" + averageEnable +
+                ", rangeEnable=" + rangeEnable +
+                ", judgeEnable=" + judgeEnable +
+                ", aqlEnable=" + aqlEnable +
+                ", roshEnable=" + roshEnable +
+                ", logoPic=" + Arrays.toString(logoPic) +
+                ", confirmationFrequency=" + confirmationFrequency +
+                ", lastConfirmTimeStamp=" + lastConfirmTimeStamp +
+                '}';
+    }
 }

@@ -167,7 +167,18 @@ public class Input2Activity extends BaseOActivity {
     @Override
     protected void initView() {
 
-        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
+        mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load(mCodeBean.getUseTemplateID());
+        mTemplateBean = null;
+        if (mTemplateBean == null) {
+            DialogUtils.showDialog(this, "未设置模板", "未设置模板，无法测量.", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            return;
+        }
         // mParameterBean2s = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
         mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
@@ -316,9 +327,7 @@ public class Input2Activity extends BaseOActivity {
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
-                    android.util.Log.d("wlDebug", "rol1Bean = " + rol1Bean.toString());
                     View view = (View) getInputViewByType(rol1Bean.getType() == 3 ? "1" : "0");
-                    // EditText _edt1 = getInputEditView(true);
                     dataLayout.addView(view, getItemLayoutParams(2, 1));
                     results.get(j).add(view);
                     // 图片;
@@ -332,9 +341,9 @@ public class Input2Activity extends BaseOActivity {
 
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
-                    EditText _edt2 = getInputEditView(true);
-                    dataLayout.addView(_edt2, getItemLayoutParams(2, 1));
-                    results.get(j).add(_edt2);
+                    View view = (View) getInputViewByType(rol2Bean.getType() == 3 ? "1" : "0");
+                    dataLayout.addView(view, getItemLayoutParams(2, 1));
+                    results.get(j).add(view);
                     ImageView img = getImageView();
                     dataLayout.addView(img, getItemLayoutParams(3, 1));
                     resultImgs.get(j).add(img);
@@ -345,9 +354,9 @@ public class Input2Activity extends BaseOActivity {
 
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
-                    EditText _edt3 = getInputEditView(true);
-                    dataLayout.addView(_edt3, getItemLayoutParams(2, 1));
-                    results.get(j).add(_edt3);
+                    View view = (View) getInputViewByType(rol3Bean.getType() == 3 ? "1" : "0");
+                    dataLayout.addView(view, getItemLayoutParams(2, 1));
+                    results.get(j).add(view);
                     ImageView img = getImageView();
                     dataLayout.addView(img, getItemLayoutParams(3, 1));
                     resultImgs.get(j).add(img);

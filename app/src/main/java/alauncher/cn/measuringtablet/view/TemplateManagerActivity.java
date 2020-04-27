@@ -15,6 +15,7 @@ import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.User;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.view.adapter.TemplateListAdapter;
 import alauncher.cn.measuringtablet.widget.CodeEditDialog;
@@ -40,17 +41,23 @@ public class TemplateManagerActivity extends BaseOActivity implements DataUpdate
 
     @Override
     protected void initLayout() {
-        setContentView(R.layout.activity_code2);
+        setContentView(R.layout.activity_template_manager);
     }
 
     @Override
     protected void initView() {
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
         codeBeans = App.getDaoSession().getTemplateBeanDao().loadAll();
         for (TemplateBean bean : codeBeans) {
-            android.util.Log.d("wlDebug", "bean = " + bean.toString());
+            // android.util.Log.d("wlDebug", "bean = " + bean.toString());
         }
-
         codeID = App.getDaoSession().getCodeBeanDao().load(Long.valueOf(App.getSetupBean().getCodeID())).getUseTemplateID();
         states.put(String.valueOf(codeID - 1), true);
         adapter = new TemplateListAdapter(codeBeans, states, this, this, (int) codeID);
@@ -62,36 +69,35 @@ public class TemplateManagerActivity extends BaseOActivity implements DataUpdate
         super.onPause();
     }
 
-    @OnClick({R.id.set_btn, R.id.set_as_btn, R.id.add_code_btn})
+    @OnClick({R.id.edit_template_btn, R.id.set_as_btn, R.id.add_template_btn, R.id.copy_add_template_btn})
     public void onSetBtnClick(View v) {
+        android.util.Log.d("wlDebug", "adapter.currentCodeID = " + adapter.currentCodeID);
         switch (v.getId()) {
-            case R.id.set_btn:
-                Intent intent = new Intent(this, TemplateActivity.class);
-                intent.putExtra("templateID", codeID);
-                startActivity(intent);
+            case R.id.edit_template_btn:
+                Intent edit_TemplateIntent = new Intent(this, TemplateActivity.class);
+                edit_TemplateIntent.putExtra("TEMPLATE_ID", adapter.currentCodeID);
+                edit_TemplateIntent.putExtra("IS_COPY", false);
+                startActivity(edit_TemplateIntent);
                 break;
             case R.id.set_as_btn:
-                SetupBean _sbean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
-                _sbean.setCodeID(adapter.currentCodeID);
-                App.getDaoSession().getSetupBeanDao().insertOrReplace(_sbean);
                 CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
-                User user = App.getDaoSession().getUserDao().load(App.handlerAccout);
-                String _name = App.handlerAccout;
-                if (user != null) {
-                    _name = user.getName();
-                }
-                if (_bean != null) {
-                    actionTips.setText(_name + " " + _bean.getName());
-                } else {
-                    actionTips.setText(_name + " 程序" + App.getSetupBean().getCodeID());
-                }
+                _bean.setUseTemplateID((long) adapter.currentCodeID);
+                App.getDaoSession().insertOrReplace(_bean);
+                codeID = adapter.currentCodeID;
                 InputActivity.datas.clear();
                 InputActivity.updates.clear();
+                DialogUtils.showDialog(this, "设为当前", "设置成功.");
                 break;
-            case R.id.add_code_btn:
-                CodeEditDialog codeEditDialog = new CodeEditDialog(TemplateManagerActivity.this, null);
-                codeEditDialog.setDataUpdateInterface(this);
-                codeEditDialog.show();
+            case R.id.add_template_btn:
+                Intent intent = new Intent(this, TemplateActivity.class);
+                intent.putExtra("TEMPLATE_ID", -1);
+                startActivity(intent);
+                break;
+            case R.id.copy_add_template_btn:
+                Intent addTemplateIntent = new Intent(this, TemplateActivity.class);
+                addTemplateIntent.putExtra("TEMPLATE_ID", adapter.currentCodeID);
+                addTemplateIntent.putExtra("IS_COPY", true);
+                startActivity(addTemplateIntent);
                 break;
         }
     }
