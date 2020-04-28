@@ -72,7 +72,7 @@ android {
 }
 
 greendao {
-    schemaVersion 28 //数据库版本号
+    schemaVersion 29 //数据库版本号
     daoPackage 'alauncher.cn.measuringtablet.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/

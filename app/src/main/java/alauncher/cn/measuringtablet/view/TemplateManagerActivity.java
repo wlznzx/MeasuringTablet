@@ -12,13 +12,10 @@ import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
-import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
-import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.view.adapter.TemplateListAdapter;
-import alauncher.cn.measuringtablet.widget.CodeEditDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
 

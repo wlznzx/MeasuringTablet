@@ -89,23 +89,32 @@ public class PDFUtils {
         document.open();
         // 添加表格，4列
         PdfPTable table = new PdfPTable(16);
-        // 构建每个单元格
+
+
+        // 添加Logo;
+        if (pTemplateResultBean.getLogoPic() != null) {
+            PdfPCell logoCell = new PdfPCell(Image.getInstance(pTemplateResultBean.getLogoPic()), true);
+            logoCell.setRowspan(2);
+            logoCell.setColspan(2);
+            logoCell.setBorderColor(BaseColor.BLACK);
+            logoCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            logoCell.setPaddingLeft(5);
+            logoCell.setPaddingRight(5);
+            logoCell.setPaddingTop(5);
+            logoCell.setPaddingBottom(5);
+            table.addCell(logoCell);
+        }
+
+        // 添加title
         PdfPCell cell1 = new PdfPCell(new Paragraph(pTemplateResultBean.getTitle(), font));
-        // 边框颜色
         cell1.setBorderColor(BaseColor.BLACK);
-        // 设置背景颜色
         cell1.setBackgroundColor(titleColor);
-        // 设置跨两行
         cell1.setRowspan(2);
-        // 列数;
-        cell1.setColspan(8);
-        // 设置距左边的距离
+        cell1.setColspan(pTemplateResultBean.getLogoPic() != null ? 6 : 8);
         cell1.setPaddingLeft(10);
-        // 设置高度
         cell1.setFixedHeight(20);
-        // 设置内容水平居中显示
         cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        // 设置垂直居中
         cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(cell1);
 

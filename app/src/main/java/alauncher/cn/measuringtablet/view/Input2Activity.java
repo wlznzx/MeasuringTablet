@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -169,7 +170,6 @@ public class Input2Activity extends BaseOActivity {
 
         mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         mTemplateBean = App.getDaoSession().getTemplateBeanDao().load(mCodeBean.getUseTemplateID());
-        mTemplateBean = null;
         if (mTemplateBean == null) {
             DialogUtils.showDialog(this, "未设置模板", "未设置模板，无法测量.", new DialogInterface.OnClickListener() {
                 @Override
@@ -894,27 +894,29 @@ public class Input2Activity extends BaseOActivity {
     public void btnClick(View view) {
         switch (view.getId()) {
             case R.id.swap_btn:
-
-                showFristDialog();
+                showChooseDialog(0);
                 break;
         }
     }
 
-    private void showFristDialog() {
+    private List<CodeBean> lists;
+
+    private void showChooseDialog(int index) {
         View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
         GridView gridview = view.findViewById(R.id.gridview);
         final Dialog dialog = new Dialog(this, R.style.common_dialog);
         dialog.setContentView(view);
         dialog.show();
-
-
-        List<CodeBean> _lists = App.getDaoSession().getCodeBeanDao().loadAll();
-        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        Set<String> fristSet = new HashSet<>();
-        for (CodeBean _bean : _lists) {
-            String str = _bean.getName().substring(0, _bean.getName().indexOf("-"));
-            fristSet.add(str);
+        if (index == 0) {
+            lists = App.getDaoSession().getCodeBeanDao().loadAll();
         }
+        Set<String> fristSet = new HashSet<>();
+        for (CodeBean _bean : lists) {
+            String[] strArray = _bean.getName().split("-");
+            fristSet.add(strArray[index]);
+        }
+
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
 
         for (String key : fristSet) {
             Map<String, Object> item = new HashMap<String, Object>();
@@ -926,73 +928,27 @@ public class Input2Activity extends BaseOActivity {
         gridview.setAdapter(simpleAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, View view, int j, long arg3) {
                 TextView tv = view.findViewById(R.id.grid_name);
                 String str = tv.getText().toString();
-                android.util.Log.d("wlDebug", "key = " + str);
-
-//                for (CodeBean _bean : _lists) {
-//                    if (!_bean.getName().contains(str)) _lists.remove(_bean);
-//                }
-                for (int i = _lists.size() - 1; i >= 0; i--) {
-                    CodeBean item = _lists.get(i);
-                    if (!item.getName().contains(str)) {
-                        _lists.remove(item);
+                dialog.dismiss();
+                if (index < 3) {
+                    for (int i = lists.size() - 1; i >= 0; i--) {
+                        CodeBean item = lists.get(i);
+                        if (!item.getName().contains(str)) {
+                            lists.remove(item);
+                        }
                     }
+                    showChooseDialog(index + 1);
+                } else {
+                    CodeBean _CodeBean = lists.get(j);
+                    SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                    _bean.setCodeID(_CodeBean.getCodeID().intValue());
+                    App.getDaoSession().getSetupBeanDao().update(_bean);
+                    clear();
                 }
-                dialog.dismiss();
-                showChooseDialog(_lists);
-                /*
-                CodeBean _CodeBean = _lists.get(ar);
-                SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
-                _bean.setCodeID(_CodeBean.getCodeID().intValue());
-                App.getDaoSession().getSetupBeanDao().update(_bean);
-                dialog.dismiss();
-                clear();
-                 */
             }
         });
-
-    }
-
-    private void showSecondDialog(String fristPick, List<CodeBean> lists) {
-        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
-        GridView gridview = view.findViewById(R.id.gridview);
-        final Dialog dialog = new Dialog(this, R.style.common_dialog);
-        dialog.setContentView(view);
-        dialog.show();
-
-    }
-
-    private void showChooseDialog(List<CodeBean> lists) {
-        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
-        GridView gridview = view.findViewById(R.id.gridview);
-        final Dialog dialog = new Dialog(this, R.style.common_dialog);
-        dialog.setContentView(view);
-        dialog.show();
-
-        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-
-        for (int i = 0; i < lists.size(); i++) {
-            Map<String, Object> _item = new HashMap<String, Object>();
-            _item.put("itemName", lists.get(i).getName());
-            items.add(_item);
-        }
-
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, items, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
-        gridview.setAdapter(simpleAdapter);
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int i, long arg3) {
-                CodeBean _CodeBean = lists.get(i);
-                SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
-                _bean.setCodeID(_CodeBean.getCodeID().intValue());
-                App.getDaoSession().getSetupBeanDao().update(_bean);
-                dialog.dismiss();
-                clear();
-            }
-        });
-
     }
 
 

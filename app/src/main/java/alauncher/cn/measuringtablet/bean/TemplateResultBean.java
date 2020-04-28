@@ -23,6 +23,8 @@ public class TemplateResultBean {
 
     public int codeID;
 
+    public byte[] logoPic;
+
     // 标题;
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> titleList;
@@ -92,21 +94,21 @@ public class TemplateResultBean {
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> nominalValues;
 
-    @Generated(hash = 319552402)
-    public TemplateResultBean(Long id, String factoryCode, String deviceCode, int codeID,
-            List<String> titleList, List<String> signList, List<String> AQLList,
-            List<String> RoHSList, String headerLeft, String headerMid, String headerRight,
-            String footerLeft, String footerMid, String footerRight, String title,
-            int dataNum, boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
-            boolean rangeEnable, boolean judgeEnable, String allJudge, long timeStamp,
-            byte[] img, String remarks, String user, List<String> titleResultList,
-            List<String> AQLResultList, List<String> RoHSResultList, List<String> valueIndexs,
-            List<String> upperToleranceValues, List<String> lowerToleranceValues,
-            List<String> nominalValues) {
+
+    @Generated(hash = 587414792)
+    public TemplateResultBean(Long id, String factoryCode, String deviceCode, int codeID, byte[] logoPic,
+                              List<String> titleList, List<String> signList, List<String> AQLList, List<String> RoHSList,
+                              String headerLeft, String headerMid, String headerRight, String footerLeft, String footerMid,
+                              String footerRight, String title, int dataNum, boolean maximumEnable, boolean minimumEnable,
+                              boolean averageEnable, boolean rangeEnable, boolean judgeEnable, String allJudge, long timeStamp,
+                              byte[] img, String remarks, String user, List<String> titleResultList, List<String> AQLResultList,
+                              List<String> RoHSResultList, List<String> valueIndexs, List<String> upperToleranceValues,
+                              List<String> lowerToleranceValues, List<String> nominalValues) {
         this.id = id;
         this.factoryCode = factoryCode;
         this.deviceCode = deviceCode;
         this.codeID = codeID;
+        this.logoPic = logoPic;
         this.titleList = titleList;
         this.signList = signList;
         this.AQLList = AQLList;
@@ -405,7 +407,14 @@ public class TemplateResultBean {
     public void setUser(String user) {
         this.user = user;
     }
-    
+
+    public byte[] getLogoPic() {
+        return this.logoPic;
+    }
+
+    public void setLogoPic(byte[] logoPic) {
+        this.logoPic = logoPic;
+    }
 
 
 }
