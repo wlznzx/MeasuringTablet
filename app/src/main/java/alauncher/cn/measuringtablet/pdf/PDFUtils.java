@@ -379,9 +379,10 @@ public class PDFUtils {
         }
 
         // 添加备注
+        /**/
         PdfPCell remarkCell = new PdfPCell(new Paragraph(pTemplateResultBean.getRemarks(), font));
         remarkCell.setBorderColor(BaseColor.BLACK);
-        remarkCell.setRowspan(2);
+        remarkCell.setRowspan(3);
         remarkCell.setColspan(16);
         remarkCell.setPaddingLeft(10);
         remarkCell.setFixedHeight(20);
@@ -392,20 +393,19 @@ public class PDFUtils {
         // 添加备注图片;
         if (pTemplatePicBeans != null) {
             for (TemplatePicBean _bean : pTemplatePicBeans) {
-                /*
+                /**/
                 Image _img = Image.getInstance(_bean.getImg());
                 PdfPCell _cell = new PdfPCell(_img, true);
-                _cell.setRowspan(10);
+                _cell.setRowspan(8);
                 _cell.setColspan(16);
                 _cell.setBorderColor(BaseColor.BLACK);
-                _cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                _cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                _cell.setPaddingLeft(5);
-                _cell.setPaddingRight(5);
-                _cell.setPaddingTop(5);
-                _cell.setPaddingBottom(5);
+//                _cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//                _cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                _cell.setPaddingLeft(2);
+                _cell.setPaddingRight(2);
+                _cell.setPaddingTop(2);
+                _cell.setPaddingBottom(2);
                 table.addCell(_cell);
-                 */
             }
         }
 

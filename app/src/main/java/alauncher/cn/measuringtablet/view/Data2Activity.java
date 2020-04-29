@@ -494,7 +494,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                     return;
                 }
                 selectedList.add(_bean);
-                index--;
+                // index--;
             }
         }
 

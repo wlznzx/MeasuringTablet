@@ -49,11 +49,5 @@ public class TemplatePicBean {
         this.img = img;
     }
 
-    @Override
-    public String toString() {
-        return "TemplatePicBean{" +
-                "id=" + id +
-                ", templateResultID=" + templateResultID +
-                '}';
-    }
+
 }

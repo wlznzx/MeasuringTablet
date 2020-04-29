@@ -39,7 +39,7 @@ public class FileUtils {
 
     public static byte[] getBitmapByte(Bitmap bitmap) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
         try {
             out.flush();
             out.close();

@@ -586,7 +586,11 @@ public class Input2Activity extends BaseOActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent(BACKUP_TAKE_PHOTO);
+                if (addImgs.size() >= 20) {
+                    DialogUtils.showDialog(Input2Activity.this, "超限制", "已经20张了，无法添加照片.");
+                } else {
+                    dispatchTakePictureIntent(BACKUP_TAKE_PHOTO);
+                }
             }
         });
         mainLayout.addView(view, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 1));
@@ -1355,7 +1359,7 @@ public class Input2Activity extends BaseOActivity {
 
                 // 插入图片;
                 for (String _path : addImgs) {
-                    android.util.Log.d("wlDebug","_path = " + _path);
+                    android.util.Log.d("wlDebug", "_path = " + _path);
                     byte[] fileByte = FileUtils.image2byte(_path);
                     if (fileByte != null) {
                         TemplatePicBean _bean = new TemplatePicBean();
