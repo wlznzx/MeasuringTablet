@@ -45,10 +45,12 @@ import alauncher.cn.measuringtablet.bean.Parameter2Bean;
 import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
+import alauncher.cn.measuringtablet.bean.TemplatePicBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
+import alauncher.cn.measuringtablet.database.greenDao.db.TemplatePicBeanDao;
 import alauncher.cn.measuringtablet.pdf.PDFUtils;
 import alauncher.cn.measuringtablet.utils.CommonUtil;
 import alauncher.cn.measuringtablet.utils.DateUtils;
@@ -533,21 +535,22 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             //处理耗时操作
 
             try {
-                byte[] img = null;
-                if (mCodeBean.getWorkpiecePic() == null) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(Data2Activity.this.getResources(), R.drawable.workspice);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    img = baos.toByteArray();
-                } else {
-                    img = mCodeBean.getWorkpiecePic();
-                }
-
+//                byte[] img = null;
+//                if (mCodeBean.getWorkpiecePic() == null) {
+//                    Bitmap bitmap = BitmapFactory.decodeResource(Data2Activity.this.getResources(), R.drawable.workspice);
+//                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                    img = baos.toByteArray();
+//                } else {
+//                    img = mCodeBean.getWorkpiecePic();
+//                }
                 File file = new File(path);
                 if (file.exists()) file.delete();
                 file.getParentFile().mkdirs();
-                PDFUtils.createNTTable(mTemplateResultBean, datas, img, path);
-
+                List<TemplatePicBean> beans = App.getDaoSession().getTemplatePicBeanDao().queryBuilder().where(TemplatePicBeanDao.Properties.TemplateResultID.eq(mTemplateResultBean.getId())).list();
+                // TemplatePicBean bean = App.getDaoSession().getTemplatePicBeanDao().load(1L);
+                // android.util.Log.d("wlDebug", bean.toString());
+                PDFUtils.createNTTable(mTemplateResultBean, datas, beans, path);
             } catch (Exception e) {
                 e.printStackTrace();
             }

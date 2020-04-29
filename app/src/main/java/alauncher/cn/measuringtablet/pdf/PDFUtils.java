@@ -20,12 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.bean.ResultBean3;
+import alauncher.cn.measuringtablet.bean.TemplatePicBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 
 
 public class PDFUtils {
-
-    public static final String FOX = "/mnt/sdcard/timg.jpg";
 
     /**
      * 表格各种属性综合使用
@@ -68,7 +67,7 @@ public class PDFUtils {
         signatureTitle.add("担当");
     }
 
-    public static void createNTTable(TemplateResultBean pTemplateResultBean, List<ResultBean3> pResultBean3s, byte[] img, String path) throws IOException, DocumentException {
+    public static void createNTTable(TemplateResultBean pTemplateResultBean, List<ResultBean3> pResultBean3s, List<TemplatePicBean> pTemplatePicBeans, String path) throws IOException, DocumentException {
 
         BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
         Font font = new Font(bf, 8, Font.NORMAL);
@@ -389,6 +388,26 @@ public class PDFUtils {
         remarkCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         remarkCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(remarkCell);
+
+        // 添加备注图片;
+        if (pTemplatePicBeans != null) {
+            for (TemplatePicBean _bean : pTemplatePicBeans) {
+                /*
+                Image _img = Image.getInstance(_bean.getImg());
+                PdfPCell _cell = new PdfPCell(_img, true);
+                _cell.setRowspan(10);
+                _cell.setColspan(16);
+                _cell.setBorderColor(BaseColor.BLACK);
+                _cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                _cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                _cell.setPaddingLeft(5);
+                _cell.setPaddingRight(5);
+                _cell.setPaddingTop(5);
+                _cell.setPaddingBottom(5);
+                table.addCell(_cell);
+                 */
+            }
+        }
 
         document.add(table);
         // 关闭文档

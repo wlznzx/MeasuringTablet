@@ -27,6 +27,7 @@ import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.StepBean;
 import alauncher.cn.measuringtablet.bean.StoreBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
+import alauncher.cn.measuringtablet.bean.TemplatePicBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.bean.User;
 
@@ -49,6 +50,7 @@ import alauncher.cn.measuringtablet.database.greenDao.db.SetupBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.StoreBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.TemplateBeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.TemplatePicBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.TemplateResultBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.UserDao;
 
@@ -80,6 +82,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig stepBeanDaoConfig;
     private final DaoConfig storeBeanDaoConfig;
     private final DaoConfig templateBeanDaoConfig;
+    private final DaoConfig templatePicBeanDaoConfig;
     private final DaoConfig templateResultBeanDaoConfig;
     private final DaoConfig userDaoConfig;
 
@@ -102,6 +105,7 @@ public class DaoSession extends AbstractDaoSession {
     private final StepBeanDao stepBeanDao;
     private final StoreBeanDao storeBeanDao;
     private final TemplateBeanDao templateBeanDao;
+    private final TemplatePicBeanDao templatePicBeanDao;
     private final TemplateResultBeanDao templateResultBeanDao;
     private final UserDao userDao;
 
@@ -166,6 +170,9 @@ public class DaoSession extends AbstractDaoSession {
         templateBeanDaoConfig = daoConfigMap.get(TemplateBeanDao.class).clone();
         templateBeanDaoConfig.initIdentityScope(type);
 
+        templatePicBeanDaoConfig = daoConfigMap.get(TemplatePicBeanDao.class).clone();
+        templatePicBeanDaoConfig.initIdentityScope(type);
+
         templateResultBeanDaoConfig = daoConfigMap.get(TemplateResultBeanDao.class).clone();
         templateResultBeanDaoConfig.initIdentityScope(type);
 
@@ -191,6 +198,7 @@ public class DaoSession extends AbstractDaoSession {
         stepBeanDao = new StepBeanDao(stepBeanDaoConfig, this);
         storeBeanDao = new StoreBeanDao(storeBeanDaoConfig, this);
         templateBeanDao = new TemplateBeanDao(templateBeanDaoConfig, this);
+        templatePicBeanDao = new TemplatePicBeanDao(templatePicBeanDaoConfig, this);
         templateResultBeanDao = new TemplateResultBeanDao(templateResultBeanDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
 
@@ -213,6 +221,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(StepBean.class, stepBeanDao);
         registerDao(StoreBean.class, storeBeanDao);
         registerDao(TemplateBean.class, templateBeanDao);
+        registerDao(TemplatePicBean.class, templatePicBeanDao);
         registerDao(TemplateResultBean.class, templateResultBeanDao);
         registerDao(User.class, userDao);
     }
@@ -237,6 +246,7 @@ public class DaoSession extends AbstractDaoSession {
         stepBeanDaoConfig.clearIdentityScope();
         storeBeanDaoConfig.clearIdentityScope();
         templateBeanDaoConfig.clearIdentityScope();
+        templatePicBeanDaoConfig.clearIdentityScope();
         templateResultBeanDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
     }
@@ -315,6 +325,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public TemplateBeanDao getTemplateBeanDao() {
         return templateBeanDao;
+    }
+
+    public TemplatePicBeanDao getTemplatePicBeanDao() {
+        return templatePicBeanDao;
     }
 
     public TemplateResultBeanDao getTemplateResultBeanDao() {

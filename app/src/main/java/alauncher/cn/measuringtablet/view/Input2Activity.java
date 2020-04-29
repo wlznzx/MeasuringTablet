@@ -36,11 +36,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.cuiweiyou.numberpickerdialog.NumberPickerDialog;
@@ -49,6 +51,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,13 +72,14 @@ import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
+import alauncher.cn.measuringtablet.bean.TemplatePicBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.bean.User;
-import alauncher.cn.measuringtablet.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
+import alauncher.cn.measuringtablet.utils.FileUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.NumberUtils;
 import alauncher.cn.measuringtablet.widget.BorderEditView;
@@ -143,6 +147,10 @@ public class Input2Activity extends BaseOActivity {
     private TextView allResultTV;
 
     private EditText remarkEdt;
+
+    // 添加备注下面图片的img;
+    @BindView(R.id.scroll_view)
+    public ScrollView scrollView;
 
     private List<Double> maxs = new ArrayList<>();
     private List<Double> mins = new ArrayList<>();
@@ -572,6 +580,60 @@ public class Input2Activity extends BaseOActivity {
         mainLayout.addView(bottomLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1 * bottomRow, 1));
         remarkEdt = getInputEditView();
         mainLayout.addView(remarkEdt, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 1));
+
+        // 添加底部添加图片按钮;
+        View view = getLayoutInflater().inflate(R.layout.add_pic_item, null);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent(BACKUP_TAKE_PHOTO);
+            }
+        });
+        mainLayout.addView(view, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 1));
+    }
+
+    private LinearLayout bottomImageLayout;
+    private List<String> addImgs = new ArrayList<>();
+
+    private void updateBottomImageLayout() {
+        if (bottomImageLayout == null) {
+            bottomImageLayout = new LinearLayout(this);
+            bottomImageLayout.setOrientation(LinearLayout.VERTICAL);
+        }
+        mainLayout.removeView(bottomImageLayout);
+        bottomImageLayout.removeAllViews();
+        for (int i = 0; i < addImgs.size(); i++) {
+            ImageView img = new BorderImageView(this);
+            img.setPadding(0, 3, 0, 3);
+            img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            final String path = addImgs.get(i);
+            Glide.with(this).load(path).into(img);
+            img.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    DialogUtils.showDialog(Input2Activity.this, "删除图片", "确认删除此图片?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            addImgs.remove(path);
+                            updateBottomImageLayout();
+                        }
+                    });
+                    return true;
+                }
+            });
+            bottomImageLayout.addView(img, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+        mainLayout.addView(bottomImageLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        scrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        }, 800);
+        mainLayout.invalidate();
     }
 
     public boolean getIsNeedConfirm() {
@@ -644,7 +706,7 @@ public class Input2Activity extends BaseOActivity {
                     openImage(String.valueOf(imgTV.getTag()));
                 } else {
                     currentImg = imgTV;
-                    dispatchTakePictureIntent();
+                    dispatchTakePictureIntent(RESULT_TAKE_PHOTO);
                 }
             }
         });
@@ -679,6 +741,7 @@ public class Input2Activity extends BaseOActivity {
         });
         return imgTV;
     }
+
 
     public void openImage(String path) {
         File file = new File(path);
@@ -873,10 +936,17 @@ public class Input2Activity extends BaseOActivity {
         switch (requestCode) {
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    if (currentImg != null) {
-                        Glide.with(this).load(currentPhotoPath).into(currentImg);
-                        currentImg.setTag(currentPhotoPath);
+                    if (curMode == RESULT_TAKE_PHOTO) {
+                        if (currentImg != null) {
+                            Glide.with(this).load(currentPhotoPath).into(currentImg);
+                            currentImg.setTag(currentPhotoPath);
+                            currentImg = null;
+                        }
+                    } else if (curMode == BACKUP_TAKE_PHOTO) {
+                        addImgs.add(currentPhotoPath);
+                        updateBottomImageLayout();
                     }
+                    curMode = 0;
                 }
                 break;
             default:
@@ -1201,7 +1271,6 @@ public class Input2Activity extends BaseOActivity {
 
             doJudges();
             // doSave();
-
             try {
                 byte[] img = null;
                 if (mCodeBean.getWorkpiecePic() == null) {
@@ -1215,6 +1284,10 @@ public class Input2Activity extends BaseOActivity {
 
                 mTemplateResultBean = new TemplateResultBean();
                 mTemplateResultBean.setImg(img);
+                if (mTemplateBean.getLogoPic() != null) {
+                    mTemplateResultBean.setLogoPic(new byte[mTemplateBean.getLogoPic().length]);
+                    System.arraycopy(mTemplateBean.getLogoPic(), 0, mTemplateResultBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length);
+                }
                 mTemplateResultBean.setTitle(mTemplateBean.getTitle());
                 mTemplateResultBean.setTitleList(mTemplateBean.getTitleList());
                 mTemplateResultBean.setSignList(mTemplateBean.getSignList());
@@ -1280,6 +1353,20 @@ public class Input2Activity extends BaseOActivity {
                 mTemplateResultBean.setAllJudge(allJudge);
                 Long templateID = App.getDaoSession().getTemplateResultBeanDao().insert(mTemplateResultBean);
 
+                // 插入图片;
+                for (String _path : addImgs) {
+                    android.util.Log.d("wlDebug","_path = " + _path);
+                    byte[] fileByte = FileUtils.image2byte(_path);
+                    if (fileByte != null) {
+                        TemplatePicBean _bean = new TemplatePicBean();
+                        _bean.setTemplateResultID(templateID);
+                        byte[] imgByte = new byte[fileByte.length];
+                        _bean.setImg(imgByte);
+                        System.arraycopy(fileByte, 0, imgByte, 0, fileByte.length);
+                        App.getDaoSession().getTemplatePicBeanDao().insert(_bean);
+                    }
+                }
+
                 mResultBean3s.clear();
                 for (int i = 0; i < results.size(); i++) {
                     ResultBean3 _bean = new ResultBean3();
@@ -1317,11 +1404,6 @@ public class Input2Activity extends BaseOActivity {
                         e.printStackTrace();
                     }
                 }
-
-//                File file = new File(path);
-//                if (file.exists()) file.delete();
-//                file.getParentFile().mkdirs();
-//                PDFUtils.createNTTable(mTemplateResultBean, mResultBean3s, img, path);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1438,16 +1520,19 @@ public class Input2Activity extends BaseOActivity {
 
     private final static int REQUEST_TAKE_PHOTO = 2;
 
-    private void dispatchTakePictureIntent() {
+    private final static int RESULT_TAKE_PHOTO = 1;
+    private final static int BACKUP_TAKE_PHOTO = 2;
+    private int curMode = 0;
+
+    private void dispatchTakePictureIntent(int mode) {
+        curMode = mode;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
             File photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                // Error occurred while creating the File
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
