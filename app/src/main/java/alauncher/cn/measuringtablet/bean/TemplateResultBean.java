@@ -3,13 +3,9 @@ package alauncher.cn.measuringtablet.bean;
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-
-import java.util.List;
-
-import alauncher.cn.measuringtablet.utils.StringConverter;
-
 import org.greenrobot.greendao.annotation.Generated;
-
+import java.util.List;
+import alauncher.cn.measuringtablet.utils.StringConverter;
 
 @Entity
 public class TemplateResultBean {

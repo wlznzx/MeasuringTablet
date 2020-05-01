@@ -273,6 +273,7 @@ public class JdbcUtil {
             m1pstmt.setFloat(4, 0);
             m1pstmt.setString(5, "- -");
             m1pstmt.setString(6, _bean.getEvent());
+            m1pstmt.setBytes(7, FileUtils.image2byte(_bean.getMPicPaths().get(i)));
             m1pstmt.executeUpdate();
             m1pstmt.close();
         }
