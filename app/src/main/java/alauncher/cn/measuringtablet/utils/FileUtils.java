@@ -31,6 +31,7 @@ public class FileUtils {
 
     //图片到byte数组
     public static byte[] image2byte(String path) {
+        if (path == null) return null;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = false;
         Bitmap bm = BitmapFactory.decodeFile(path, opts);

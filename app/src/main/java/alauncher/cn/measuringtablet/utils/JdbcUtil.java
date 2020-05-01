@@ -15,6 +15,8 @@ import alauncher.cn.measuringtablet.bean.ParameterBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
+import alauncher.cn.measuringtablet.bean.TemplatePicBean;
+import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 
 public class JdbcUtil {
     //url
@@ -234,11 +236,91 @@ public class JdbcUtil {
         return 1;
     }
 
-    public static int addResult3(String factory_code, String machine_code, int prog_id, String serial_number,
-                                 final ResultBean3 _bean) throws Exception {
+
+    public static int addTemplateResultBean(final TemplateResultBean _bean) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
-        String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) VALUES (?,?,?,?,?,?,?,?);";
+        String sql = "insert into template_result " +
+                "(factory_code,device_code,code_id,logo_pic,title_list,sign_list,aql_list,rohs_List,header_left,header_mid,header_right,footer_left,footer_mid,footer_right,title,data_num,maximum_enable,minimum_enable,average_enable," +
+                "range_enable,judge_enable,all_judge,timestamp,img,remarks,user_name,title_result_list,aql_result_list,rohs_result_list,value_indexs,upper_tolerance_values,lower_tolerance_values,nominal_values) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+        pstmt.setString(1, _bean.getFactoryCode());
+        pstmt.setString(2, _bean.getDeviceCode());
+        pstmt.setInt(3, _bean.getCodeID());
+        pstmt.setBytes(4, _bean.getLogoPic());
+        pstmt.setString(5, StringConverter.convertToDatabaseValueS(_bean.getTitleList()));
+        pstmt.setString(6, StringConverter.convertToDatabaseValueS(_bean.getSignList()));
+        pstmt.setString(7, StringConverter.convertToDatabaseValueS(_bean.getAQLList()));
+        pstmt.setString(8, StringConverter.convertToDatabaseValueS(_bean.getRoHSList()));
+        pstmt.setString(9, _bean.getHeaderLeft());
+        pstmt.setString(10, _bean.getHeaderMid());
+        pstmt.setString(11, _bean.getHeaderRight());
+        pstmt.setString(12, _bean.getFooterLeft());
+        pstmt.setString(13, _bean.getFooterMid());
+        pstmt.setString(14, _bean.getFooterRight());
+        pstmt.setString(15, _bean.getTitle());
+        pstmt.setInt(16, _bean.getDataNum());
+
+        pstmt.setBoolean(17, _bean.getMaximumEnable());
+        pstmt.setBoolean(18, _bean.getMinimumEnable());
+        pstmt.setBoolean(19, _bean.getAverageEnable());
+        pstmt.setBoolean(20, _bean.getRangeEnable());
+        pstmt.setBoolean(21, _bean.getJudgeEnable());
+        pstmt.setString(22, _bean.getAllJudge());
+
+        pstmt.setTimestamp(23, new java.sql.Timestamp(System.currentTimeMillis()));
+        pstmt.setBytes(24, _bean.getImg());
+        pstmt.setString(25, _bean.getRemarks());
+        pstmt.setString(26, _bean.getUser());
+
+        pstmt.setString(27, StringConverter.convertToDatabaseValueS(_bean.getTitleResultList()));
+        pstmt.setString(28, StringConverter.convertToDatabaseValueS(_bean.getAQLResultList()));
+        pstmt.setString(29, StringConverter.convertToDatabaseValueS(_bean.getRoHSList()));
+        pstmt.setString(30, StringConverter.convertToDatabaseValueS(_bean.getValueIndexs()));
+        pstmt.setString(31, StringConverter.convertToDatabaseValueS(_bean.getUpperToleranceValues()));
+        pstmt.setString(32, StringConverter.convertToDatabaseValueS(_bean.getLowerToleranceValues()));
+        pstmt.setString(33, StringConverter.convertToDatabaseValueS(_bean.getNominalValues()));
+
+        pstmt.executeUpdate();//执行sql
+        ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
+        int autoIncKey = 0;
+        if (rs.next()) {
+            autoIncKey = rs.getInt(1);//取得ID
+            android.util.Log.d("wlDebug", "result = " + autoIncKey);
+        } else {
+            // throw an exception from here
+        }
+        close(pstmt, conn);
+        return autoIncKey;
+    }
+
+
+    public static int addTemplatePic(TemplatePicBean _bean) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "insert into template_pic (template_result_id,img) VALUES (?,?);";
+        PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+        pstmt.setLong(1, _bean.getTemplateResultID());
+        pstmt.setBytes(2, _bean.getImg());
+        pstmt.executeUpdate();//执行sql
+        ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
+        int autoIncKey = 0;
+        if (rs.next()) {
+            autoIncKey = rs.getInt(1);//取得ID
+            android.util.Log.d("wlDebug", "result = " + autoIncKey);
+        } else {
+            // throw an exception from here
+        }
+        close(pstmt, conn);
+        return 1;
+    }
+
+    public static int addResult3(String factory_code, String machine_code, int prog_id, String serial_number,
+                                 final ResultBean3 _bean, int templateResultID) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time,template_result_id) VALUES (?,?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, factory_code);
         pstmt.setString(2, machine_code);
@@ -248,6 +330,7 @@ public class JdbcUtil {
         pstmt.setString(6, "");
         pstmt.setString(7, _bean.getHandlerAccout());
         pstmt.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
+        pstmt.setLong(9, templateResultID);
         pstmt.executeUpdate();//执行sql
         ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
         int autoIncKey = 0;
@@ -259,7 +342,7 @@ public class JdbcUtil {
         }
 
         for (int i = 0; i < _bean.getMValues().size(); i++) {
-            String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value) VALUES (?,?,?,?,?,?);";
+            String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value,img) VALUES (?,?,?,?,?,?,?);";
             PreparedStatement m1pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
             m1pstmt.setInt(1, autoIncKey);
             m1pstmt.setString(2, "" + (i + 1));

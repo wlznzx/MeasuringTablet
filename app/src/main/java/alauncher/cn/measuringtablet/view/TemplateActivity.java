@@ -407,7 +407,7 @@ public class TemplateActivity extends BaseOActivity {
 
     public byte[] getBitmapByte(Bitmap bitmap) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, out);
         try {
             out.flush();
             out.close();

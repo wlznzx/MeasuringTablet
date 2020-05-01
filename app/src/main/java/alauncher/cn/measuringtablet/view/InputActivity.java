@@ -673,7 +673,7 @@ public class InputActivity extends BaseOLandscapeActivity {
 //                        "rmk3", App.handlerName);
                 for (ResultBean3 _b3 : updateBeans) {
                     try {
-                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
+                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3,1);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

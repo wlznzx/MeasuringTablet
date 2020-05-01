@@ -30,4 +30,17 @@ public class StringConverter implements PropertyConverter<List<String>, String> 
             return sb.toString();
         }
     }
+
+    public static String convertToDatabaseValueS(List<String> entityProperty) {
+        if (entityProperty == null) {
+            return null;
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (String link : entityProperty) {
+                sb.append(link);
+                sb.append(",");
+            }
+            return sb.toString();
+        }
+    }
 }

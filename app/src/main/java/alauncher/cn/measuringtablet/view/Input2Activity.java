@@ -1358,6 +1358,7 @@ public class Input2Activity extends BaseOActivity {
                 Long templateID = App.getDaoSession().getTemplateResultBeanDao().insert(mTemplateResultBean);
 
                 // 插入图片;
+                List<TemplatePicBean> templatePicBeans = new ArrayList<>();
                 for (String _path : addImgs) {
                     android.util.Log.d("wlDebug", "_path = " + _path);
                     byte[] fileByte = FileUtils.image2byte(_path);
@@ -1367,6 +1368,7 @@ public class Input2Activity extends BaseOActivity {
                         byte[] imgByte = new byte[fileByte.length];
                         _bean.setImg(imgByte);
                         System.arraycopy(fileByte, 0, imgByte, 0, fileByte.length);
+                        templatePicBeans.add(_bean);
                         App.getDaoSession().getTemplatePicBeanDao().insert(_bean);
                     }
                 }
@@ -1403,7 +1405,13 @@ public class Input2Activity extends BaseOActivity {
 
                 for (ResultBean3 _b3 : mResultBean3s) {
                     try {
-                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
+                        // 添加result模板到数据库;
+                        int template_id = JdbcUtil.addTemplateResultBean(mTemplateResultBean);
+                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3, template_id);
+                        for (TemplatePicBean _bean : templatePicBeans) {
+                            _bean.setTemplateResultID(template_id);
+                            JdbcUtil.addTemplatePic(_bean);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1451,52 +1459,6 @@ public class Input2Activity extends BaseOActivity {
         return str;
     }
 
-    public void doSave() {
-        List<ResultBean3> updateBeans = new ArrayList<>();
-
-        for (int i = 0; i < dataNumber; i++) {
-            // 1
-            ResultBean3 _workpiece1Bean = new ResultBean3();
-
-            _workpiece1Bean.setHandlerAccout(App.handlerName);
-            _workpiece1Bean.setCodeID(App.getSetupBean().getCodeID());
-            _workpiece1Bean.setResult(judges.get(i));
-            _workpiece1Bean.setTimeStamp(System.currentTimeMillis());
-
-            List<String> values = new ArrayList();
-            for (int j = 0; j < mParameterBean2s.size(); j++) {
-                View edt = results.get(i).get(j);
-                if (edt instanceof EditText) {
-                    values.add(((EditText) edt).getText().toString().trim());
-                } else if (edt instanceof Spinner) {
-                    Spinner sp = (Spinner) edt;
-                    values.add(sp.getSelectedItemPosition() == 0 ? "1" : "0");
-                }
-            }
-            List<String> paths = new ArrayList();
-            for (int j = 0; j < mParameterBean2s.size(); j++) {
-                paths.add((String) resultImgs.get(i).get(j).getTag());
-                // if (j == 0) paths.set(j, "/mnt/sdcard/e0bfe5aa51336f4508397adc87992263.jpg");
-            }
-            _workpiece1Bean.setMValues(values);
-            _workpiece1Bean.setMPicPaths(paths);
-            App.getDaoSession().getResultBean3Dao().insert(_workpiece1Bean);
-        }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (ResultBean3 _b3 : updateBeans) {
-                    try {
-                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-        // Toast.makeText(this, "保存了" + saveNum + "件工件", Toast.LENGTH_SHORT).show();
-    }
 
     public void openPDFInBrowser(Context context, String url) {
         Uri uri = Uri.parse(url);
