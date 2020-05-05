@@ -42,6 +42,9 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
     @BindView(R.id.describe_edt)
     public EditText describeEdt;
 
+    @BindView(R.id.parameter_name_edt)
+    public EditText parameterNameEdt;
+
     @BindView(R.id.nominal_value_edt)
     public EditText nominalValueEdt;
 
@@ -162,6 +165,7 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             deviationEdt.setText(Arith.double2Str(_bean.getDeviation()));
             formulaBtn.setText(_bean.getCode());
             groupBtn.setText(R.string.grouping);
+            parameterNameEdt.setText(_bean.getName());
             isEnableSwitch.setChecked(_bean.getEnable());
         }
         // 每次进入参数设置,删除添加的数组;
@@ -187,6 +191,7 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             _bean.setEnable(isEnableSwitch.isChecked());
             _bean.setCode(formulaBtn.getText().toString());
             _bean.setType((int) mTypeSP.getSelectedItemId());
+            _bean.setName(parameterNameEdt.getText().toString().trim());
 
             // 如果是新加数据;
             if (isAdd) {

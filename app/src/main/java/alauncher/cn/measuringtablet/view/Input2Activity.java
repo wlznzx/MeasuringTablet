@@ -327,11 +327,11 @@ public class Input2Activity extends BaseOActivity {
             LinearLayout nominalLayout = new LinearLayout(this);
             nominalLayout.addView(getInfoTV("中间值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
             nominalLayout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    rol1Bean.getType() != 3 ? String.valueOf(rol1Bean.getNominalValue()) : rol1Bean.getName() : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             nominalLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    rol2Bean.getType() != 3 ? String.valueOf(rol2Bean.getNominalValue()) : rol2Bean.getName() : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             nominalLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominalValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+                    rol3Bean.getType() != 3 ? String.valueOf(rol3Bean.getNominalValue()) : rol3Bean.getName() : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(nominalLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             for (int j = 0; j < dataNumber; j++) {
