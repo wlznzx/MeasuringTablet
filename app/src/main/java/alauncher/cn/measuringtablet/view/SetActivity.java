@@ -66,11 +66,13 @@ public class SetActivity extends BaseActivity {
         if (helpFragment == null)
             helpFragment = new HelpFragment();
 
-        String[] mTitles = new String[]{getString(R.string.device_info), "帮助"};
+        // String[] mTitles = new String[]{getString(R.string.device_info), "帮助"};
+        String[] mTitles = new String[]{getString(R.string.device_info)};
         mTitleList = Arrays.asList(mTitles);
 
 
-        mFragmentList = Arrays.asList(codeBaseInfoFragment, helpFragment);
+        // mFragmentList = Arrays.asList(codeBaseInfoFragment, helpFragment);
+        mFragmentList = Arrays.asList(codeBaseInfoFragment);
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);

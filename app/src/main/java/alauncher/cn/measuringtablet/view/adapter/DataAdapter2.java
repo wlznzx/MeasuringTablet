@@ -153,7 +153,11 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
                     holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i).equals("1")) ? "OK" : "NG");
                 }
             } else {
-                holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
+                try {
+                    holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
+                } catch (Exception e) {
+
+                }
             }
             holder.setVisible(mValueIDs.get(i), true);
             holder.setVisible(mPicIDs.get(i), true);

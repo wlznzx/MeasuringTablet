@@ -230,7 +230,11 @@ public class Input2Activity extends BaseOActivity {
             LinearLayout signLayout = new LinearLayout(this);
             signLayout.setOrientation(LinearLayout.VERTICAL);
             signLayout.addView(getInfoTV(mTemplateBean.getSignList().get(i), ColorConstants.titleColor), getItemVLayoutParams(1, 2));
-            signLayout.addView(getInfoTV(mTemplateBean.getSignList().get(i).equals("担当") ? user.getName() : "", Color.WHITE), getItemVLayoutParams(1, 2));
+            if (user != null) {
+                signLayout.addView(getInfoTV(mTemplateBean.getSignList().get(i).equals("担当") ? user.getName() : "", Color.WHITE), getItemVLayoutParams(1, 2));
+            } else {
+                signLayout.addView(getInfoTV(mTemplateBean.getSignList().get(i).equals("担当") ? "" : "", Color.WHITE), getItemVLayoutParams(1, 2));
+            }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, (int) getResources().getDimension(R.dimen.item_height) * 2);
             params.weight = 2;
             _layout.addView(signLayout, params);

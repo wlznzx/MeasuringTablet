@@ -43,11 +43,13 @@ public class ParameterBean2 {
 
     public int type;
 
-    @Generated(hash = 300202343)
+    public String name;
+
+    @Generated(hash = 572636147)
     public ParameterBean2(Long id, long codeID, int sequenceNumber, String describe,
-                          double nominalValue, double upperToleranceValue,
-                          double lowerToleranceValue, double deviation, int resolution,
-                          double scale, String code, boolean enable, int type) {
+                          double nominalValue, double upperToleranceValue, double lowerToleranceValue,
+                          double deviation, int resolution, double scale, String code, boolean enable,
+                          int type, String name) {
         this.id = id;
         this.codeID = codeID;
         this.sequenceNumber = sequenceNumber;
@@ -61,6 +63,7 @@ public class ParameterBean2 {
         this.code = code;
         this.enable = enable;
         this.type = type;
+        this.name = name;
     }
 
     @Generated(hash = 1020281904)
@@ -188,5 +191,13 @@ public class ParameterBean2 {
                 ", enable=" + enable +
                 ", type=" + type +
                 '}';
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

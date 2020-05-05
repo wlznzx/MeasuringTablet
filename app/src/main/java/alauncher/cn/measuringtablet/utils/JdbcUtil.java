@@ -101,7 +101,6 @@ public class JdbcUtil {
         if (con == null) return -1;
         String sql = "select count(*) from ntqc_equipment where machine_code = '" + machine_code + "'";
         try {
-
             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = null;
             rs = pstmt.executeQuery();

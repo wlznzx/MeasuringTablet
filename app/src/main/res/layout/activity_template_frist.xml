@@ -13,6 +13,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:text="@string/inventory_template"
+        android:visibility="gone"
         android:textSize="22sp" />
 
     <View
@@ -243,7 +244,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/template_margin_left"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp">
 
         <TextView
@@ -329,7 +330,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/template_margin_left"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:gravity="center_vertical">
 
@@ -421,7 +422,7 @@
         android:layout_height="0dp"
         android:layout_marginLeft="@dimen/template_margin_left"
         android:layout_marginTop="10dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <TextView

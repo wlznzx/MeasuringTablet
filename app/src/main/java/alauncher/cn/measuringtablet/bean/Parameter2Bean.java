@@ -18,21 +18,24 @@ public class Parameter2Bean {
 
     public String describe;
 
+    public String name;
+
     public double nominal_value;
 
     public double upper_tolerance_value;
 
     public double lower_tolerance_value;
 
-    @Generated(hash = 280239974)
-    public Parameter2Bean(Long id, long code_id, int index, boolean enable,
-            String describe, double nominal_value, double upper_tolerance_value,
+    @Generated(hash = 1746925372)
+    public Parameter2Bean(Long id, long code_id, int index, boolean enable, String describe,
+            String name, double nominal_value, double upper_tolerance_value,
             double lower_tolerance_value) {
         this.id = id;
         this.code_id = code_id;
         this.index = index;
         this.enable = enable;
         this.describe = describe;
+        this.name = name;
         this.nominal_value = nominal_value;
         this.upper_tolerance_value = upper_tolerance_value;
         this.lower_tolerance_value = lower_tolerance_value;
@@ -104,6 +107,14 @@ public class Parameter2Bean {
 
     public void setLower_tolerance_value(double lower_tolerance_value) {
         this.lower_tolerance_value = lower_tolerance_value;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
