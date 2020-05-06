@@ -108,6 +108,7 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
                     getResources().getColor(android.R.color.holo_green_dark) : getResources().getColor(android.R.color.holo_red_dark));
             holder.setText(R.id.is_enable_tv, _bean.getEnable() ? "是" : "否");
             holder.setText(R.id.m_title_tv, "M" + (_bean.getSequenceNumber() + 1));
+            holder.setText(R.id.parameter_tv, _bean.getName());
             holder.setText(R.id.describe_tv, _bean.getDescribe());
             holder.setText(R.id.nominal_value_tv, Arith.double2Str(_bean.getNominalValue()));
             holder.setText(R.id.upper_tolerance_value_tv, Arith.double2Str(_bean.getUpperToleranceValue()));

@@ -32,7 +32,7 @@ public class BackupTask extends AsyncTask<String, Void, String> {
         // 默认路径是 /data/data/(包名)/databases/*.db
         File dbFile = mContext.getDatabasePath("mi.db");
         File exportDir = new File(Environment.getExternalStorageDirectory(),
-                "ETBackup");
+                "NTBackup");
         if (!exportDir.exists()) {
             exportDir.mkdirs();
         }
@@ -45,7 +45,8 @@ public class BackupTask extends AsyncTask<String, Void, String> {
         String command = params[0];
         if (command.equals(COMMAND_BACKUP)) {
             try {
-                backup = new File(exportDir, "mi" + DateUtils.getFileDate(System.currentTimeMillis()) + ".db");
+                String serial = android.os.Build.SERIAL;
+                backup = new File(exportDir, "mi" + DateUtils.getFileDate(System.currentTimeMillis()) + "_" + serial + ".db");
                 backup.createNewFile();
                 fileCopy(dbFile, backup);
                 return backup.getAbsolutePath();

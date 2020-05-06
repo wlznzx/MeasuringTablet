@@ -11,6 +11,7 @@ import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 
 import org.greenrobot.greendao.database.Database;
+import org.greenrobot.greendao.identityscope.IdentityScopeType;
 
 import java.util.ArrayList;
 
@@ -66,7 +67,7 @@ public class App extends MultiDexApplication {
         DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "mi.db", null);
         Database db = openHelper.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
-        mDaoSession = daoMaster.newSession();
+        mDaoSession = daoMaster.newSession(IdentityScopeType.None);
         // 初始化默认的数值;
         new Thread(new Runnable() {
             @Override

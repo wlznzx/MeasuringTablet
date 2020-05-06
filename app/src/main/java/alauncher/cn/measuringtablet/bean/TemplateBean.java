@@ -355,7 +355,6 @@ public class TemplateBean {
                 ", judgeEnable=" + judgeEnable +
                 ", aqlEnable=" + aqlEnable +
                 ", roshEnable=" + roshEnable +
-                ", logoPic=" + Arrays.toString(logoPic) +
                 ", confirmationFrequency=" + confirmationFrequency +
                 ", lastConfirmTimeStamp=" + lastConfirmTimeStamp +
                 '}';

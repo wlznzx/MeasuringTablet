@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Browser;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 
 import android.util.Log;
@@ -214,14 +215,15 @@ public class Input2Activity extends BaseOActivity {
         LinearLayout _layout = new LinearLayout(this);
         _layout.setOrientation(LinearLayout.HORIZONTAL);
         ImageView logoIV = getImageView();
-        logoIV.setPadding(0, 0, 0, 0);
+        logoIV.setPadding(2, 2, 2, 2);
         logoIV.setOnClickListener(null);
         if (mTemplateBean.getLogoPic() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
             logoIV.setScaleType(ImageView.ScaleType.FIT_XY);
             logoIV.setImageBitmap(bitmap);
         } else {
-            logoIV.setImageResource(R.drawable.et_logo);
+            // logoIV.setImageResource(R.drawable.et_logo);
+            logoIV.setVisibility(View.GONE);
         }
         _layout.addView(logoIV, getLayoutParams(0, 2, 2));
         _layout.addView(getInfoTV(mTemplateBean.getTitle(), ColorConstants.titleColor), getLayoutParams(0, 2, 10));
@@ -303,35 +305,26 @@ public class Input2Activity extends BaseOActivity {
             // 绘制上限值;
             LinearLayout upperLayout = new LinearLayout(this);
             upperLayout.addView(getInfoTV("上限值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            upperLayout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            upperLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominalValue() + rol2Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            upperLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominalValue() + rol3Bean.getUpperToleranceValue()) : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            upperLayout.addView(getInfoTV(getUpperToleranceValue(rol1Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            upperLayout.addView(getInfoTV(getUpperToleranceValue(rol2Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            upperLayout.addView(getInfoTV(getUpperToleranceValue(rol3Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(upperLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制下限值;
             LinearLayout lowerLayout = new LinearLayout(this);
             lowerLayout.addView(getInfoTV("下限值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            lowerLayout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getNominalValue() + rol1Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
-            lowerLayout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getNominalValue() + rol2Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
-            lowerLayout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getNominalValue() + rol3Bean.getLowerToleranceValue()) : " ", ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+            lowerLayout.addView(getInfoTV(getLowerToleranceValue(rol1Bean), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+            lowerLayout.addView(getInfoTV(getLowerToleranceValue(rol2Bean), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+            lowerLayout.addView(getInfoTV(getLowerToleranceValue(rol3Bean), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
             mainLayout.addView(lowerLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
 
             // 绘制中间值;
             LinearLayout nominalLayout = new LinearLayout(this);
             nominalLayout.addView(getInfoTV("中间值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            nominalLayout.addView(getInfoTV(rol1Bean != null ?
-                    rol1Bean.getType() != 3 ? String.valueOf(rol1Bean.getNominalValue()) : rol1Bean.getName() : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            nominalLayout.addView(getInfoTV(rol2Bean != null ?
-                    rol2Bean.getType() != 3 ? String.valueOf(rol2Bean.getNominalValue()) : rol2Bean.getName() : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            nominalLayout.addView(getInfoTV(rol3Bean != null ?
-                    rol3Bean.getType() != 3 ? String.valueOf(rol3Bean.getNominalValue()) : rol3Bean.getName() : " ", ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            nominalLayout.addView(getInfoTV(getNominalValue(rol1Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            nominalLayout.addView(getInfoTV(getNominalValue(rol2Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            nominalLayout.addView(getInfoTV(getNominalValue(rol3Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(nominalLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             for (int j = 0; j < dataNumber; j++) {
@@ -600,6 +593,42 @@ public class Input2Activity extends BaseOActivity {
         mainLayout.addView(view, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 1));
     }
 
+    private String getUpperToleranceValue(ParameterBean2 pBean2) {
+        if (pBean2 == null) return "";
+        switch (pBean2.getType()) {
+            case 0:
+                return String.valueOf(pBean2.getNominalValue() + pBean2.getUpperToleranceValue());
+            case 1:
+                return String.valueOf(pBean2.getUpperToleranceValue());
+            default:
+                return "";
+        }
+    }
+
+    private String getLowerToleranceValue(ParameterBean2 pBean2) {
+        if (pBean2 == null) return "";
+        switch (pBean2.getType()) {
+            case 0:
+                return String.valueOf(pBean2.getNominalValue() + pBean2.getLowerToleranceValue());
+            case 2:
+                return String.valueOf(pBean2.getLowerToleranceValue());
+            default:
+                return "";
+        }
+    }
+
+    private String getNominalValue(ParameterBean2 pBean2) {
+        if (pBean2 == null) return "";
+        switch (pBean2.getType()) {
+            case 0:
+                return String.valueOf(pBean2.getNominalValue());
+            case 3:
+                return pBean2.getName();
+            default:
+                return "";
+        }
+    }
+
     private LinearLayout bottomImageLayout;
     private List<String> addImgs = new ArrayList<>();
 
@@ -831,6 +860,7 @@ public class Input2Activity extends BaseOActivity {
         et.setGravity(Gravity.CENTER);
         et.setBackground(null);
         et.setMaxLines(1);
+        et.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         if (numOnly) {
             DigitsKeyListener numericOnlyListener = new DigitsKeyListener(false, true);
             et.setKeyListener(numericOnlyListener);
@@ -1136,7 +1166,7 @@ public class Input2Activity extends BaseOActivity {
                     continue;
                 }
                 if (((EditText) _view).getText().toString().trim().equals("")) {
-                    dataJudges.set(j, "NG");
+                    // dataJudges.set(j, "NG");
                     continue;
                 }
                 int type = mParameterBean2s.get(i).getType();
@@ -1184,8 +1214,8 @@ public class Input2Activity extends BaseOActivity {
                         continue;
                     }
                     if (((EditText) _view).getText().toString().trim().equals("")) {
-                        judges.set(i, "NG");
-                        allJudge = "NG";
+                        // judges.set(i, "NG");
+                        // allJudge = "NG";
                         continue;
                     }
                     double _value = Double.valueOf(((EditText) _view).getText().toString().trim());
@@ -1246,10 +1276,12 @@ public class Input2Activity extends BaseOActivity {
                     }
                 }
             }
-            maxs.get(i).equals(-100000);
-            maxs.set(i, 0d);
-            mins.get(i).equals(100000);
-            mins.set(i, 0d);
+            if (maxs.get(i) == -100000) {
+                maxs.set(i, 0d);
+            }
+            if (mins.get(i) == 1000000) {
+                mins.set(i, 0d);
+            }
             avgs.set(i, BigDecimal.valueOf(sum / dataNumber).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
             ranges.set(i, BigDecimal.valueOf(maxs.get(i) - mins.get(i)).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
         }

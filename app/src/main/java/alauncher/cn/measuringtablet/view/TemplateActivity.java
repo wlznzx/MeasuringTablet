@@ -122,10 +122,10 @@ public class TemplateActivity extends BaseOActivity {
         } else {
             boolean isCopy = getIntent().getBooleanExtra("IS_COPY", false);
             if (isCopy) {
-                mTemplateBean.setTemplateID(0L);
+                mTemplateBean.setTemplateID(null);
             }
         }
-        android.util.Log.d("wlDebug", "bean = " + mTemplateBean.toString());
+        // android.util.Log.d("wlDebug", "bean = " + mTemplateBean.toString());
 
         views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, null);
         leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);

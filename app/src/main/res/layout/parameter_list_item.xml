@@ -21,6 +21,13 @@
         android:layout_height="match_parent" />
 
     <TextView
+        android:id="@+id/parameter_tv"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/handler" />
+
+    <TextView
         android:id="@+id/describe_tv"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"

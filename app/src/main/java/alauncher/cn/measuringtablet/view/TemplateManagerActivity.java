@@ -53,9 +53,10 @@ public class TemplateManagerActivity extends BaseOActivity implements DataUpdate
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
         codeBeans = App.getDaoSession().getTemplateBeanDao().loadAll();
         for (TemplateBean bean : codeBeans) {
-            // android.util.Log.d("wlDebug", "bean = " + bean.toString());
+            android.util.Log.d("wlDebug", "bean = " + bean.toString());
         }
         codeID = App.getDaoSession().getCodeBeanDao().load(Long.valueOf(App.getSetupBean().getCodeID())).getUseTemplateID();
+        android.util.Log.d("wlDebug", "codeID = " + codeID);
         states.put(String.valueOf(codeID - 1), true);
         adapter = new TemplateListAdapter(codeBeans, states, this, this, (int) codeID);
         listView.setAdapter(adapter);
@@ -74,6 +75,7 @@ public class TemplateManagerActivity extends BaseOActivity implements DataUpdate
                 Intent edit_TemplateIntent = new Intent(this, TemplateActivity.class);
                 edit_TemplateIntent.putExtra("TEMPLATE_ID", adapter.currentCodeID);
                 edit_TemplateIntent.putExtra("IS_COPY", false);
+                edit_TemplateIntent.putExtra("Title", R.string.edit_template);
                 startActivity(edit_TemplateIntent);
                 break;
             case R.id.set_as_btn:
@@ -87,11 +89,13 @@ public class TemplateManagerActivity extends BaseOActivity implements DataUpdate
                 break;
             case R.id.add_template_btn:
                 Intent intent = new Intent(this, TemplateActivity.class);
+                intent.putExtra("Title", R.string.add_template);
                 intent.putExtra("TEMPLATE_ID", -1);
                 startActivity(intent);
                 break;
             case R.id.copy_add_template_btn:
                 Intent addTemplateIntent = new Intent(this, TemplateActivity.class);
+                addTemplateIntent.putExtra("Title", R.string.copy_add_template);
                 addTemplateIntent.putExtra("TEMPLATE_ID", adapter.currentCodeID);
                 addTemplateIntent.putExtra("IS_COPY", true);
                 startActivity(addTemplateIntent);

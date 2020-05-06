@@ -349,4 +349,5 @@
     <string name="add_template">新建模板</string>
     <string name="copy_add_template">复制新建</string>
     <string name="add_pic_tips">添加图片，最多可添加20张</string>
+    <string name="edit_template">编辑模板</string>
 </resources>

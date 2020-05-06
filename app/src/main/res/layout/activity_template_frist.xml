@@ -227,7 +227,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_margin="10dp"
-            android:src="@drawable/et_logo"
+            android:src="@drawable/add_circle"
             android:text="5"
             android:visibility="visible"></ImageView>
 

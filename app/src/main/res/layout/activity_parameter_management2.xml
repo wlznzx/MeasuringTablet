@@ -50,6 +50,12 @@
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
+                    android:text="@string/describe" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
                     android:text="@string/nominal_value" />
 
                 <TextView
