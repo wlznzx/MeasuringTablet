@@ -96,7 +96,8 @@ public class InfoFragment extends Fragment {
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
         DeviceInfoBean _bean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
-        if (_bean == null) {
+        android.util.Log.d("wlDebug", "info = " + _bean.toString());
+        if (_bean != null) {
 
         } else {
             _bean.setFactoryCode(factoryCodeEdt.getText().toString().trim());

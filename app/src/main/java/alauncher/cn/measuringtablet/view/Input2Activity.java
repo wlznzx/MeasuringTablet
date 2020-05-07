@@ -8,11 +8,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,7 +30,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,19 +40,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.cuiweiyou.numberpickerdialog.NumberPickerDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -164,6 +159,8 @@ public class Input2Activity extends BaseOActivity {
     private User user;
     private static int dataNumber = 1;
 
+    ImageView imgView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -268,9 +265,8 @@ public class Input2Activity extends BaseOActivity {
         }
 
         // 添加工件图;
-        ImageView imgView = new ImageView(this);
-        mainLayout.addView(imgView, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 10));
-
+        imgView = new ImageView(this);
+        mainLayout.addView(imgView, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 15));
         imgView.setImageResource(R.drawable.workspice);
         byte[] _pic = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID()).getWorkpiecePic();
         if (_pic != null) {
@@ -279,6 +275,15 @@ public class Input2Activity extends BaseOActivity {
         } else {
             imgView.setImageResource(R.drawable.workspice);
         }
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (_pic != null) {
+                    String path = bytesToImageFile(_pic);
+                    if (path != null) openImage(path);
+                }
+            }
+        });
 
         // 秀的操作来了，真是可怕;
         //每页显示的记录数
@@ -779,6 +784,27 @@ public class Input2Activity extends BaseOActivity {
         return imgTV;
     }
 
+    private String bytesToImageFile(byte[] bytes) {
+        try {
+            String imageFileName = "workpiece";
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg", /* suffix */
+                    storageDir      /* directory */
+            );
+            if (image.exists()) image.delete();
+            image.createNewFile();
+            FileOutputStream fos = new FileOutputStream(image);
+            fos.write(bytes, 0, bytes.length);
+            fos.flush();
+            fos.close();
+            return image.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public void openImage(String path) {
         File file = new File(path);
@@ -946,6 +972,7 @@ public class Input2Activity extends BaseOActivity {
     @OnClick(R.id.btn_refresh)
     public void refresh() {
         // 刷新;
+        android.util.Log.d("wlDebug", "(" + imgView.getWidth() + "," + imgView.getHeight() + ")");
         new judgeTask().execute();
     }
 

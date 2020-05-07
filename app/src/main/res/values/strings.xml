@@ -186,7 +186,7 @@
     <string name="default_factory_name">无锡恩梯量仪科技有限公司</string>
     <string name="manufacturer">制造商</string>
     <string name="device_name">设备名称</string>
-    <string name="default_device_name">物联网量仪</string>
+    <string name="default_device_name">松下平板</string>
     <string name="device_code">设备编号</string>
     <string name="default_device_code">02</string>
     <string name="software_version">软件版本</string>

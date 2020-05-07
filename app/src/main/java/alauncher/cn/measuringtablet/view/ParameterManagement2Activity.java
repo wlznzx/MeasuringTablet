@@ -260,6 +260,7 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
             @Override
             public void run() {
                 try {
+                    android.util.Log.d("wlDebug", "mDeviceInfoBean = " + mDeviceInfoBean.toString());
                     int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode());
                     android.util.Log.d("wlDebug", "delete ret = " + ret);
                     ret = JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);

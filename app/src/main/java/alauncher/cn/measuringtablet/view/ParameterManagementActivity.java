@@ -339,7 +339,6 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
             @Override
             public void run() {
                 try {
-
                     int ret = JdbcUtil.selectParamConfig(_dBean.getDeviceCode(), App.getSetupBean().getCodeID(), "M1");
                     android.util.Log.d("wlDebug", "" + ret);
                     if (ret > 0) {
