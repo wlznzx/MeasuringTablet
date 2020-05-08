@@ -30,6 +30,11 @@ public class BuildUtils {
     }
 
     public static String getLinuxCore_Ver() {
+
+        String str = System.getProperty("os.version");
+        if (str != null) {
+            return str;
+        }
         Process process = null;
         String kernelVersion = "";
         try {

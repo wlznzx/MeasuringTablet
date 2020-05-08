@@ -128,7 +128,7 @@
     <string name="sign1">签字1</string>
     <string name="sign2">签名2</string>
     <string name="sign3">签名3</string>
-    <string name="list_header">标题</string>
+    <string name="list_header">表头</string>
     <string name="aql_title">检测项</string>
     <string name="rosh_str">相关信息</string>
     <string name="info_item">信息项</string>

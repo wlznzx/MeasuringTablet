@@ -160,7 +160,7 @@ public class InfoFragment extends Fragment {
         ipEdt.setText(String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY, "47.98.58.40")));
         softwareVersionEdt.setText(BuildUtils.packageName(getContext()));
         kernelVersionEdt.setText(BuildUtils.getLinuxCore_Ver());
-        deviceCodeEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.serialno"));
+        deviceCodeEdt.setText(_bean.getDeviceCode());
         baseVersionEdt.setText(BuildUtils.getInner_Ver());
 
         startHour = _bean.getStartHour();

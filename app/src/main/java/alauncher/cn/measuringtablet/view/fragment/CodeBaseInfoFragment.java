@@ -102,8 +102,9 @@ public class CodeBaseInfoFragment extends Fragment {
     }
 
     private void initView() {
-        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load((long) App.getSetupBean().getCodeID());
+
         mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        mTemplateBean = App.getDaoSession().getTemplateBeanDao().load(mCodeBean.getUseTemplateID());
         if (mCodeBean != null) {
             machineToolEdt.setText(mCodeBean.getMachineTool());
             partEdt.setText(mCodeBean.getParts());
@@ -111,8 +112,10 @@ public class CodeBaseInfoFragment extends Fragment {
             titleDefaultRV.setLayoutManager(new LinearLayoutManager(getContext()));
             titleDefaultRV.setAdapter(new ListDefaultAdapter());
             defaultTitles = new ArrayList<>();
-            for (String str : mTemplateBean.getTitleList()) {
-                defaultTitles.add("");
+            if (mTemplateBean != null) {
+                for (String str : mTemplateBean.getTitleList()) {
+                    defaultTitles.add("");
+                }
             }
         } else {
 
