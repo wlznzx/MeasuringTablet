@@ -34,6 +34,7 @@ public class ResultBean3 {
 
     public String result;
 
+
     @Transient
     public boolean isSelect;
 
@@ -46,11 +47,14 @@ public class ResultBean3 {
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> mItems;
 
-    @Generated(hash = 960487014)
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> isBoolList;
+
+    @Generated(hash = 1911000603)
     public ResultBean3(Long id, long codeID, long templateID, String handlerAccout,
-                       long timeStamp, String workid, String workid_extra, String eventid,
-                       String event, String result, List<String> mValues,
-                       List<String> mPicPaths, List<String> mItems) {
+            long timeStamp, String workid, String workid_extra, String eventid, String event,
+            String result, List<String> mValues, List<String> mPicPaths, List<String> mItems,
+            List<String> isBoolList) {
         this.id = id;
         this.codeID = codeID;
         this.templateID = templateID;
@@ -64,6 +68,7 @@ public class ResultBean3 {
         this.mValues = mValues;
         this.mPicPaths = mPicPaths;
         this.mItems = mItems;
+        this.isBoolList = isBoolList;
     }
 
     @Generated(hash = 1867049585)
@@ -200,5 +205,13 @@ public class ResultBean3 {
                 ", mPicPaths=" + mPicPaths +
                 ", mItems=" + mItems +
                 '}';
+    }
+
+    public List<String> getIsBoolList() {
+        return this.isBoolList;
+    }
+
+    public void setIsBoolList(List<String> isBoolList) {
+        this.isBoolList = isBoolList;
     }
 }

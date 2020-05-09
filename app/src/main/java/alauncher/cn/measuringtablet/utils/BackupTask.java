@@ -57,7 +57,21 @@ public class BackupTask extends AsyncTask<String, Void, String> {
             }
         } else if (command.equals(COMMAND_RESTORE)) {
             try {
+                File shmFile = new File(dbFile.getAbsoluteFile() + "-shm");
+                Log.d("wlDebug", "shmFile path = " + shmFile.getAbsolutePath());
+                if (shmFile.isFile() && shmFile.exists()) {
+                    Log.d("wlDebug", "shmFile Delete");
+                    shmFile.delete();
+                }
+                File walFile = new File(dbFile.getAbsoluteFile() + "-wal");
+                Log.d("wlDebug", "walFile path = " + walFile.getAbsolutePath());
+                if (walFile.isFile() && walFile.exists()) {
+                    Log.d("wlDebug", "walFile Delete");
+                    walFile.delete();
+                }
                 backup = new File(params[1]);
+                Log.d("wlDebug", "base path = " + backup.getAbsolutePath());
+                Log.d("wlDebug", "to path = " + dbFile.getAbsolutePath());
                 fileCopy(backup, dbFile);
                 return backup.getAbsolutePath();
             } catch (Exception e) {
@@ -77,7 +91,6 @@ public class BackupTask extends AsyncTask<String, Void, String> {
         try {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             if (inChannel != null) {

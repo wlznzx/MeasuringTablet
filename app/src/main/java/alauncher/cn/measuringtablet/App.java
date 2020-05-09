@@ -65,6 +65,7 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "mi.db", null);
+        // DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "/storage/emulated/0/NTBackup/mi2020-05-09_15-59-53_R4CBB20226100635.db", null);
         Database db = openHelper.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         mDaoSession = daoMaster.newSession(IdentityScopeType.None);
@@ -93,6 +94,8 @@ public class App extends MultiDexApplication {
             }
         };
         Bugly.init(getApplicationContext(), "be2b337540", true);
+
+        android.util.Log.d("wlDebug", getDatabasePath("..").getAbsolutePath());
     }
 
     public static DaoSession getDaoSession() {

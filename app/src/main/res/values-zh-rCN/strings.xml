@@ -143,7 +143,7 @@
     <string name="pdf_export_msg">PDF导出成功，路径位于:</string>
     <string name="data_num">数据个数:</string>
     <string name="export_pdf">导出PDF</string>
-    <string name="save_batch">保存批次</string>
+    <string name="save_batch">保存组号</string>
     <string name="no_select_title">无选中项</string>
     <string name="no_select_msg">必须有选中数据才能导出.</string>
     <string name="tips">提示</string>
@@ -156,4 +156,6 @@
     <string name="copy_add_template">复制新建</string>
     <string name="add_pic_tips">添加图片，最多可添加20张</string>
     <string name="edit_template">编辑模板</string>
+    <string name="template_num">模板编号</string>
+    <string name="template_title">模板标题</string>
 </resources>

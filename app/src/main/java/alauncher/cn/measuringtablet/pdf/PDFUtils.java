@@ -200,17 +200,24 @@ public class PDFUtils {
                 String _result = "OK";
                 for (int j = 0; j < pResultBean3s.size(); j++) {
                     ResultBean3 _bean = pResultBean3s.get(j);
-                    sum += Double.valueOf(_bean.getMValues().get(i));
-                    if (Double.valueOf(_bean.getMValues().get(i)) < _min) {
-                        _min = Double.valueOf(_bean.getMValues().get(i));
+                    String _value = _bean.getMValues().get(i);
+                    boolean isBool = _bean.getIsBoolList().size() > 0 ? _bean.getIsBoolList().equals("")
+                    if (_value.equals("")) {
+                        continue;
                     }
-                    if (Double.valueOf(_bean.getMValues().get(i)) > _max) {
-                        _max = Double.valueOf(_bean.getMValues().get(i));
+                    sum += Double.valueOf(_value);
+                    if (Double.valueOf(_value) < _min) {
+                        _min = Double.valueOf(_value);
+                    }
+                    if (Double.valueOf(_value) > _max) {
+                        _max = Double.valueOf(_value);
                     }
                     if (_bean.getResult().equals("NG")) {
                         _result = "NG";
                     }
                 }
+                if (_max == -100000) _max = 0D;
+                if (_min == 1000000) _min = 0D;
                 _maxs.add(_max);
                 _mins.add(_min);
                 _avgs.add(BigDecimal.valueOf(sum / pResultBean3s.size()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
@@ -227,9 +234,9 @@ public class PDFUtils {
             // ParameterBean2 rol3Bean = i * 3 + 2 <= pResultBean3s.get(0).getMValueIndexs().size() - 1 ? pResultBean3s.get(0).getMValueIndexs().get(i * 3 + 2) : null;
             // 绘制数据列第一行
             table.addCell(getDataCell("记号", 1, 1, dataTitleColor));
-            table.addCell(getDataCell(pTemplateResultBean.getValueIndexs().size() > i * 3 + 0 ? pTemplateResultBean.getValueIndexs().get(i * 3 + 0) : " ", 1, 5, dataTitleColor));
-            table.addCell(getDataCell(pTemplateResultBean.getValueIndexs().size() > i * 3 + 1 ? pTemplateResultBean.getValueIndexs().get(i * 3 + 1) : " ", 1, 5, dataTitleColor));
-            table.addCell(getDataCell(pTemplateResultBean.getValueIndexs().size() > i * 3 + 2 ? pTemplateResultBean.getValueIndexs().get(i * 3 + 2) : " ", 1, 5, dataTitleColor));
+            table.addCell(getDataCell(pTemplateResultBean.getMarkList().size() > i * 3 + 0 ? pTemplateResultBean.getMarkList().get(i * 3 + 0) : " ", 1, 5, dataTitleColor));
+            table.addCell(getDataCell(pTemplateResultBean.getMarkList().size() > i * 3 + 1 ? pTemplateResultBean.getMarkList().get(i * 3 + 1) : " ", 1, 5, dataTitleColor));
+            table.addCell(getDataCell(pTemplateResultBean.getMarkList().size() > i * 3 + 2 ? pTemplateResultBean.getMarkList().get(i * 3 + 2) : " ", 1, 5, dataTitleColor));
 
             // 绘制上限值;
             table.addCell(getDataCell("上限值", 1, 1, dataTitleColor));
@@ -261,11 +268,43 @@ public class PDFUtils {
 
             // 数据；
             for (int j = 0; j < pResultBean3s.size(); j++) {
-                String value1 = i * 3 + 0 <= (pResultBean3s.get(j).getMValues().size() - 1) ? pResultBean3s.get(j).getMValues().get(i * 3 + 0) : " ";
+                String value1 = "", value2 = "", value3 = "";
+                if (pResultBean3s.get(j).getIsBoolList() != null) {
+                    if (i * 3 + 0 <= (pResultBean3s.get(j).getMValues().size() - 1)) {
+                        if (pResultBean3s.get(j).getIsBoolList().get(i * 3 + 0).equals("false")) {
+                            value1 = pResultBean3s.get(j).getMValues().get(i * 3 + 0);
+                        } else {
+                            value1 = pResultBean3s.get(j).getMValues().get(i * 3 + 0).equals("1") ? "OK" : "NG";
+                        }
+                    } else {
+                        value1 = " ";
+                    }
+                    if (i * 3 + 1 <= (pResultBean3s.get(j).getMValues().size() - 1)) {
+                        if (pResultBean3s.get(j).getIsBoolList().get(i * 3 + 1).equals("false")) {
+                            value2 = pResultBean3s.get(j).getMValues().get(i * 3 + 1);
+                        } else {
+                            value2 = pResultBean3s.get(j).getMValues().get(i * 3 + 1).equals("1") ? "OK" : "NG";
+                        }
+                    } else {
+                        value2 = " ";
+                    }
+                    if (i * 3 + 2 <= (pResultBean3s.get(j).getMValues().size() - 1)) {
+                        if (pResultBean3s.get(j).getIsBoolList().get(i * 3 + 2).equals("false")) {
+                            value3 = pResultBean3s.get(j).getMValues().get(i * 3 + 2);
+                        } else {
+                            value3 = pResultBean3s.get(j).getMValues().get(i * 3 + 2).equals("1") ? "OK" : "NG";
+                        }
+                    } else {
+                        value3 = " ";
+                    }
+                } else {
+                    value1 = i * 3 + 0 <= (pResultBean3s.get(j).getMValues().size() - 1) ? pResultBean3s.get(j).getMValues().get(i * 3 + 0) : " ";
+                    value2 = i * 3 + 1 <= (pResultBean3s.get(j).getMValues().size() - 1) ? pResultBean3s.get(j).getMValues().get(i * 3 + 1) : " ";
+                    value3 = i * 3 + 2 <= (pResultBean3s.get(j).getMValues().size() - 1) ? pResultBean3s.get(j).getMValues().get(i * 3 + 2) : " ";
+                }
+
                 String path1 = i * 3 + 0 <= (pResultBean3s.get(j).getMPicPaths().size() - 1) ? pResultBean3s.get(j).getMPicPaths().get(i * 3 + 0) : " ";
-                String value2 = i * 3 + 1 <= (pResultBean3s.get(j).getMValues().size() - 1) ? pResultBean3s.get(j).getMValues().get(i * 3 + 1) : " ";
                 String path2 = i * 3 + 1 <= (pResultBean3s.get(j).getMPicPaths().size() - 1) ? pResultBean3s.get(j).getMPicPaths().get(i * 3 + 1) : " ";
-                String value3 = i * 3 + 2 <= (pResultBean3s.get(j).getMValues().size() - 1) ? pResultBean3s.get(j).getMValues().get(i * 3 + 2) : " ";
                 String path3 = i * 3 + 2 <= (pResultBean3s.get(j).getMPicPaths().size() - 1) ? pResultBean3s.get(j).getMPicPaths().get(i * 3 + 2) : " ";
                 table.addCell(getDataCell(String.valueOf((j + 1)), 1, 1, dataHeader));
                 table.addCell(getDataCell(value1, 1, 2, j % 2 == 1 ? dataLineOneColor : dataLineTwoColor));

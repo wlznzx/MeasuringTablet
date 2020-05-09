@@ -62,7 +62,6 @@ public class MainActivity extends BaseOActivity {
 
         }
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
-
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         rv.addItemDecoration(new RecyclerItemDecoration(24, 3));
         rv.setLayoutManager(layoutManager);
@@ -109,9 +108,9 @@ public class MainActivity extends BaseOActivity {
         builder.show();
         if (builder.getWindow() == null) return;
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
-        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
-        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
-        Button sure = (Button) builder.findViewById(R.id.btn_sure);
+        TextView msg = builder.findViewById(R.id.tv_msg);
+        Button cancle = builder.findViewById(R.id.btn_cancle);
+        Button sure = builder.findViewById(R.id.btn_sure);
         if (msg == null || cancle == null || sure == null) return;
         msg.setText("确认注销当前账号？");
         cancle.setOnClickListener(new View.OnClickListener() {

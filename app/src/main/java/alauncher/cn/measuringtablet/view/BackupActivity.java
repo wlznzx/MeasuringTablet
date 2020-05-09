@@ -74,9 +74,9 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
                 builder.show();
                 if (builder.getWindow() == null) return;
                 builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
-                TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
-                Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
-                Button sure = (Button) builder.findViewById(R.id.btn_sure);
+                TextView msg = builder.findViewById(R.id.tv_msg);
+                Button cancle = builder.findViewById(R.id.btn_cancle);
+                Button sure = builder.findViewById(R.id.btn_sure);
                 if (msg == null || cancle == null || sure == null) return;
                 msg.setText("确认导入数据？");
                 cancle.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +141,8 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
 //        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {//是否选择，没选择就不会继续
             Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
-            String _path = UriToPathUtil.getFilePathByUri(this, uri);
+            String _path = UriToPathUtil.getFilePathByUri2(this, uri);
+            if (_path == null) _path = UriToPathUtil.getFilePathByUri(this, uri);
             // _path = getDataColumn(this, uri, null, null);
             android.util.Log.d("wlDebug", "_path = " + _path);
             // _path = uri.getPath();

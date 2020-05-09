@@ -1387,18 +1387,20 @@ public class Input2Activity extends BaseOActivity {
                 List<String> nominalValue = new ArrayList<>();
                 List<String> upperLists = new ArrayList<>();
                 List<String> lowerLists = new ArrayList<>();
+                List<String> markLists = new ArrayList<>();
                 for (int j = 0; j < mParameterBean2s.size(); j++) {
                     ParameterBean2 _bean = mParameterBean2s.get(j);
                     indexLists.add(String.valueOf(_bean.getSequenceNumber() + 1));
-                    nominalValue.add(String.valueOf(_bean.getNominalValue()));
-                    upperLists.add(String.valueOf(_bean.getNominalValue() + _bean.getUpperToleranceValue()));
-                    lowerLists.add(String.valueOf(_bean.getNominalValue() + _bean.getLowerToleranceValue()));
+                    nominalValue.add(getNominalValue(_bean));
+                    upperLists.add(getUpperToleranceValue(_bean));
+                    lowerLists.add(getLowerToleranceValue(_bean));
+                    markLists.add(_bean.getDescribe());
                 }
                 mTemplateResultBean.setValueIndexs(indexLists);
                 mTemplateResultBean.setNominalValues(nominalValue);
                 mTemplateResultBean.setUpperToleranceValues(upperLists);
                 mTemplateResultBean.setLowerToleranceValues(lowerLists);
-
+                mTemplateResultBean.setMarkList(markLists);
                 List<String> titleLists = new ArrayList<>();
                 for (Object obj : titleEdts) {
                     // titleLists.add(edt.getText().toString().trim());
@@ -1443,12 +1445,15 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setCodeID(App.getSetupBean().getCodeID());
                     ArrayList<String> values = new ArrayList<>();
                     ArrayList<String> picPaths = new ArrayList<>();
+                    ArrayList<String> isBools = new ArrayList<>();
                     for (View edt : results.get(i)) {
                         if (edt instanceof EditText) {
                             values.add(((EditText) edt).getText().toString().trim());
+                            isBools.add("false");
                         } else if (edt instanceof Spinner) {
                             Spinner sp = (Spinner) edt;
                             values.add(sp.getSelectedItemPosition() == 0 ? "1" : "0");
+                            isBools.add("true");
                         }
                     }
                     for (int j = 0; j < mParameterBean2s.size(); j++) {
@@ -1457,6 +1462,7 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setMItems(indexLists);
                     _bean.setMValues(values);
                     _bean.setMPicPaths(picPaths);
+                    _bean.setIsBoolList(isBools);
                     _bean.setHandlerAccout(App.handlerAccout);
                     _bean.setResult(dataJudges.get(i));
                     _bean.setWorkid_extra("");

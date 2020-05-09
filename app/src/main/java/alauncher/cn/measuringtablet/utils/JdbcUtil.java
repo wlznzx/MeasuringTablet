@@ -319,7 +319,7 @@ public class JdbcUtil {
                                  final ResultBean3 _bean, int templateResultID) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
-        String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time,template_result_id) VALUES (?,?,?,?,?,?,?,?,?);";
+        String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time,template_result_id,template_show_id) VALUES (?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, factory_code);
         pstmt.setString(2, machine_code);
@@ -330,6 +330,7 @@ public class JdbcUtil {
         pstmt.setString(7, _bean.getHandlerAccout());
         pstmt.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
         pstmt.setLong(9, templateResultID);
+        pstmt.setLong(10, _bean.getTemplateID());
         pstmt.executeUpdate();//执行sql
         ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
         int autoIncKey = 0;
@@ -341,7 +342,7 @@ public class JdbcUtil {
         }
 
         for (int i = 0; i < _bean.getMValues().size(); i++) {
-            String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value,img) VALUES (?,?,?,?,?,?,?);";
+            String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value,img,isbool) VALUES (?,?,?,?,?,?,?,?);";
             PreparedStatement m1pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
             m1pstmt.setInt(1, autoIncKey);
             m1pstmt.setString(2, "" + (i + 1));
@@ -356,6 +357,7 @@ public class JdbcUtil {
             m1pstmt.setString(5, "- -");
             m1pstmt.setString(6, _bean.getEvent());
             m1pstmt.setBytes(7, FileUtils.image2byte(_bean.getMPicPaths().get(i)));
+            m1pstmt.setBoolean(8,_bean.getIsBoolList().get(i).equals("true"));
             m1pstmt.executeUpdate();
             m1pstmt.close();
         }
