@@ -201,8 +201,12 @@ public class PDFUtils {
                 for (int j = 0; j < pResultBean3s.size(); j++) {
                     ResultBean3 _bean = pResultBean3s.get(j);
                     String _value = _bean.getMValues().get(i);
-                    boolean isBool = _bean.getIsBoolList().size() > 0 ? _bean.getIsBoolList().equals("")
+                    boolean isBool = _bean.getIsBoolList().size() > 0 ? _bean.getIsBoolList().get(i).equals("true") : false;
                     if (_value.equals("")) {
+                        continue;
+                    }
+                    if (isBool) {
+                        if (_value.equals("0")) _result = "NG";
                         continue;
                     }
                     sum += Double.valueOf(_value);

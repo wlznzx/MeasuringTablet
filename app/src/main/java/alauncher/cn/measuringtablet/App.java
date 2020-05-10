@@ -14,6 +14,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import alauncher.cn.measuringtablet.bean.CalibrationBean;
 import alauncher.cn.measuringtablet.bean.CodeBean;
@@ -66,6 +67,7 @@ public class App extends MultiDexApplication {
         super.onCreate();
         DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "mi.db", null);
         // DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "/storage/emulated/0/NTBackup/mi2020-05-09_15-59-53_R4CBB20226100635.db", null);
+        openHelper.setWriteAheadLoggingEnabled(false);
         Database db = openHelper.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         mDaoSession = daoMaster.newSession(IdentityScopeType.None);

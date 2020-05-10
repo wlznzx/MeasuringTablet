@@ -69,6 +69,12 @@ public class BackupTask extends AsyncTask<String, Void, String> {
                     Log.d("wlDebug", "walFile Delete");
                     walFile.delete();
                 }
+                File journalFile = new File(dbFile.getAbsoluteFile() + "-journal");
+                Log.d("wlDebug", "journalFile path = " + journalFile.getAbsolutePath());
+                if (journalFile.isFile() && journalFile.exists()) {
+                    Log.d("wlDebug", "journalFile Delete");
+                    journalFile.delete();
+                }
                 backup = new File(params[1]);
                 Log.d("wlDebug", "base path = " + backup.getAbsolutePath());
                 Log.d("wlDebug", "to path = " + dbFile.getAbsolutePath());

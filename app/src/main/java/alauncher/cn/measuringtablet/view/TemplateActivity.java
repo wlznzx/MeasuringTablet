@@ -257,7 +257,6 @@ public class TemplateActivity extends BaseOActivity {
         mListHeaderAdapter = new ListHeaderAdapter();
         mAQLHeaderAdapter = new AQLHeaderAdapter();
         mRoHSHeaderAdapter = new RoHSHeaderAdapter();
-
         vp2.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -276,6 +275,7 @@ public class TemplateActivity extends BaseOActivity {
                 return views[position];
             }
         });
+
         if (mTemplateBean.getLogoPic() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
             logoImageButton.setImageBitmap(bitmap);

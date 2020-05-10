@@ -241,8 +241,8 @@ public class JdbcUtil {
         if (conn == null) return -1;
         String sql = "insert into template_result " +
                 "(factory_code,device_code,code_id,logo_pic,title_list,sign_list,aql_list,rohs_List,header_left,header_mid,header_right,footer_left,footer_mid,footer_right,title,data_num,maximum_enable,minimum_enable,average_enable," +
-                "range_enable,judge_enable,all_judge,timestamp,img,remarks,user_name,title_result_list,aql_result_list,rohs_result_list,value_indexs,upper_tolerance_values,lower_tolerance_values,nominal_values) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                "range_enable,judge_enable,all_judge,timestamp,img,remarks,user_name,title_result_list,aql_result_list,rohs_result_list,value_indexs,upper_tolerance_values,lower_tolerance_values,nominal_values,marklist) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, _bean.getFactoryCode());
         pstmt.setString(2, _bean.getDeviceCode());
@@ -280,6 +280,7 @@ public class JdbcUtil {
         pstmt.setString(31, StringConverter.convertToDatabaseValueS(_bean.getUpperToleranceValues()));
         pstmt.setString(32, StringConverter.convertToDatabaseValueS(_bean.getLowerToleranceValues()));
         pstmt.setString(33, StringConverter.convertToDatabaseValueS(_bean.getNominalValues()));
+        pstmt.setString(34, StringConverter.convertToDatabaseValueS(_bean.getMarkList()));
 
         pstmt.executeUpdate();//执行sql
         ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
@@ -357,7 +358,7 @@ public class JdbcUtil {
             m1pstmt.setString(5, "- -");
             m1pstmt.setString(6, _bean.getEvent());
             m1pstmt.setBytes(7, FileUtils.image2byte(_bean.getMPicPaths().get(i)));
-            m1pstmt.setBoolean(8,_bean.getIsBoolList().get(i).equals("true"));
+            m1pstmt.setBoolean(8, _bean.getIsBoolList().get(i).equals("true"));
             m1pstmt.executeUpdate();
             m1pstmt.close();
         }
