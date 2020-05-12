@@ -22,10 +22,9 @@ import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.utils.BuildUtils;
 import alauncher.cn.measuringtablet.utils.Constants;
-import alauncher.cn.measuringtablet.utils.DeviceUtils;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.SPUtils;
-import alauncher.cn.measuringtablet.utils.SystemPropertiesProxy;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -97,7 +96,7 @@ public class InfoFragment extends Fragment {
     public void onSave(View v) {
         DeviceInfoBean _bean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
         android.util.Log.d("wlDebug", "info = " + _bean.toString());
-        if (_bean != null) {
+        if (_bean == null) {
 
         } else {
             _bean.setFactoryCode(factoryCodeEdt.getText().toString().trim());
@@ -111,8 +110,8 @@ public class InfoFragment extends Fragment {
             _bean.setStopMin(stopMin);
         }
         App.getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
-        Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
-
+        // Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
+        DialogUtils.showDialog(getContext(), "保存", "保存成功.");
         SPUtils.put(getContext(), Constants.IP_KEY, ipEdt.getText().toString().trim());
         android.util.Log.d("wlDebug", "info = " + _bean.toString());
         SPUtils.put(getContext(), Constants.INPUT_TIME_KEY, Long.valueOf(tInputTimeEdt.getText().toString().trim()));

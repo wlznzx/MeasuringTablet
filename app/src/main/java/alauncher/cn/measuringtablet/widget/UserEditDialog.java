@@ -9,6 +9,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wangpeiyuan.cycleviewpager2.indicator.Indicator;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,18 +64,18 @@ public class UserEditDialog extends Dialog {
 
     private User mUser;
 
-    public Map<Integer,Integer> spMap = new HashMap<>();
-    public Map<Integer,Integer> toMap = new HashMap<>();
+    public Map<Integer, Integer> spMap = new HashMap<>();
+    public Map<Integer, Integer> toMap = new HashMap<>();
 
     public UserEditDialog(Context context) {
         super(context);
         mContext = context;
         mUserDao = App.getDaoSession().getUserDao();
-        spMap.put(0,0);
-        spMap.put(1,4);
+        spMap.put(0, 0);
+        spMap.put(1, 4);
 
-        toMap.put(0,0);
-        toMap.put(4,1);
+        toMap.put(0, 0);
+        toMap.put(4, 1);
     }
 
     public UserEditDialog(Context context, int themeResId) {

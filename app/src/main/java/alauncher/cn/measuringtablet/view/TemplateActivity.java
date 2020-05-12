@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +31,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.cuiweiyou.numberpickerdialog.NumberPickerDialog;
+import com.wangpeiyuan.cycleviewpager2.CycleViewPager2;
+import com.wangpeiyuan.cycleviewpager2.adapter.CyclePagerAdapter;
+import com.wangpeiyuan.cycleviewpager2.indicator.DotsIndicator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
+import alauncher.cn.measuringtablet.MainActivity;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
@@ -61,7 +66,7 @@ public class TemplateActivity extends BaseOActivity {
 //    public RecyclerView titlePRV;
 
     @BindView(R.id.vp2)
-    public ViewPager vp2;
+    public CycleViewPager2 vp2;
 
     public EditText leftHeaderEdt, midHeaderEdt, rightHeaderEdt, titleEdt, leftFooterEdt, midFooterEdt, rightFooterEdt;
 
@@ -127,136 +132,175 @@ public class TemplateActivity extends BaseOActivity {
         }
         // android.util.Log.d("wlDebug", "bean = " + mTemplateBean.toString());
 
-        views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, null);
-        leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
-        rightHeaderEdt = views[0].findViewById(R.id.right_header_edt);
-        midHeaderEdt = views[0].findViewById(R.id.mid_header_edt);
-        leftFooterEdt = views[0].findViewById(R.id.left_footer_edt);
-        rightFooterEdt = views[0].findViewById(R.id.right_footer_edt);
-        midFooterEdt = views[0].findViewById(R.id.mid_footer_edt);
-        titleEdt = views[0].findViewById(R.id.title_edt);
-        signSP1 = views[0].findViewById(R.id.sign_sp1);
-        signSP2 = views[0].findViewById(R.id.sign_sp2);
-        signSP3 = views[0].findViewById(R.id.sign_sp3);
-        aqlSwitch = views[0].findViewById(R.id.aql_switch);
-        roshSwitch = views[0].findViewById(R.id.rosh_switch);
-        logoImageButton = views[0].findViewById(R.id.logo_btn);
-        logoImageButton.setOnClickListener(new View.OnClickListener() {
+
+        vp2.setAdapter(new CyclePagerAdapter() {
             @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
+            public int getRealItemViewType(int position) {
+                return position;
             }
-        });
-        confirmationFrequencyBtn = views[0].findViewById(R.id.confirmation_frequency_btn);
-        confirmationFrequencyBtn.setText(String.valueOf(mTemplateBean.getConfirmationFrequency()));
-        confirmationFrequencyBtn.setOnClickListener(new View.OnClickListener() {
+
+            @NonNull
             @Override
-            public void onClick(View view) {
-                new NumberPickerDialog(
-                        TemplateActivity.this,
-                        new NumberPicker.OnValueChangeListener() {
-                            @Override
-                            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                                confirmationFrequencyBtn.setText(newVal + "");
-                            }
-                        },
-                        10, // 最大值
-                        0, // 最小值
-                        mTemplateBean.getConfirmationFrequency()) // 默认值
-                        .setCurrentValue(mTemplateBean.getConfirmationFrequency()) // 更新默认值
-                        .show();
-            }
-        });
-        addListHeaderBtn = views[0].findViewById(R.id.add_list_header);
-        addListHeaderBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
-                    @Override
-                    public void doString(String str, String type) {
-                        ArrayList<String> _list = new ArrayList<>(mTemplateBean.getTitleList());
-                        _list.add(str);
-                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getTitleTypeList());
-                        _typeList.add(type);
-                        mTemplateBean.setTitleList(_list);
-                        mTemplateBean.setTitleTypeList(_typeList);
-                        mListHeaderAdapter.notifyDataSetChanged();
+            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                android.util.Log.d("wlDebug", "viewType = " + viewType);
+                if (viewType == 0) {
+                    views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, parent, false);
+                    leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
+                    rightHeaderEdt = views[0].findViewById(R.id.right_header_edt);
+                    midHeaderEdt = views[0].findViewById(R.id.mid_header_edt);
+                    leftFooterEdt = views[0].findViewById(R.id.left_footer_edt);
+                    rightFooterEdt = views[0].findViewById(R.id.right_footer_edt);
+                    midFooterEdt = views[0].findViewById(R.id.mid_footer_edt);
+                    titleEdt = views[0].findViewById(R.id.title_edt);
+                    signSP1 = views[0].findViewById(R.id.sign_sp1);
+                    signSP2 = views[0].findViewById(R.id.sign_sp2);
+                    signSP3 = views[0].findViewById(R.id.sign_sp3);
+                    aqlSwitch = views[0].findViewById(R.id.aql_switch);
+                    roshSwitch = views[0].findViewById(R.id.rosh_switch);
+                    logoImageButton = views[0].findViewById(R.id.logo_btn);
+                    logoImageButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dispatchTakePictureIntent();
+                        }
+                    });
+                    confirmationFrequencyBtn = views[0].findViewById(R.id.confirmation_frequency_btn);
+                    confirmationFrequencyBtn.setText(String.valueOf(mTemplateBean.getConfirmationFrequency()));
+                    confirmationFrequencyBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            new NumberPickerDialog(
+                                    TemplateActivity.this,
+                                    new NumberPicker.OnValueChangeListener() {
+                                        @Override
+                                        public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                                            confirmationFrequencyBtn.setText(newVal + "");
+                                        }
+                                    },
+                                    10, // 最大值
+                                    0, // 最小值
+                                    mTemplateBean.getConfirmationFrequency()) // 默认值
+                                    .setCurrentValue(mTemplateBean.getConfirmationFrequency()) // 更新默认值
+                                    .show();
+                        }
+                    });
+                    addListHeaderBtn = views[0].findViewById(R.id.add_list_header);
+                    addListHeaderBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
+                                @Override
+                                public void doString(String str, String type) {
+                                    ArrayList<String> _list = new ArrayList<>(mTemplateBean.getTitleList());
+                                    _list.add(str);
+                                    ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getTitleTypeList());
+                                    _typeList.add(type);
+                                    mTemplateBean.setTitleList(_list);
+                                    mTemplateBean.setTitleTypeList(_typeList);
+                                    mListHeaderAdapter.notifyDataSetChanged();
+                                }
+                            }, "", "0").show();
+                        }
+                    });
+                    listHeaderRV = views[0].findViewById(R.id.title_p_rv);
+                    listHeaderRV.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
+                    leftHeaderEdt.setText(mTemplateBean.getHeaderLeft());
+                    midHeaderEdt.setText(mTemplateBean.getHeaderMid());
+                    rightHeaderEdt.setText(mTemplateBean.getHeaderRight());
+                    leftFooterEdt.setText(mTemplateBean.getFooterLeft());
+                    rightFooterEdt.setText(mTemplateBean.getFooterRight());
+                    midFooterEdt.setText(mTemplateBean.getFooterMid());
+                    titleEdt.setText(mTemplateBean.getTitle());
+                    signSP1.setSelection(getRoleID(mTemplateBean.getSignList().get(0)));
+                    signSP2.setSelection(getRoleID(mTemplateBean.getSignList().get(1)));
+                    signSP3.setSelection(getRoleID(mTemplateBean.getSignList().get(2)));
+                    aqlSwitch.setChecked(mTemplateBean.getAqlEnable());
+                    roshSwitch.setChecked(mTemplateBean.getRoshEnable());
+                    mListHeaderAdapter = new ListHeaderAdapter();
+                    if (mTemplateBean.getLogoPic() != null) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
+                        logoImageButton.setImageBitmap(bitmap);
                     }
-                }, "", "0").show();
+                    listHeaderRV.setAdapter(mListHeaderAdapter);
+                    mListHeaderAdapter.notifyDataSetChanged();
+                } else if (viewType == 1) {
+                    views[1] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_second, parent, false);
+                    maximumSwitch = views[1].findViewById(R.id.maximum_switch);
+                    minimumSwitch = views[1].findViewById(R.id.minimum_switch);
+                    averageSwitch = views[1].findViewById(R.id.average_switch);
+                    rangeSwitch = views[1].findViewById(R.id.range_switch);
+                    judgeSwitch = views[1].findViewById(R.id.judge_switch);
+                    addAQLBtn = views[1].findViewById(R.id.add_aql);
+                    addAQLBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
+                                @Override
+                                public void doString(String str, String type) {
+                                    ArrayList<String> _list = new ArrayList<>(mTemplateBean.getAQLList());
+                                    _list.add(str);
+                                    ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getAQLTypeList());
+                                    _typeList.add(type);
+                                    mTemplateBean.setAQLList(_list);
+                                    mTemplateBean.setAQLTypeList(_typeList);
+                                    mAQLHeaderAdapter.notifyDataSetChanged();
+                                }
+                            }, "", "0").show();
+                        }
+                    });
+                    addRoSHBtn = views[1].findViewById(R.id.add_rosh);
+                    addRoSHBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
+                                @Override
+                                public void doString(String str, String type) {
+                                    ArrayList<String> _list = new ArrayList<>(mTemplateBean.getRoHSList());
+                                    _list.add(str);
+                                    ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getRoHSTypeList());
+                                    _typeList.add(type);
+                                    mTemplateBean.setRoHSList(_list);
+                                    mTemplateBean.setRoHSTypeList(_typeList);
+                                    mListHeaderAdapter.notifyDataSetChanged();
+                                }
+                            }, "", "0").show();
+                        }
+                    });
+                    AQLRV = views[1].findViewById(R.id.aql_rv);
+                    AQLRV.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
+                    RoSHRV = views[1].findViewById(R.id.rosh_rv);
+                    RoSHRV.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
+
+                    maximumSwitch.setChecked(mTemplateBean.getMaximumEnable());
+                    minimumSwitch.setChecked(mTemplateBean.getMinimumEnable());
+                    averageSwitch.setChecked(mTemplateBean.getAverageEnable());
+                    rangeSwitch.setChecked(mTemplateBean.getRangeEnable());
+                    judgeSwitch.setChecked(mTemplateBean.getJudgeEnable());
+                    mAQLHeaderAdapter = new AQLHeaderAdapter();
+                    mRoHSHeaderAdapter = new RoHSHeaderAdapter();
+                    AQLRV.setAdapter(mAQLHeaderAdapter);
+                    RoSHRV.setAdapter(mRoHSHeaderAdapter);
+                    mAQLHeaderAdapter.notifyDataSetChanged();
+                    mRoHSHeaderAdapter.notifyDataSetChanged();
+                }
+                return new ViewHolder(TemplateActivity.this, views[viewType]);
             }
-        });
-        listHeaderRV = views[0].findViewById(R.id.title_p_rv);
-        listHeaderRV.setLayoutManager(new LinearLayoutManager(this));
-        views[1] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_second, null);
-        maximumSwitch = views[1].findViewById(R.id.maximum_switch);
-        minimumSwitch = views[1].findViewById(R.id.minimum_switch);
-        averageSwitch = views[1].findViewById(R.id.average_switch);
-        rangeSwitch = views[1].findViewById(R.id.range_switch);
-        judgeSwitch = views[1].findViewById(R.id.judge_switch);
-        addAQLBtn = views[1].findViewById(R.id.add_aql);
-        addAQLBtn.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View view) {
-                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
-                    @Override
-                    public void doString(String str, String type) {
-                        ArrayList<String> _list = new ArrayList<>(mTemplateBean.getAQLList());
-                        _list.add(str);
-                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getAQLTypeList());
-                        _typeList.add(type);
-                        mTemplateBean.setAQLList(_list);
-                        mTemplateBean.setAQLTypeList(_typeList);
-                        mAQLHeaderAdapter.notifyDataSetChanged();
-                    }
-                }, "", "0").show();
+            public int getRealItemCount() {
+                return views.length;
             }
-        });
-        addRoSHBtn = views[1].findViewById(R.id.add_rosh);
-        addRoSHBtn.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View view) {
-                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
-                    @Override
-                    public void doString(String str, String type) {
-                        ArrayList<String> _list = new ArrayList<>(mTemplateBean.getRoHSList());
-                        _list.add(str);
-                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getRoHSTypeList());
-                        _typeList.add(type);
-                        mTemplateBean.setRoHSList(_list);
-                        mTemplateBean.setRoHSTypeList(_typeList);
-                        mListHeaderAdapter.notifyDataSetChanged();
-                    }
-                }, "", "0").show();
+            public void onBindRealViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
             }
         });
-        AQLRV = views[1].findViewById(R.id.aql_rv);
-        AQLRV.setLayoutManager(new LinearLayoutManager(this));
-        RoSHRV = views[1].findViewById(R.id.rosh_rv);
-        RoSHRV.setLayoutManager(new LinearLayoutManager(this));
-
-        maximumSwitch.setChecked(mTemplateBean.getMaximumEnable());
-        minimumSwitch.setChecked(mTemplateBean.getMinimumEnable());
-        averageSwitch.setChecked(mTemplateBean.getAverageEnable());
-        rangeSwitch.setChecked(mTemplateBean.getRangeEnable());
-        judgeSwitch.setChecked(mTemplateBean.getJudgeEnable());
-        aqlSwitch.setChecked(mTemplateBean.getAqlEnable());
-        roshSwitch.setChecked(mTemplateBean.getRoshEnable());
-
-        leftHeaderEdt.setText(mTemplateBean.getHeaderLeft());
-        midHeaderEdt.setText(mTemplateBean.getHeaderMid());
-        rightHeaderEdt.setText(mTemplateBean.getHeaderRight());
-        leftFooterEdt.setText(mTemplateBean.getFooterLeft());
-        rightFooterEdt.setText(mTemplateBean.getFooterRight());
-        midFooterEdt.setText(mTemplateBean.getFooterMid());
-        titleEdt.setText(mTemplateBean.getTitle());
-
-        signSP1.setSelection(getRoleID(mTemplateBean.getSignList().get(0)));
-        signSP2.setSelection(getRoleID(mTemplateBean.getSignList().get(1)));
-        signSP3.setSelection(getRoleID(mTemplateBean.getSignList().get(2)));
-
-        mListHeaderAdapter = new ListHeaderAdapter();
-        mAQLHeaderAdapter = new AQLHeaderAdapter();
-        mRoHSHeaderAdapter = new RoHSHeaderAdapter();
+        DotsIndicator indicator = new DotsIndicator(TemplateActivity.this);
+        indicator.setUnSelectedColor(Color.BLACK);
+        indicator.setSelectedColor(R.color.colorPrimary);
+        vp2.setIndicator(indicator);
+        /*
         vp2.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -275,17 +319,12 @@ public class TemplateActivity extends BaseOActivity {
                 return views[position];
             }
         });
+    ``  */
 
-        if (mTemplateBean.getLogoPic() != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
-            logoImageButton.setImageBitmap(bitmap);
-        }
-        listHeaderRV.setAdapter(mListHeaderAdapter);
-        AQLRV.setAdapter(mAQLHeaderAdapter);
-        RoSHRV.setAdapter(mRoHSHeaderAdapter);
-        mListHeaderAdapter.notifyDataSetChanged();
-        mAQLHeaderAdapter.notifyDataSetChanged();
-        mRoHSHeaderAdapter.notifyDataSetChanged();
+        /*
+
+
+         */
     }
 
     @OnClick(R.id.btn_save)
