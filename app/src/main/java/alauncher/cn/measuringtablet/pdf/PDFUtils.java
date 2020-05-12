@@ -192,6 +192,7 @@ public class PDFUtils {
         ArrayList<String> _results = new ArrayList<>();
         double sum = 0;
         for (int i = 0; i < pTemplateResultBean.getValueIndexs().size(); i++) {
+            sum = 0;
             if (i >= pResultBean3s.get(0).getMValues().size()) {
 
             } else {
