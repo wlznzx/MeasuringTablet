@@ -1228,7 +1228,6 @@ public class Input2Activity extends BaseOActivity {
         }
 
         for (int i = 0; i < mParameterBean2s.size(); i++) {
-
             sum = 0;
             for (int j = 0; j < dataNumber; j++) {
                 try {
