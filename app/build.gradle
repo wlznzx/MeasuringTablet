@@ -72,7 +72,7 @@ android {
 }
 
 greendao {
-    schemaVersion 36 //数据库版本号
+    schemaVersion 37 //数据库版本号
     daoPackage 'alauncher.cn.measuringtablet.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
@@ -128,6 +128,7 @@ dependencies {
 
     implementation 'com.github.731942771:NumberPickerDialog:1.0'
     implementation 'com.github.wangpeiyuan:CycleViewPager2:v1.0.7'
+    implementation 'com.github.LidongWen:DataBaseUpdate:1.0.2'
 }
 
 android.applicationVariants.all {

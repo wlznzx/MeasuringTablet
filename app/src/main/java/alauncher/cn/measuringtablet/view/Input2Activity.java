@@ -1468,9 +1468,8 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setTimeStamp(System.currentTimeMillis());
                     mResultBean3s.add(_bean);
                     App.getDaoSession().getResultBean3Dao().insert(_bean);
-                    android.util.Log.d("wlDebug", _bean.toString());
+                    // android.util.Log.d("wlDebug", _bean.toString());
                 }
-
                 for (ResultBean3 _b3 : mResultBean3s) {
                     try {
                         // 添加result模板到数据库;
@@ -1482,9 +1481,15 @@ public class Input2Activity extends BaseOActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DialogUtils.showDialog(Input2Activity.this, "上传失败", "上传服务器失败，请检查网络.");
+                            }
+                        });
+                        break;
                     }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }

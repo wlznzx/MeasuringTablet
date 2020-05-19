@@ -28,6 +28,7 @@ import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.utils.Arith;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.widget.ParameterEditDialog;
@@ -267,6 +268,12 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
                     android.util.Log.d("wlDebug", "add ret = " + ret);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            DialogUtils.showDialog(ParameterManagement2Activity.this, "上传失败", "上传服务器失败，请检查网络.");
+                        }
+                    });
                 }
             }
         }).start();

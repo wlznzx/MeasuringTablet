@@ -34,6 +34,7 @@ public class ResultBean3 {
 
     public String result;
 
+    public boolean isUploaded;
 
     @Transient
     public boolean isSelect;
@@ -50,10 +51,10 @@ public class ResultBean3 {
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> isBoolList;
 
-    @Generated(hash = 1911000603)
-    public ResultBean3(Long id, long codeID, long templateID, String handlerAccout,
-            long timeStamp, String workid, String workid_extra, String eventid, String event,
-            String result, List<String> mValues, List<String> mPicPaths, List<String> mItems,
+    @Generated(hash = 1397366814)
+    public ResultBean3(Long id, long codeID, long templateID, String handlerAccout, long timeStamp,
+            String workid, String workid_extra, String eventid, String event, String result,
+            boolean isUploaded, List<String> mValues, List<String> mPicPaths, List<String> mItems,
             List<String> isBoolList) {
         this.id = id;
         this.codeID = codeID;
@@ -65,6 +66,7 @@ public class ResultBean3 {
         this.eventid = eventid;
         this.event = event;
         this.result = result;
+        this.isUploaded = isUploaded;
         this.mValues = mValues;
         this.mPicPaths = mPicPaths;
         this.mItems = mItems;
@@ -213,5 +215,13 @@ public class ResultBean3 {
 
     public void setIsBoolList(List<String> isBoolList) {
         this.isBoolList = isBoolList;
+    }
+
+    public boolean getIsUploaded() {
+        return this.isUploaded;
+    }
+
+    public void setIsUploaded(boolean isUploaded) {
+        this.isUploaded = isUploaded;
     }
 }

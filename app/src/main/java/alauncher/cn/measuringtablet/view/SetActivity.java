@@ -70,7 +70,6 @@ public class SetActivity extends BaseActivity {
         String[] mTitles = new String[]{getString(R.string.device_info)};
         mTitleList = Arrays.asList(mTitles);
 
-
         // mFragmentList = Arrays.asList(codeBaseInfoFragment, helpFragment);
         mFragmentList = Arrays.asList(codeBaseInfoFragment);
 

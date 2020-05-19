@@ -33,24 +33,14 @@ public class JdbcUtil {
     /**
      * 获取连接方法
      */
-    public static Connection getConnection() throws NoClassDefFoundError {
-        try {
-            // Connection conn = DriverManager.getConnection(url, user, password);
-            Class.forName("org.postgresql.Driver");
-            Connection c = DriverManager
-                    .getConnection("jdbc:postgresql://" + getIP() + ":5432/NT_CLOUD",
-                            "dfqtech", "dfqtech2016");
-            return c;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } catch (NoClassDefFoundError e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static Connection getConnection() throws NoClassDefFoundError, SQLException, Exception, ClassNotFoundException {
+        // Connection conn = DriverManager.getConnection(url, user, password);
+        Class.forName("org.postgresql.Driver");
+        Connection c = DriverManager
+                .getConnection("jdbc:postgresql://" + getIP() + ":5432/NT_CLOUD",
+                        "dfqtech", "dfqtech2016");
+        return c;
+        // return null;
     }
 
     public static String getIP() {
@@ -95,7 +85,7 @@ public class JdbcUtil {
         return re;
     }
 
-    public static int selectDevice(String machine_code) {
+    public static int selectDevice(String machine_code) throws Exception {
         int count = 0;
         Connection con = getConnection();
         if (con == null) return -1;
@@ -113,7 +103,7 @@ public class JdbcUtil {
         return count;
     }
 
-    public static int addDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
+    public static int addDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) throws Exception {
         Connection con = getConnection();
         if (con == null) return -1;
         String sql = "insert into ntqc_equipment (factory_code,factory_name,machine_code,machine_name,manufacturer,manufacture_date,rmk,operator,operate_time) values (?,?,?,?,?,?,?,?,?)";
@@ -135,7 +125,7 @@ public class JdbcUtil {
         return 0;
     }
 
-    public static int updateDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
+    public static int updateDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
         String sql = "update ntqc_equipment set factory_code=?,factory_name=?,machine_name=?,manufacturer=?,rmk=?,operator=?,operate_time=? where machine_code=?";
@@ -157,7 +147,7 @@ public class JdbcUtil {
     }
 
 
-    public static int insertOrReplace(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
+    public static int insertOrReplace(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) throws Exception {
         if (selectDevice(machine_code) > 0) {
             updateDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
         } else {
@@ -578,7 +568,7 @@ public class JdbcUtil {
         return 1;
     }
 
-    public static int selectParamConfig(String machine_code, int prog_id, String param_key) {
+    public static int selectParamConfig(String machine_code, int prog_id, String param_key) throws Exception {
         int count = 0;
         Connection con = getConnection();
         if (con == null) return -1;
@@ -596,7 +586,7 @@ public class JdbcUtil {
         return count;
     }
 
-    public static int deleteParam2s(String factory_code, String machine_code) throws SQLException {
+    public static int deleteParam2s(String factory_code, String machine_code) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
         String sql = "delete from ntqc_param_config where machine_code=? and factory_code=?";
@@ -609,7 +599,7 @@ public class JdbcUtil {
         return ret;
     }
 
-    public static int addParam2Config(String factory_code, String machine_code, List<ParameterBean2> list) throws SQLException {
+    public static int addParam2Config(String factory_code, String machine_code, List<ParameterBean2> list) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
         String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +

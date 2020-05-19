@@ -119,8 +119,19 @@ public class InfoFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                JdbcUtil.insertOrReplace(_bean.getFactoryCode(), _bean.getFactoryName(), _bean.getDeviceCode(), _bean.getDeviceName(), _bean.getManufacturer(),
-                        "rmk3", App.handlerAccout);
+                try {
+                    JdbcUtil.insertOrReplace(_bean.getFactoryCode(), _bean.getFactoryName(), _bean.getDeviceCode(), _bean.getDeviceName(), _bean.getManufacturer(),
+                            "rmk3", App.handlerAccout);
+                } catch (Exception e) {
+                    android.util.Log.d("wlDebug", "catch by this ? ");
+                    e.printStackTrace();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            DialogUtils.showDialog(getActivity(), "上传失败", "上传服务器失败，请检查网络.");
+                        }
+                    });
+                }
             }
         }).start();
     }

@@ -33,6 +33,7 @@ import alauncher.cn.measuringtablet.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringtablet.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringtablet.database.greenDao.db.Parameter2BeanDao;
 import alauncher.cn.measuringtablet.utils.Constants;
+import alauncher.cn.measuringtablet.utils.DBOpenHelper;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.SPUtils;
 import alauncher.cn.measuringtablet.utils.SystemPropertiesProxy;
@@ -65,7 +66,8 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "mi.db", null);
+        // DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "mi.db", null);
+        DaoMaster.DevOpenHelper openHelper = new DBOpenHelper(this, "mi.db");
         // DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "/storage/emulated/0/NTBackup/mi2020-05-09_15-59-53_R4CBB20226100635.db", null);
         openHelper.setWriteAheadLoggingEnabled(false);
         Database db = openHelper.getWritableDb();
