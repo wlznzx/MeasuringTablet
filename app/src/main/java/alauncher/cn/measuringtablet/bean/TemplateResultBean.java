@@ -4,7 +4,9 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+
 import java.util.List;
+
 import alauncher.cn.measuringtablet.utils.StringConverter;
 
 @Entity
@@ -69,6 +71,8 @@ public class TemplateResultBean {
 
     public String user;
 
+    public boolean isUpload;
+
     // 标题;
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> titleResultList;
@@ -94,15 +98,19 @@ public class TemplateResultBean {
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> nominalValues;
 
-
-    @Generated(hash = 602178000)
-    public TemplateResultBean(Long id, String factoryCode, String deviceCode, int codeID, byte[] logoPic, List<String> titleList,
-            List<String> signList, List<String> AQLList, List<String> RoHSList, List<String> markList, String headerLeft,
-            String headerMid, String headerRight, String footerLeft, String footerMid, String footerRight, String title, int dataNum,
-            boolean maximumEnable, boolean minimumEnable, boolean averageEnable, boolean rangeEnable, boolean judgeEnable,
-            String allJudge, long timeStamp, byte[] img, String remarks, String user, List<String> titleResultList,
-            List<String> AQLResultList, List<String> RoHSResultList, List<String> valueIndexs, List<String> upperToleranceValues,
-            List<String> lowerToleranceValues, List<String> nominalValues) {
+    @Generated(hash = 1378650688)
+    public TemplateResultBean(Long id, String factoryCode, String deviceCode, int codeID,
+            byte[] logoPic, List<String> titleList, List<String> signList,
+            List<String> AQLList, List<String> RoHSList, List<String> markList,
+            String headerLeft, String headerMid, String headerRight, String footerLeft,
+            String footerMid, String footerRight, String title, int dataNum,
+            boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
+            boolean rangeEnable, boolean judgeEnable, String allJudge, long timeStamp,
+            byte[] img, String remarks, String user, boolean isUpload,
+            List<String> titleResultList, List<String> AQLResultList,
+            List<String> RoHSResultList, List<String> valueIndexs,
+            List<String> upperToleranceValues, List<String> lowerToleranceValues,
+            List<String> nominalValues) {
         this.id = id;
         this.factoryCode = factoryCode;
         this.deviceCode = deviceCode;
@@ -131,6 +139,7 @@ public class TemplateResultBean {
         this.img = img;
         this.remarks = remarks;
         this.user = user;
+        this.isUpload = isUpload;
         this.titleResultList = titleResultList;
         this.AQLResultList = AQLResultList;
         this.RoHSResultList = RoHSResultList;
@@ -176,6 +185,14 @@ public class TemplateResultBean {
         this.codeID = codeID;
     }
 
+    public byte[] getLogoPic() {
+        return this.logoPic;
+    }
+
+    public void setLogoPic(byte[] logoPic) {
+        this.logoPic = logoPic;
+    }
+
     public List<String> getTitleList() {
         return this.titleList;
     }
@@ -206,6 +223,14 @@ public class TemplateResultBean {
 
     public void setRoHSList(List<String> RoHSList) {
         this.RoHSList = RoHSList;
+    }
+
+    public List<String> getMarkList() {
+        return this.markList;
+    }
+
+    public void setMarkList(List<String> markList) {
+        this.markList = markList;
     }
 
     public String getHeaderLeft() {
@@ -344,6 +369,22 @@ public class TemplateResultBean {
         this.remarks = remarks;
     }
 
+    public String getUser() {
+        return this.user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public boolean getIsUpload() {
+        return this.isUpload;
+    }
+
+    public void setIsUpload(boolean isUpload) {
+        this.isUpload = isUpload;
+    }
+
     public List<String> getTitleResultList() {
         return this.titleResultList;
     }
@@ -398,30 +439,6 @@ public class TemplateResultBean {
 
     public void setNominalValues(List<String> nominalValues) {
         this.nominalValues = nominalValues;
-    }
-
-    public String getUser() {
-        return this.user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public byte[] getLogoPic() {
-        return this.logoPic;
-    }
-
-    public void setLogoPic(byte[] logoPic) {
-        this.logoPic = logoPic;
-    }
-
-    public List<String> getMarkList() {
-        return this.markList;
-    }
-
-    public void setMarkList(List<String> markList) {
-        this.markList = markList;
     }
 
 

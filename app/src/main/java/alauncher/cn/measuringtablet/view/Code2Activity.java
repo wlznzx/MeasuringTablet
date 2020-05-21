@@ -14,6 +14,7 @@ import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.User;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.view.adapter.CodeListAdapter;
 import alauncher.cn.measuringtablet.widget.CodeEditDialog;
@@ -83,8 +84,9 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
                 } else {
                     actionTips.setText(_name + " 程序" + App.getSetupBean().getCodeID());
                 }
-                InputActivity.datas.clear();
-                InputActivity.updates.clear();
+                // InputActivity.datas.clear();
+                // InputActivity.updates.clear();
+                DialogUtils.showDialog(this, "设为当前", "设置成功.");
                 break;
             case R.id.add_code_btn:
                 CodeEditDialog codeEditDialog = new CodeEditDialog(Code2Activity.this, null);

@@ -684,7 +684,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         String queryString = "";
         if (bean.getStartTime() == 0 && bean.getEndTime() == 0) {
-            queryString = "SELECT * FROM " + ResultBean3Dao.TABLENAME + " where 1==1 ";
+            queryString = "SELECT * FROM " + ResultBean3Dao.TABLENAME + " where 1==1";
         } else {
             queryString = "SELECT * FROM " + ResultBean3Dao.TABLENAME + " where " + ResultBean3Dao.Properties.TimeStamp.columnName + " between " + bean.getStartTime() + " and " + bean.getEndTime();
         }
@@ -717,6 +717,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             strParamLt.add(bean.getResult());
         }
 
+        // queryString += queryString + " ORDER BY _id DESC";
+
         Object[] objs = strParamLt.toArray();
         String[] strs = new String[objs.length];
 
@@ -725,6 +727,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         }
 
 //        Cursor cursor = mResultBean3Dao.getDatabase().rawQuery("SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '工'", null);
+        queryString = queryString + " ORDER BY _id desc";
+        android.util.Log.d("wlDebug", "queryString = " + queryString);
         Cursor cursor = App.getDaoSession().getResultBean3Dao().getDatabase().rawQuery(queryString, strs);
 
 
@@ -735,6 +739,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         int Result = cursor.getColumnIndex(ResultBean3Dao.Properties.Result.columnName);
         int MValues = cursor.getColumnIndex(ResultBean3Dao.Properties.MValues.columnName);
         int MPicPaths = cursor.getColumnIndex(ResultBean3Dao.Properties.MPicPaths.columnName);
+        int templateID = cursor.getColumnIndex(ResultBean3Dao.Properties.TemplateID.columnName);
 
         List<ResultBean3> _datas = new ArrayList<>();
 
@@ -747,9 +752,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             rBean.setResult(cursor.getString(Result));
             rBean.setMValues(convertToEntityProperty(cursor.getString(MValues)));
             rBean.setMPicPaths(convertToEntityProperty(cursor.getString(MPicPaths)));
-
+            rBean.setTemplateID(cursor.getInt(templateID));
             Date date = new Date(rBean.getTimeStamp());
-
             if (bean.getClassType() == 0) {
                 _datas.add(rBean);
             } else if (bean.getClassType() == 1) {

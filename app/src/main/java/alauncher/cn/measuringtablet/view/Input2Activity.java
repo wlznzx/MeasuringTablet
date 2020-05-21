@@ -17,7 +17,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Browser;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 
 import android.util.Log;
@@ -51,6 +53,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -80,6 +83,7 @@ import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.NumberUtils;
 import alauncher.cn.measuringtablet.widget.BorderEditView;
 import alauncher.cn.measuringtablet.widget.BorderImageView;
+import alauncher.cn.measuringtablet.widget.BorderSpinner;
 import alauncher.cn.measuringtablet.widget.BorderTextView;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -485,6 +489,8 @@ public class Input2Activity extends BaseOActivity {
                 if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV3);
                 mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
+
+
         }
 
         int bottomRow = Math.max(Math.max(mTemplateBean.getAQLList().size(), mTemplateBean.getRoHSList().size()), 5);
@@ -891,8 +897,35 @@ public class Input2Activity extends BaseOActivity {
             DigitsKeyListener numericOnlyListener = new DigitsKeyListener(false, true);
             et.setKeyListener(numericOnlyListener);
             et.setText("");
+            et.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable edt) {
+                    android.util.Log.d("wlDebug", "afterTextChanged");
+                    String temp = edt.toString();
+                    int posDot = temp.indexOf(".");
+                    if (temp.startsWith("00")) {
+                        edt.delete(0, 1);
+                        return;
+                    }
+                    if (posDot < 0) {
+                        return;
+                    }
+                    if (temp.length() - posDot - 1 > 8) {
+                        edt.delete(posDot + 9, posDot + 10);
+                    }
+                }
+            });
         } else {
-            // et.setText("测试");
             et.setHint(R.string.hint);
         }
         return et;
@@ -908,7 +941,7 @@ public class Input2Activity extends BaseOActivity {
     }
 
     public Spinner getInputSpinner() {
-        Spinner sp = new Spinner(this);
+        Spinner sp = new BorderSpinner(this);
         sp.setPadding(2, 2, 2, 2);
         sp.setGravity(Gravity.CENTER);
         ArrayAdapter array_adapter = new ArrayAdapter(this, R.layout.spinner_item, getResources().getStringArray(R.array.input_result));
@@ -919,7 +952,7 @@ public class Input2Activity extends BaseOActivity {
     }
 
     public Spinner getInputSpinner2() {
-        Spinner sp = new Spinner(this);
+        Spinner sp = new BorderSpinner(this);
         sp.setGravity(Gravity.CENTER);
         ArrayAdapter array_adapter = new ArrayAdapter(this, R.layout.spinner_item, getResources().getStringArray(R.array.quantity_items));
         array_adapter
@@ -1178,6 +1211,7 @@ public class Input2Activity extends BaseOActivity {
             mins.set(i, Double.valueOf(1000000));
             judges.set(i, "OK");
         }
+        android.util.Log.d("wlDebug", "judges.size = " + judges.size());
         for (int i = 0; i < dataNumber; i++) {
             dataJudges.set(i, "OK");
         }
@@ -1234,7 +1268,7 @@ public class Input2Activity extends BaseOActivity {
                     View _view = results.get(j).get(i);
                     if (_view instanceof Spinner) {
                         if (((Spinner) _view).getSelectedItemPosition() == 1) {
-                            judges.set(j, "NG");
+                            judges.set(i, "NG");
                             allJudge = "NG";
                         }
                         continue;
@@ -1311,6 +1345,11 @@ public class Input2Activity extends BaseOActivity {
             avgs.set(i, BigDecimal.valueOf(sum / dataNumber).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
             ranges.set(i, BigDecimal.valueOf(maxs.get(i) - mins.get(i)).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
         }
+
+        for (int i = 0; i < judges.size(); i++) {
+            android.util.Log.d("wlDebug", "string" + i + " = " + judges.get(i));
+        }
+
     }
 
     public class ExportedTask extends AsyncTask<String, Integer, String> {
