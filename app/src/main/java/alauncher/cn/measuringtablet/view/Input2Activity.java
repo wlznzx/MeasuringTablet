@@ -255,7 +255,7 @@ public class Input2Activity extends BaseOActivity {
                 __layout.addView(getInfoTV((i * 4 + j) < mTemplateBean.getTitleList().size() ?
                         mTemplateBean.getTitleList().get(i * 4 + j) : "", ColorConstants.titleColor), getItemLayoutParams(1, 1));
                 if ((i * 4 + j) < mTemplateBean.getTitleList().size()) {
-                    View view = (View) getInputViewByType(mTemplateBean.getTitleTypeList().get(i * 4 + j));
+                    View view = (View) getInputViewByType(mTemplateBean.getTitleTypeList().get(i * 4 + j), false);
                     __layout.addView(view, getItemLayoutParams(1, 1));
                     if (mCodeBean.getDefaultTitles().size() > (i * 4 + j) && view instanceof EditText) {
                         ((EditText) view).setText(mCodeBean.getDefaultTitles().get(i * 4 + j));
@@ -341,7 +341,7 @@ public class Input2Activity extends BaseOActivity {
                 dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
-                    View view = (View) getInputViewByType(rol1Bean.getType() == 3 ? "1" : "0");
+                    View view = (View) getInputViewByType(rol1Bean.getType() == 3 ? "1" : "0", true);
                     dataLayout.addView(view, getItemLayoutParams(2, 1));
                     results.get(j).add(view);
                     // 图片;
@@ -355,7 +355,7 @@ public class Input2Activity extends BaseOActivity {
 
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
-                    View view = (View) getInputViewByType(rol2Bean.getType() == 3 ? "1" : "0");
+                    View view = (View) getInputViewByType(rol2Bean.getType() == 3 ? "1" : "0", true);
                     dataLayout.addView(view, getItemLayoutParams(2, 1));
                     results.get(j).add(view);
                     ImageView img = getImageView();
@@ -368,7 +368,7 @@ public class Input2Activity extends BaseOActivity {
 
 
                 if (results.get(j).size() < mParameterBean2s.size()) {
-                    View view = (View) getInputViewByType(rol3Bean.getType() == 3 ? "1" : "0");
+                    View view = (View) getInputViewByType(rol3Bean.getType() == 3 ? "1" : "0", true);
                     dataLayout.addView(view, getItemLayoutParams(2, 1));
                     results.get(j).add(view);
                     ImageView img = getImageView();
@@ -520,7 +520,7 @@ public class Input2Activity extends BaseOActivity {
         aqlResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (aqlObjects.size() < mTemplateBean.getAQLList().size()) {
-                View view = (View) getInputViewByType(mTemplateBean.getAqlEnable() ? mTemplateBean.getAQLTypeList().get(j) : "4");
+                View view = (View) getInputViewByType(mTemplateBean.getAqlEnable() ? mTemplateBean.getAQLTypeList().get(j) : "4", false);
                 aqlResultLayout.addView(view, getItemVLayoutParams(1, 1));
                 aqlObjects.add(view);
             } else {
@@ -552,7 +552,7 @@ public class Input2Activity extends BaseOActivity {
         roshResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (roshEdts.size() < mTemplateBean.getRoHSList().size()) {
-                View view = (View) getInputViewByType(mTemplateBean.getRoshEnable() ? mTemplateBean.getRoHSTypeList().get(j) : "4");
+                View view = (View) getInputViewByType(mTemplateBean.getRoshEnable() ? mTemplateBean.getRoHSTypeList().get(j) : "4", false);
                 roshResultLayout.addView(view, getItemVLayoutParams(1, 1));
                 roshEdts.add(view);
                 if (mTemplateBean.getRoshEnable()) {
@@ -715,11 +715,11 @@ public class Input2Activity extends BaseOActivity {
         return params;
     }
 
-    public Object getInputViewByType(String type) {
+    public Object getInputViewByType(String type, boolean numOnly) {
         Object view = null;
         switch (type) {
             case "0":
-                view = getInputEditView(false);
+                view = getInputEditView(numOnly);
                 break;
             case "1":
                 view = getInputSpinner();
@@ -925,6 +925,7 @@ public class Input2Activity extends BaseOActivity {
                     }
                 }
             });
+            et.setHint(R.string.hint);
         } else {
             et.setHint(R.string.hint);
         }
@@ -953,6 +954,7 @@ public class Input2Activity extends BaseOActivity {
 
     public Spinner getInputSpinner2() {
         Spinner sp = new BorderSpinner(this);
+        sp.setPadding(2, 2, 2, 2);
         sp.setGravity(Gravity.CENTER);
         ArrayAdapter array_adapter = new ArrayAdapter(this, R.layout.spinner_item, getResources().getStringArray(R.array.quantity_items));
         array_adapter

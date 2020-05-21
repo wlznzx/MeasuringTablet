@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
+import alauncher.cn.measuringtablet.utils.NlpRegexTool;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,6 +86,20 @@ public class CodeEditDialog extends Dialog {
             TemplateBean mTemplateBean = App.getDefaultTemplateBean();
             // mTemplateBean.setCodeID(codeID);
             App.getDaoSession().getTemplateBeanDao().insert(mTemplateBean);
+        }
+    }
+
+    public void testJipiao() {
+        String content = "我要买北京到上海的机票";
+        String regxStr = "我要买(.*?)到(.*?)的(.*?)";
+        List<String> codes = new ArrayList<String>();
+        codes.add("fromAddress");
+        codes.add("toAddress");
+        codes.add("what");
+        Map<String, String> resultMap = NlpRegexTool.matchMultiGroup(content,
+                regxStr, codes, 3);
+        for (String key : resultMap.keySet()) {
+            System.out.println(key + ":" + resultMap.get(key));
         }
     }
 
