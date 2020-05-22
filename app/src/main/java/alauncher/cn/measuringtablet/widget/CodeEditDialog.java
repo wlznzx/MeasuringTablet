@@ -7,17 +7,15 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
-import alauncher.cn.measuringtablet.utils.NlpRegexTool;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
-import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 
@@ -25,7 +23,7 @@ public class CodeEditDialog extends Dialog {
 
     private Context mContext;
 
-    DataUpdateInterface dataUpdateInterface;
+    private DataUpdateInterface dataUpdateInterface;
 
     private CodeBean mCodeBean;
 
@@ -67,11 +65,20 @@ public class CodeEditDialog extends Dialog {
     }
 
     public boolean doCodeAdd() {
+
         if (mCodeBean == null) {
+            String _name = codeNameEdt.getText().toString().trim();
+            String[] strArray = _name.split("-");
+            // android.util.Log.d("wlDebug", "strArray.length = " + strArray.length);
+            if (strArray.length != 4) {
+                // 命名不正确.
+                DialogUtils.showDialog(mContext, "无法添加", "命名不正确，请参考\"十工位-Block-TRA-100\"");
+                return false;
+            }
             mCodeBean = new CodeBean();
             mCodeBean.setMachineTool(getContext().getResources().getString(R.string.machine_tool));
             mCodeBean.setParts(getContext().getResources().getString(R.string.spare_parts));
-            mCodeBean.setName(codeNameEdt.getText().toString().trim());
+            mCodeBean.setName(_name);
             mCodeBean.setDefaultTitles(new ArrayList<>());
             mCodeBean.setUseTemplateID(1L);
         }
@@ -84,22 +91,7 @@ public class CodeEditDialog extends Dialog {
         // 默认模板;
         if (App.getDaoSession().getTemplateBeanDao().load((long) codeID) == null) {
             TemplateBean mTemplateBean = App.getDefaultTemplateBean();
-            // mTemplateBean.setCodeID(codeID);
             App.getDaoSession().getTemplateBeanDao().insert(mTemplateBean);
-        }
-    }
-
-    public void testJipiao() {
-        String content = "我要买北京到上海的机票";
-        String regxStr = "我要买(.*?)到(.*?)的(.*?)";
-        List<String> codes = new ArrayList<String>();
-        codes.add("fromAddress");
-        codes.add("toAddress");
-        codes.add("what");
-        Map<String, String> resultMap = NlpRegexTool.matchMultiGroup(content,
-                regxStr, codes, 3);
-        for (String key : resultMap.keySet()) {
-            System.out.println(key + ":" + resultMap.get(key));
         }
     }
 

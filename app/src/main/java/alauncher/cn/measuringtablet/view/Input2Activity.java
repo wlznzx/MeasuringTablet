@@ -489,8 +489,6 @@ public class Input2Activity extends BaseOActivity {
                 if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV3);
                 mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
-
-
         }
 
         int bottomRow = Math.max(Math.max(mTemplateBean.getAQLList().size(), mTemplateBean.getRoHSList().size()), 5);
