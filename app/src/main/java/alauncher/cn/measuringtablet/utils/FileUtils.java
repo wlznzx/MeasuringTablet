@@ -35,6 +35,7 @@ public class FileUtils {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = false;
         Bitmap bm = BitmapFactory.decodeFile(path, opts);
+        if (bm == null) return null;
         return getBitmapByte(bm);
     }
 

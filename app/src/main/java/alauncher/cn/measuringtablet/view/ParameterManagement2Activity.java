@@ -88,6 +88,7 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
 
         mAdapter.notifyDataSetChanged();
         // syncToServer();
+        new uploadTask().execute();
     }
 
     class ParameterAdapter extends RecyclerView.Adapter<ViewHolder> {

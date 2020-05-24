@@ -7,8 +7,8 @@ android {
         applicationId "alauncher.cn.measuringtablet"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 30
-        versionName "v3.5.3_Bate"
+        versionCode 31
+        versionName "v3.5.5_Bate"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

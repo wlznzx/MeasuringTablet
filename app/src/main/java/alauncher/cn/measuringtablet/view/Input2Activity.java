@@ -1689,8 +1689,11 @@ public class Input2Activity extends BaseOActivity {
                 List<ResultBean3> bean3s = App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.TemplateID.eq(templateResultBeans.get(i).getId())).list();
                 sum += bean3s.size();
                 // List<TemplatePicBean> picBeans = App.getDaoSession().getTemplatePicBeanDao().queryBuilder().where(TemplatePicBeanDao.Properties.TemplateResultID.eq(templateResultBeans.get(i).getId())).list();
+                // templateResultBeans.get(i).setIsUpload(true);
+                // App.getDaoSession().getTemplateResultBeanDao().insertOrReplace(templateResultBeans.get(i));
             }
             publishProgress(sum, uploadSum);
+            /*            */
             for (TemplateResultBean resultBean : templateResultBeans) {
                 try {
                     // 添加result模板到数据库;
@@ -1698,7 +1701,6 @@ public class Input2Activity extends BaseOActivity {
                     List<ResultBean3> bean3s = App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.TemplateID.eq(resultBean.getId())).list();
                     for (ResultBean3 _b3 : bean3s) {
                         JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3, template_id);
-
                     }
                     List<TemplatePicBean> picBeans = App.getDaoSession().getTemplatePicBeanDao().queryBuilder().where(TemplatePicBeanDao.Properties.TemplateResultID.eq(resultBean.getId())).list();
                     for (TemplatePicBean _bean : picBeans) {
@@ -1710,12 +1712,13 @@ public class Input2Activity extends BaseOActivity {
                     App.getDaoSession().getTemplateResultBeanDao().insertOrReplace(resultBean);
                     publishProgress(sum, uploadSum);
                 } catch (Exception e) {
+                    android.util.Log.d("wlDebug", "Exception", e);
                     break;
                 } catch (Throwable e) {
+                    android.util.Log.d("wlDebug", "Throwable", e);
                     break;
                 }
             }
-
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

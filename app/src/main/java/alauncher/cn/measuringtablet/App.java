@@ -99,7 +99,7 @@ public class App extends MultiDexApplication {
         };
         Bugly.init(getApplicationContext(), "be2b337540", true);
 
-        android.util.Log.d("wlDebug", getDatabasePath("..").getAbsolutePath());
+        // android.util.Log.d("wlDebug", getDatabasePath("..").getAbsolutePath());
     }
 
     public static DaoSession getDaoSession() {
