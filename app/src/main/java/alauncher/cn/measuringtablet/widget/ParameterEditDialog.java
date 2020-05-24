@@ -15,7 +15,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.utils.Arith;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.view.MGroup2Activity;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import butterknife.BindView;
@@ -181,12 +181,18 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
     public boolean doConditionAdd() {
         if (_bean == null) _bean = new ParameterBean2();
         try {
+            double lowerToleranceValue = Double.valueOf(lowerToleranceValueEdt.getText().toString().trim());
+            double upperToleranceValue = Double.valueOf(upperToleranceValueEdt.getText().toString().trim());
+            if (lowerToleranceValue > upperToleranceValue) {
+                DialogUtils.showDialog(getContext(), "参数异常", "下工差值不应超过上工差值，请确认输入.");
+                return false;
+            }
             int sequenceNumber = (int) showItemSP.getSelectedItemId();
             _bean.setResolution((int) resolutionSP.getSelectedItemId());
             _bean.setNominalValue(Double.valueOf(nominalValueEdt.getText().toString().trim()));
             _bean.setDescribe(describeEdt.getText().toString().trim());
-            _bean.setUpperToleranceValue(Double.valueOf(upperToleranceValueEdt.getText().toString().trim()));
-            _bean.setLowerToleranceValue(Double.valueOf(lowerToleranceValueEdt.getText().toString().trim()));
+            _bean.setUpperToleranceValue(upperToleranceValue);
+            _bean.setLowerToleranceValue(lowerToleranceValue);
             _bean.setDeviation(Double.valueOf(deviationEdt.getText().toString().trim()));
             _bean.setEnable(isEnableSwitch.isChecked());
             _bean.setCode(formulaBtn.getText().toString());

@@ -87,7 +87,7 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
         }
 
         mAdapter.notifyDataSetChanged();
-        syncToServer();
+        // syncToServer();
     }
 
     class ParameterAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -184,9 +184,69 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
         _dialog.show();
     }
 
+    @OnClick(R.id.upload_server_btn)
+    public void uploadServerBtn(View v) {
+        /*
+        ParameterEditDialog _dialog = new ParameterEditDialog(this, null);
+        _dialog.setDataUpdateInterface(ParameterManagement2Activity.this);
+        _dialog.show();
+        */
+        new uploadTask().execute();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public class uploadTask extends AsyncTask<String, Integer, Boolean> {
+
+        private ProgressDialog dialog;
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(ParameterManagement2Activity.this);
+            dialog.setTitle("参数同步");
+            dialog.setMessage("参数正在同步服务器，请稍等.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                android.util.Log.d("wlDebug", "mDeviceInfoBean = " + mDeviceInfoBean.toString());
+                int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode());
+                android.util.Log.d("wlDebug", "delete ret = " + ret);
+                ret = JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);
+                android.util.Log.d("wlDebug", "add ret = " + ret);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isSuccess) {
+            dialog.dismiss();
+            if (isSuccess) {
+                DialogUtils.showDialog(ParameterManagement2Activity.this, "上传成功", "上传服务器成功.");
+            } else {
+                DialogUtils.showDialog(ParameterManagement2Activity.this, "上传失败", "上传服务器失败，请配置和网络.");
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
     }
 
     public class DeleteTask extends AsyncTask<String, Integer, String> {

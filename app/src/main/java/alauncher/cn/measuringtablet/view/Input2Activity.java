@@ -257,6 +257,7 @@ public class Input2Activity extends BaseOActivity {
                 if ((i * 4 + j) < mTemplateBean.getTitleList().size()) {
                     View view = (View) getInputViewByType(mTemplateBean.getTitleTypeList().get(i * 4 + j), false);
                     __layout.addView(view, getItemLayoutParams(1, 1));
+
                     if (mCodeBean.getDefaultTitles().size() > (i * 4 + j) && view instanceof EditText) {
                         ((EditText) view).setText(mCodeBean.getDefaultTitles().get(i * 4 + j));
                     }
@@ -887,6 +888,7 @@ public class Input2Activity extends BaseOActivity {
     public EditText getInputEditView(boolean numOnly) {
         EditText et = new BorderEditView(this);
         et.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+        et.setPadding(2, 2, 2, 2);
         et.setGravity(Gravity.CENTER);
         et.setBackground(null);
         et.setMaxLines(1);
@@ -932,6 +934,7 @@ public class Input2Activity extends BaseOActivity {
 
     public EditText getInputEditView() {
         EditText et = new BorderEditView(this);
+
         // et.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
         et.setBackground(null);
         et.setMaxLines(1);
