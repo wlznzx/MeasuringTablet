@@ -45,6 +45,12 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
 
     @Override
     protected void initView() {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
         codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
         for (CodeBean bean : codeBeans) {
@@ -52,8 +58,12 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
         }
         codeID = App.getSetupBean().getCodeID();
         states.put(String.valueOf(codeID - 1), true);
-        adapter = new CodeListAdapter(codeBeans, states, this, this);
-        listView.setAdapter(adapter);
+        if(adapter == null){
+            adapter = new CodeListAdapter(codeBeans, states, this, this);
+            listView.setAdapter(adapter);
+        }
+        adapter.setList(codeBeans);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -95,7 +105,6 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
                 break;
         }
     }
-
 
     @Override
     public void dataUpdate() {

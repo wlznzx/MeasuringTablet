@@ -75,6 +75,9 @@ import alauncher.cn.measuringtablet.bean.TemplatePicBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
+import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
+import alauncher.cn.measuringtablet.database.greenDao.db.TemplatePicBeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.TemplateResultBeanDao;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
@@ -1070,6 +1073,11 @@ public class Input2Activity extends BaseOActivity {
         }
     }
 
+    @OnClick({R.id.sync_btn})
+    public void syncClick(View view) {
+        new SyncTask().execute();
+    }
+
     private List<CodeBean> lists;
 
     private void showChooseDialog(int index) {
@@ -1461,7 +1469,7 @@ public class Input2Activity extends BaseOActivity {
                 }
                 mTemplateResultBean.setRoHSResultList(roshLists);
                 mTemplateResultBean.setAllJudge(allJudge);
-                Long templateID = App.getDaoSession().getTemplateResultBeanDao().insert(mTemplateResultBean);
+                Long templateLocalID = App.getDaoSession().getTemplateResultBeanDao().insert(mTemplateResultBean);
 
                 // 插入图片;
                 List<TemplatePicBean> templatePicBeans = new ArrayList<>();
@@ -1470,7 +1478,7 @@ public class Input2Activity extends BaseOActivity {
                     byte[] fileByte = FileUtils.image2byte(_path);
                     if (fileByte != null) {
                         TemplatePicBean _bean = new TemplatePicBean();
-                        _bean.setTemplateResultID(templateID);
+                        _bean.setTemplateResultID(templateLocalID);
                         byte[] imgByte = new byte[fileByte.length];
                         _bean.setImg(imgByte);
                         System.arraycopy(fileByte, 0, imgByte, 0, fileByte.length);
@@ -1482,7 +1490,7 @@ public class Input2Activity extends BaseOActivity {
                 mResultBean3s.clear();
                 for (int i = 0; i < results.size(); i++) {
                     ResultBean3 _bean = new ResultBean3();
-                    _bean.setTemplateID(templateID);
+                    _bean.setTemplateID(templateLocalID);
                     _bean.setCodeID(App.getSetupBean().getCodeID());
                     ArrayList<String> values = new ArrayList<>();
                     ArrayList<String> picPaths = new ArrayList<>();
@@ -1512,27 +1520,38 @@ public class Input2Activity extends BaseOActivity {
                     App.getDaoSession().getResultBean3Dao().insert(_bean);
                     // android.util.Log.d("wlDebug", _bean.toString());
                 }
-                for (ResultBean3 _b3 : mResultBean3s) {
-                    try {
-                        // 添加result模板到数据库;
-                        int template_id = JdbcUtil.addTemplateResultBean(mTemplateResultBean);
+
+                try {
+                    // 添加result模板到数据库;
+                    int template_id = JdbcUtil.addTemplateResultBean(mTemplateResultBean);
+                    for (ResultBean3 _b3 : mResultBean3s) {
                         JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3, template_id);
-                        for (TemplatePicBean _bean : templatePicBeans) {
-                            _bean.setTemplateResultID(template_id);
-                            JdbcUtil.addTemplatePic(_bean);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                DialogUtils.showDialog(Input2Activity.this, "上传失败", "上传服务器失败，请检查网络.");
-                            }
-                        });
-                        break;
                     }
+                    for (TemplatePicBean _bean : templatePicBeans) {
+                        _bean.setTemplateResultID(template_id);
+                        JdbcUtil.addTemplatePic(_bean);
+                    }
+                    mTemplateResultBean.setIsUpload(true);
+                    App.getDaoSession().getTemplateResultBeanDao().insertOrReplace(mTemplateResultBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            DialogUtils.showDialog(Input2Activity.this, "上传失败", "上传服务器失败，请检查网络.");
+                        }
+                    });
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            DialogUtils.showDialog(Input2Activity.this, "上传失败", "上传服务器失败，请检查网络.");
+                        }
+                    });
                 }
-            } catch (Exception e) {
+            } catch (
+                    Exception e) {
                 e.printStackTrace();
             }
             return "后台任务执行完毕";
@@ -1643,5 +1662,82 @@ public class Input2Activity extends BaseOActivity {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    public class SyncTask extends AsyncTask<String, Integer, String> {
+
+        private ProgressDialog dialog;
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(Input2Activity.this);
+            dialog.setTitle("续传中.");
+            dialog.setMessage("正在刷新数据 , 请稍等.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
+        @Override
+        protected String doInBackground(String... params) {
+            //处理耗时操作
+            int sum = 0, uploadSum = 0;
+            List<TemplateResultBean> templateResultBeans = App.getDaoSession().getTemplateResultBeanDao().queryBuilder().where(TemplateResultBeanDao.Properties.IsUpload.eq(false)).list();
+            for (int i = 0; i < templateResultBeans.size(); i++) {
+                List<ResultBean3> bean3s = App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.TemplateID.eq(templateResultBeans.get(i).getId())).list();
+                sum += bean3s.size();
+                // List<TemplatePicBean> picBeans = App.getDaoSession().getTemplatePicBeanDao().queryBuilder().where(TemplatePicBeanDao.Properties.TemplateResultID.eq(templateResultBeans.get(i).getId())).list();
+            }
+            publishProgress(sum, uploadSum);
+            for (TemplateResultBean resultBean : templateResultBeans) {
+                try {
+                    // 添加result模板到数据库;
+                    int template_id = JdbcUtil.addTemplateResultBean(resultBean);
+                    List<ResultBean3> bean3s = App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.TemplateID.eq(resultBean.getId())).list();
+                    for (ResultBean3 _b3 : bean3s) {
+                        JdbcUtil.addResult3(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _b3, template_id);
+
+                    }
+                    List<TemplatePicBean> picBeans = App.getDaoSession().getTemplatePicBeanDao().queryBuilder().where(TemplatePicBeanDao.Properties.TemplateResultID.eq(resultBean.getId())).list();
+                    for (TemplatePicBean _bean : picBeans) {
+                        _bean.setTemplateResultID(template_id);
+                        JdbcUtil.addTemplatePic(_bean);
+                    }
+                    uploadSum += bean3s.size();
+                    resultBean.setIsUpload(true);
+                    App.getDaoSession().getTemplateResultBeanDao().insertOrReplace(resultBean);
+                    publishProgress(sum, uploadSum);
+                } catch (Exception e) {
+                    break;
+                } catch (Throwable e) {
+                    break;
+                }
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "后台任务执行完毕";
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+            //"loading..." + progresses[0] + "%"
+            dialog.setMessage("共有" + progresses[0] + "条数据待上传，已经上传" + progresses[1] + "条数据.");
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            dialog.dismiss();
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
     }
 }

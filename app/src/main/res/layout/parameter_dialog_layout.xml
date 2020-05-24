@@ -298,6 +298,10 @@
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="50dp"
                     android:layout_marginLeft="30dp"
+                    android:textOff=""
+                    android:textOn=""
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
                     android:checked="true" />
             </LinearLayout>
 

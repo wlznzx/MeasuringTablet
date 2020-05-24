@@ -125,6 +125,7 @@ public class InfoFragment extends Fragment {
                 } catch (Exception e) {
                     android.util.Log.d("wlDebug", "catch by this ? ");
                     e.printStackTrace();
+                } catch (Throwable e) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

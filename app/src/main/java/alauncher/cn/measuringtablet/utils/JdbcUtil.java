@@ -147,7 +147,7 @@ public class JdbcUtil {
     }
 
 
-    public static int insertOrReplace(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) throws Exception {
+    public static int insertOrReplace(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) throws Exception, ClassNotFoundException {
         if (selectDevice(machine_code) > 0) {
             updateDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
         } else {

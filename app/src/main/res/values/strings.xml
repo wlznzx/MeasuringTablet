@@ -353,4 +353,5 @@
     <string name="template_num">模板编号</string>
     <string name="template_title">模板标题</string>
     <string name="upload_server">参数同步后台</string>
+    <string name="sync">续传</string>
 </resources>

@@ -225,8 +225,10 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
-                return false;
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
+            return false;
         }
 
         @Override
