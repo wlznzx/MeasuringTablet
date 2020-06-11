@@ -158,19 +158,22 @@ public class PDFUtils {
         }
 
         // Image cellIMG = Image.getInstance(FOX);
-        Image cellIMG = Image.getInstance(pTemplateResultBean.getImg());
-        PdfPCell cell4 = new PdfPCell(cellIMG, true);
-        cell4.setRowspan(10);
-        cell4.setColspan(16);
-        cell4.setBorderColor(BaseColor.BLACK);
-        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell4.setPaddingLeft(5);
-        cell4.setPaddingRight(5);
-        cell4.setPaddingTop(5);
-        cell4.setPaddingBottom(5);
-        table.addCell(cell4);
-
+        try {
+            Image cellIMG = Image.getInstance(pTemplateResultBean.getImg());
+            PdfPCell cell4 = new PdfPCell(cellIMG, true);
+            cell4.setRowspan(10);
+            cell4.setColspan(16);
+            cell4.setBorderColor(BaseColor.BLACK);
+            cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell4.setPaddingLeft(5);
+            cell4.setPaddingRight(5);
+            cell4.setPaddingTop(5);
+            cell4.setPaddingBottom(5);
+            table.addCell(cell4);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /*
         for (int i = 0; i < titles.size(); i++) {
             table.addCell(getDataCell(titles.get(i), 2, 2));

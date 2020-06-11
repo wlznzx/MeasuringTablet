@@ -360,6 +360,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     public void onItemClickListener(int pos, List<ResultBean3> myLiveList) {
+        if (pos < 0) return;
         if (editorStatus) {
             ResultBean3 _bean = myLiveList.get(pos);
             boolean isSelect = _bean.isSelect();

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--指定这些属性都是谁的的,注意这里添加完属性要在自己定义View类构造方法里应用-->
+    <!--注意:写完这个属性后,布局XML文件要想应用的话,必须要同步Gradle文件-->
+    <declare-styleable name="Indicator">
+        <!--定义控件显示圆的数量  参数format是类型-->
+        <attr name="setNumber" format="integer"></attr>
+        <!--定义控件显示圆的半径  参数format是类型-->
+        <attr name="setRadius" format="integer"></attr>
+    </declare-styleable>
+</resources>

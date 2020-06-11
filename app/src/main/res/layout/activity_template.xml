@@ -13,11 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height" />
 
-    <com.wangpeiyuan.cycleviewpager2.CycleViewPager2
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></com.wangpeiyuan.cycleviewpager2.CycleViewPager2>
+        android:layout_weight="1"></androidx.viewpager.widget.ViewPager>
+
+    <alauncher.cn.measuringtablet.widget.Indicator
+        android:id="@+id/indicator"
+        android:layout_width="200dp"
+        android:layout_height="30dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

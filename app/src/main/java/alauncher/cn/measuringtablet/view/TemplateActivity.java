@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -27,13 +26,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+//import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.cuiweiyou.numberpickerdialog.NumberPickerDialog;
-import com.wangpeiyuan.cycleviewpager2.CycleViewPager2;
-import com.wangpeiyuan.cycleviewpager2.adapter.CyclePagerAdapter;
-import com.wangpeiyuan.cycleviewpager2.indicator.DotsIndicator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,7 +42,6 @@ import java.util.Date;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
-import alauncher.cn.measuringtablet.MainActivity;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
@@ -52,6 +49,7 @@ import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.utils.UriToPathUtil;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
+import alauncher.cn.measuringtablet.widget.Indicator;
 import alauncher.cn.measuringtablet.widget.ItemEditDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,7 +64,10 @@ public class TemplateActivity extends BaseOActivity {
 //    public RecyclerView titlePRV;
 
     @BindView(R.id.vp2)
-    public CycleViewPager2 vp2;
+    public ViewPager vp2;
+
+    @BindView(R.id.indicator)
+    public Indicator indicator;
 
     public EditText leftHeaderEdt, midHeaderEdt, rightHeaderEdt, titleEdt, leftFooterEdt, midFooterEdt, rightFooterEdt;
 
@@ -84,9 +85,12 @@ public class TemplateActivity extends BaseOActivity {
 
     public RoHSHeaderAdapter mRoHSHeaderAdapter;
 
+    // public CyclePagerAdapter mCyclePagerAdapter;
+
     public View addListHeaderBtn, addAQLBtn, addRoSHBtn;
 
     public View[] views = new View[2];
+    public ViewHolder[] ViewHolders = new ViewHolder[2];
 
     public Button confirmationFrequencyBtn;
 
@@ -131,9 +135,149 @@ public class TemplateActivity extends BaseOActivity {
             }
         }
         // android.util.Log.d("wlDebug", "bean = " + mTemplateBean.toString());
+        views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, null, false);
+        leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
+        rightHeaderEdt = views[0].findViewById(R.id.right_header_edt);
+        midHeaderEdt = views[0].findViewById(R.id.mid_header_edt);
+        leftFooterEdt = views[0].findViewById(R.id.left_footer_edt);
+        rightFooterEdt = views[0].findViewById(R.id.right_footer_edt);
+        midFooterEdt = views[0].findViewById(R.id.mid_footer_edt);
+        titleEdt = views[0].findViewById(R.id.title_edt);
+        signSP1 = views[0].findViewById(R.id.sign_sp1);
+        signSP2 = views[0].findViewById(R.id.sign_sp2);
+        signSP3 = views[0].findViewById(R.id.sign_sp3);
+        aqlSwitch = views[0].findViewById(R.id.aql_switch);
+        roshSwitch = views[0].findViewById(R.id.rosh_switch);
+        logoImageButton = views[0].findViewById(R.id.logo_btn);
+        logoImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+        confirmationFrequencyBtn = views[0].findViewById(R.id.confirmation_frequency_btn);
+        confirmationFrequencyBtn.setText(String.valueOf(mTemplateBean.getConfirmationFrequency()));
+        confirmationFrequencyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new NumberPickerDialog(
+                        TemplateActivity.this,
+                        new NumberPicker.OnValueChangeListener() {
+                            @Override
+                            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                                confirmationFrequencyBtn.setText(newVal + "");
+                            }
+                        },
+                        10, // 最大值
+                        0, // 最小值
+                        mTemplateBean.getConfirmationFrequency()) // 默认值
+                        .setCurrentValue(mTemplateBean.getConfirmationFrequency()) // 更新默认值
+                        .show();
+            }
+        });
+        addListHeaderBtn = views[0].findViewById(R.id.add_list_header);
+        addListHeaderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
+                    @Override
+                    public void doString(String str, String type) {
+                        ArrayList<String> _list = new ArrayList<>(mTemplateBean.getTitleList());
+                        _list.add(str);
+                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getTitleTypeList());
+                        _typeList.add(type);
+                        mTemplateBean.setTitleList(_list);
+                        mTemplateBean.setTitleTypeList(_typeList);
+                        mListHeaderAdapter.notifyDataSetChanged();
+                    }
+                }, "", "0").show();
+            }
+        });
+        listHeaderRV = views[0].findViewById(R.id.title_p_rv);
+        listHeaderRV.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
+        leftHeaderEdt.setText(mTemplateBean.getHeaderLeft());
+        midHeaderEdt.setText(mTemplateBean.getHeaderMid());
+        rightHeaderEdt.setText(mTemplateBean.getHeaderRight());
+        leftFooterEdt.setText(mTemplateBean.getFooterLeft());
+        rightFooterEdt.setText(mTemplateBean.getFooterRight());
+        midFooterEdt.setText(mTemplateBean.getFooterMid());
+        titleEdt.setText(mTemplateBean.getTitle());
+        signSP1.setSelection(getRoleID(mTemplateBean.getSignList().get(0)));
+        signSP2.setSelection(getRoleID(mTemplateBean.getSignList().get(1)));
+        signSP3.setSelection(getRoleID(mTemplateBean.getSignList().get(2)));
+        aqlSwitch.setChecked(mTemplateBean.getAqlEnable());
+        roshSwitch.setChecked(mTemplateBean.getRoshEnable());
+        mListHeaderAdapter = new ListHeaderAdapter();
+        if (mTemplateBean.getLogoPic() != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(mTemplateBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length, null);
+            logoImageButton.setImageBitmap(bitmap);
+        }
+        listHeaderRV.setAdapter(mListHeaderAdapter);
+        mListHeaderAdapter.notifyDataSetChanged();
 
+        views[1] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_second, null, false);
+        maximumSwitch = views[1].findViewById(R.id.maximum_switch);
+        minimumSwitch = views[1].findViewById(R.id.minimum_switch);
+        averageSwitch = views[1].findViewById(R.id.average_switch);
+        rangeSwitch = views[1].findViewById(R.id.range_switch);
+        judgeSwitch = views[1].findViewById(R.id.judge_switch);
+        addAQLBtn = views[1].findViewById(R.id.add_aql);
+        addAQLBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
+                    @Override
+                    public void doString(String str, String type) {
+                        ArrayList<String> _list = new ArrayList<>(mTemplateBean.getAQLList());
+                        _list.add(str);
+                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getAQLTypeList());
+                        _typeList.add(type);
+                        mTemplateBean.setAQLList(_list);
+                        mTemplateBean.setAQLTypeList(_typeList);
+                        mAQLHeaderAdapter.notifyDataSetChanged();
+                        android.util.Log.d("wlDebug", "do invalidate.");
+                        views[1].invalidate();
+                    }
+                }, "", "0").show();
+            }
+        });
+        addRoSHBtn = views[1].findViewById(R.id.add_rosh);
+        addRoSHBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ItemEditDialog(TemplateActivity.this, new ItemEditDialog.OnStringDialogCallBack() {
+                    @Override
+                    public void doString(String str, String type) {
+                        ArrayList<String> _list = new ArrayList<>(mTemplateBean.getRoHSList());
+                        _list.add(str);
+                        ArrayList<String> _typeList = new ArrayList<>(mTemplateBean.getRoHSTypeList());
+                        _typeList.add(type);
+                        mTemplateBean.setRoHSList(_list);
+                        mTemplateBean.setRoHSTypeList(_typeList);
+                        mListHeaderAdapter.notifyDataSetChanged();
+                    }
+                }, "", "0").show();
+            }
+        });
+        AQLRV = views[1].findViewById(R.id.aql_rv);
+        AQLRV.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
+        RoSHRV = views[1].findViewById(R.id.rosh_rv);
+        RoSHRV.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
 
-        vp2.setAdapter(new CyclePagerAdapter() {
+        maximumSwitch.setChecked(mTemplateBean.getMaximumEnable());
+        minimumSwitch.setChecked(mTemplateBean.getMinimumEnable());
+        averageSwitch.setChecked(mTemplateBean.getAverageEnable());
+        rangeSwitch.setChecked(mTemplateBean.getRangeEnable());
+        judgeSwitch.setChecked(mTemplateBean.getJudgeEnable());
+        mAQLHeaderAdapter = new AQLHeaderAdapter();
+        mRoHSHeaderAdapter = new RoHSHeaderAdapter();
+        AQLRV.setAdapter(mAQLHeaderAdapter);
+        RoSHRV.setAdapter(mRoHSHeaderAdapter);
+        mAQLHeaderAdapter.notifyDataSetChanged();
+        mRoHSHeaderAdapter.notifyDataSetChanged();
+
+        /*
+        mCyclePagerAdapter = new CyclePagerAdapter() {
             @Override
             public int getRealItemViewType(int position) {
                 return position;
@@ -143,6 +287,7 @@ public class TemplateActivity extends BaseOActivity {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 android.util.Log.d("wlDebug", "viewType = " + viewType);
+                // if (ViewHolders[viewType] != null) return ViewHolders[viewType];
                 if (viewType == 0) {
                     views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, parent, false);
                     leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
@@ -223,6 +368,7 @@ public class TemplateActivity extends BaseOActivity {
                     }
                     listHeaderRV.setAdapter(mListHeaderAdapter);
                     mListHeaderAdapter.notifyDataSetChanged();
+                    ViewHolders[0] = new ViewHolder(TemplateActivity.this, views[viewType]);
                 } else if (viewType == 1) {
                     views[1] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_second, parent, false);
                     maximumSwitch = views[1].findViewById(R.id.maximum_switch);
@@ -244,6 +390,8 @@ public class TemplateActivity extends BaseOActivity {
                                     mTemplateBean.setAQLList(_list);
                                     mTemplateBean.setAQLTypeList(_typeList);
                                     mAQLHeaderAdapter.notifyDataSetChanged();
+                                    android.util.Log.d("wlDebug", "do invalidate.");
+                                    views[1].invalidate();
                                 }
                             }, "", "0").show();
                         }
@@ -282,8 +430,9 @@ public class TemplateActivity extends BaseOActivity {
                     RoSHRV.setAdapter(mRoHSHeaderAdapter);
                     mAQLHeaderAdapter.notifyDataSetChanged();
                     mRoHSHeaderAdapter.notifyDataSetChanged();
+                    ViewHolders[1] = new ViewHolder(TemplateActivity.this, views[viewType]);
                 }
-                return new ViewHolder(TemplateActivity.this, views[viewType]);
+                return ViewHolders[viewType];
             }
 
             @Override
@@ -295,13 +444,20 @@ public class TemplateActivity extends BaseOActivity {
             public void onBindRealViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
             }
-        });
+
+
+        };
+
+         */
+        /*
+        vp2.setAdapter(mCyclePagerAdapter);
         DotsIndicator indicator = new DotsIndicator(TemplateActivity.this);
         indicator.setUnSelectedColor(Color.BLACK);
         indicator.setSelectedColor(R.color.colorPrimary);
         vp2.setIndicator(indicator);
-        /*
-        vp2.setAdapter(new PagerAdapter() {
+         */
+        /* */
+        PagerAdapter adapter = new PagerAdapter() {
             @Override
             public int getCount() {
                 return 2;
@@ -318,13 +474,24 @@ public class TemplateActivity extends BaseOActivity {
                 container.addView(views[position]);
                 return views[position];
             }
+        };
+        vp2.setAdapter(adapter);
+        vp2.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                indicator.setoffest(position, positionOffset);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
         });
-    ``  */
-
-        /*
-
-
-         */
     }
 
     @OnClick(R.id.btn_save)
@@ -527,6 +694,7 @@ public class TemplateActivity extends BaseOActivity {
         }
     }
 
+
     class AQLHeaderAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         @NonNull
@@ -553,6 +721,7 @@ public class TemplateActivity extends BaseOActivity {
                             mTemplateBean.setAQLList(_list);
                             mTemplateBean.setAQLTypeList(_typeList);
                             mAQLHeaderAdapter.notifyDataSetChanged();
+                            // mCyclePagerAdapter.notifyDataSetChanged();
                         }
                     }, str, mTemplateBean.getAQLTypeList().get(position)).show();
                 }
@@ -585,16 +754,24 @@ public class TemplateActivity extends BaseOActivity {
                             mTemplateBean.setAQLList(_list);
                             mTemplateBean.setAQLTypeList(_typeList);
                             builder.dismiss();
-                            mAQLHeaderAdapter.notifyDataSetChanged();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mAQLHeaderAdapter.notifyDataSetChanged();
+                                    android.util.Log.d("wlDebug", "views[1].invalidate().");
+                                    views[1].invalidate();
+                                }
+                            });
                         }
                     });
-                    return false;
+                    return true;
                 }
             });
         }
 
         @Override
         public int getItemCount() {
+            // android.util.Log.d("wlDebug", "mTemplateBean.getAQLList().size() = " + mTemplateBean.getAQLList().size());
             return mTemplateBean.getAQLList().size();
         }
     }

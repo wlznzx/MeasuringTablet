@@ -9,7 +9,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wangpeiyuan.cycleviewpager2.indicator.Indicator;
+// import com.wangpeiyuan.cycleviewpager2.indicator.Indicator;
 
 import java.util.HashMap;
 import java.util.Map;

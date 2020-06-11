@@ -138,7 +138,7 @@ public class WorkpieceFragment extends Fragment {
 
     public byte[] getBitmapByte(Bitmap bitmap) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.WEBP, 80, out);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, out);
         try {
             out.flush();
             out.close();

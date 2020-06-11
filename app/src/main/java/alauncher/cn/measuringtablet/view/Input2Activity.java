@@ -182,6 +182,7 @@ public class Input2Activity extends BaseOActivity {
     protected void initView() {
 
         mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        // App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID()).getWorkpiecePic();
         mTemplateBean = App.getDaoSession().getTemplateBeanDao().load(mCodeBean.getUseTemplateID());
         if (mTemplateBean == null) {
             DialogUtils.showDialog(this, "未设置模板", "未设置模板，无法测量.", new DialogInterface.OnClickListener() {
@@ -196,7 +197,7 @@ public class Input2Activity extends BaseOActivity {
         mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
-        mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        // mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
 
         for (int i = 0; i < dataNumber; i++) {
@@ -276,7 +277,8 @@ public class Input2Activity extends BaseOActivity {
         imgView = new ImageView(this);
         mainLayout.addView(imgView, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 15));
         imgView.setImageResource(R.drawable.workspice);
-        byte[] _pic = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID()).getWorkpiecePic();
+        // byte[] _pic = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID()).getWorkpiecePic();
+        byte[] _pic = mCodeBean.getWorkpiecePic();
         if (_pic != null) {
             Bitmap map = BitmapFactory.decodeByteArray(_pic, 0, _pic.length);
             imgView.setImageBitmap(map);
@@ -736,6 +738,7 @@ public class Input2Activity extends BaseOActivity {
                 view = getInfoTV("", -1);
                 break;
             default:
+                view = getInfoTV("", -1);
                 break;
         }
         return view;
