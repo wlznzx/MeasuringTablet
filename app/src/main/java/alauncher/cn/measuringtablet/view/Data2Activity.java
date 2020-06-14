@@ -478,7 +478,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         }
     }
 
-
     private void pdfDatas() {
         if (index == 0) {
             DialogUtils.showDialog(this, getResources().getString(R.string.tips), getResources().getString(R.string.no_select_msg));
@@ -498,7 +497,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 // index--;
             }
         }
-
         TemplateResultBean _templateResultBean = App.getDaoSession().getTemplateResultBeanDao().load(templateID);
         new ExportedTask(_templateResultBean, selectedList).execute();
     }
@@ -733,14 +731,19 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         Cursor cursor = App.getDaoSession().getResultBean3Dao().getDatabase().rawQuery(queryString, strs);
 
 
+        int templateID = cursor.getColumnIndex(ResultBean3Dao.Properties.TemplateID.columnName);
         int HandlerAccout = cursor.getColumnIndex(ResultBean3Dao.Properties.HandlerAccout.columnName);
         int TimeStamp = cursor.getColumnIndex(ResultBean3Dao.Properties.TimeStamp.columnName);
         int Workid = cursor.getColumnIndex(ResultBean3Dao.Properties.Workid.columnName);
+        int workidExtra = cursor.getColumnIndex(ResultBean3Dao.Properties.Workid_extra.columnName);
+        int eventid = cursor.getColumnIndex(ResultBean3Dao.Properties.Eventid.columnName);
         int Event = cursor.getColumnIndex(ResultBean3Dao.Properties.Event.columnName);
         int Result = cursor.getColumnIndex(ResultBean3Dao.Properties.Result.columnName);
+        int isUploaded = cursor.getColumnIndex(ResultBean3Dao.Properties.IsUploaded.columnName);
         int MValues = cursor.getColumnIndex(ResultBean3Dao.Properties.MValues.columnName);
         int MPicPaths = cursor.getColumnIndex(ResultBean3Dao.Properties.MPicPaths.columnName);
-        int templateID = cursor.getColumnIndex(ResultBean3Dao.Properties.TemplateID.columnName);
+        int Items = cursor.getColumnIndex(ResultBean3Dao.Properties.MItems.columnName);
+        int boolLists = cursor.getColumnIndex(ResultBean3Dao.Properties.IsBoolList.columnName);
 
         List<ResultBean3> _datas = new ArrayList<>();
 
@@ -748,12 +751,17 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             ResultBean3 rBean = new ResultBean3();
             rBean.setHandlerAccout(cursor.getString(HandlerAccout));
             rBean.setWorkid(cursor.getString(Workid));
+            rBean.setWorkid_extra(cursor.getString(workidExtra));
             rBean.setTimeStamp(cursor.getLong(TimeStamp));
+            rBean.setEventid(cursor.getString(eventid));
             rBean.setEvent(cursor.getString(Event));
             rBean.setResult(cursor.getString(Result));
             rBean.setMValues(convertToEntityProperty(cursor.getString(MValues)));
             rBean.setMPicPaths(convertToEntityProperty(cursor.getString(MPicPaths)));
+            rBean.setMItems(convertToEntityProperty(cursor.getString(Items)));
+            rBean.setIsBoolList(convertToEntityProperty(cursor.getString(boolLists)));
             rBean.setTemplateID(cursor.getInt(templateID));
+
             Date date = new Date(rBean.getTimeStamp());
             if (bean.getClassType() == 0) {
                 _datas.add(rBean);

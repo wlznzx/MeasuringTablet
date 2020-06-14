@@ -1,7 +1,10 @@
 package alauncher.cn.measuringtablet.view;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
@@ -19,6 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.bugly.beta.Beta;
 
+import alauncher.cn.measuringtablet.bean.ResultBean3;
+import alauncher.cn.measuringtablet.bean.TemplatePicBean;
+import alauncher.cn.measuringtablet.bean.TemplateResultBean;
+import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
+import alauncher.cn.measuringtablet.database.greenDao.db.TemplatePicBeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.TemplateResultBeanDao;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
+import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import butterknife.BindView;
 
 public class SystemManagementActivity extends BaseOActivity {
@@ -46,6 +58,7 @@ public class SystemManagementActivity extends BaseOActivity {
         _datas.add(new MainInfo(R.string.set, R.drawable.settings));
         _datas.add(new MainInfo(R.string.wifi_str, R.drawable.wifi));
         _datas.add(new MainInfo(R.string.upgrade, R.drawable.upgrade));
+        _datas.add(new MainInfo(R.string.clean_uploaded, R.drawable.clear));
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
@@ -110,6 +123,15 @@ public class SystemManagementActivity extends BaseOActivity {
 //                            startActivity(intent);
                             Beta.checkUpgrade();
                             break;
+                        case 6:
+                            List<TemplateResultBean> templateResultBeans = App.getDaoSession().getTemplateResultBeanDao().queryBuilder().where(TemplateResultBeanDao.Properties.IsUpload.eq(true)).list();
+                            DialogUtils.showDialog(SystemManagementActivity.this,"清除数据","共有" + templateResultBeans.size() + "条已上传模板数据，是否删除？", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    new SyncTask().execute();
+                                }
+                            });
+                            break;
                         default:
                             break;
                     }
@@ -146,6 +168,55 @@ public class SystemManagementActivity extends BaseOActivity {
             } else {
                 // outRect.left = itemSpace;
             }
+
+        }
+    }
+
+    public class SyncTask extends AsyncTask<String, Integer, String> {
+
+        private ProgressDialog dialog;
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(SystemManagementActivity.this);
+            dialog.setTitle("删除中.");
+            dialog.setMessage("正在删除数据 , 请稍等.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
+        @Override
+        protected String doInBackground(String... params) {
+            //处理耗时操作
+            int sum = 0, uploadSum = 0;
+            List<TemplateResultBean> templateResultBeans = App.getDaoSession().getTemplateResultBeanDao().queryBuilder().where(TemplateResultBeanDao.Properties.IsUpload.eq(true)).list();
+            for (int i = 0; i < templateResultBeans.size(); i++) {
+                List<ResultBean3> bean3s = App.getDaoSession().getResultBean3Dao().queryBuilder().where(ResultBean3Dao.Properties.TemplateID.eq(templateResultBeans.get(i).getId())).list();
+                App.getDaoSession().getResultBean3Dao().deleteInTx(bean3s);
+                List<TemplatePicBean> picBeans = App.getDaoSession().getTemplatePicBeanDao().queryBuilder().where(TemplatePicBeanDao.Properties.TemplateResultID.eq(templateResultBeans.get(i).getId())).list();
+                App.getDaoSession().getTemplatePicBeanDao().deleteInTx(picBeans);
+            }
+            // publishProgress(sum, uploadSum);
+            App.getDaoSession().getTemplateResultBeanDao().deleteInTx(templateResultBeans);
+            return "后台任务执行完毕";
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+            //"loading..." + progresses[0] + "%"
+            dialog.setMessage("共有" + progresses[0] + "条数据待上传，已经上传" + progresses[1] + "条数据.");
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            dialog.dismiss();
+        }
+
+        @Override
+        protected void onCancelled() {
 
         }
     }

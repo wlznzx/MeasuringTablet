@@ -8,6 +8,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,7 +19,9 @@ import android.os.Environment;
 import android.provider.Browser;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 
@@ -598,8 +601,8 @@ public class Input2Activity extends BaseOActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addImgs.size() >= 20) {
-                    DialogUtils.showDialog(Input2Activity.this, "超限制", "已经20张了，无法添加照片.");
+                if (addImgs.size() >= 30) {
+                    DialogUtils.showDialog(Input2Activity.this, "超限制", "已经30张了，无法添加照片.");
                 } else {
                     dispatchTakePictureIntent(BACKUP_TAKE_PHOTO);
                 }
@@ -663,13 +666,14 @@ public class Input2Activity extends BaseOActivity {
             img.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    DialogUtils.showDialog(Input2Activity.this, "删除图片", "确认删除此图片?", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            addImgs.remove(path);
-                            updateBottomImageLayout();
-                        }
-                    });
+
+                        DialogUtils.showDialog(Input2Activity.this, "删除图片", "确认删除此图片?", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                addImgs.remove(path);
+                                updateBottomImageLayout();
+                            }
+                        });
                     return true;
                 }
             });
@@ -766,6 +770,9 @@ public class Input2Activity extends BaseOActivity {
         imgTV.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                if(imgTV.getTag() == null){
+                    return true;
+                }
                 final AlertDialog builder = new AlertDialog.Builder(Input2Activity.this)
                         .create();
                 builder.show();
@@ -836,6 +843,7 @@ public class Input2Activity extends BaseOActivity {
 
     public TextView getInfoTV(String msg, int color) {
         TextView tv = new BorderTextView(this);
+        tv.setTextColor(Color.BLACK);
         tv.setMaxLines(1);
         tv.setText(msg);
         tv.setTextSize(18);
@@ -900,7 +908,7 @@ public class Input2Activity extends BaseOActivity {
         et.setMaxLines(1);
         et.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         if (numOnly) {
-            DigitsKeyListener numericOnlyListener = new DigitsKeyListener(false, true);
+            DigitsKeyListener numericOnlyListener = new DigitsKeyListener(true, true);
             et.setKeyListener(numericOnlyListener);
             et.setText("");
             et.addTextChangedListener(new TextWatcher() {
@@ -1746,4 +1754,6 @@ public class Input2Activity extends BaseOActivity {
 
         }
     }
+
+
 }

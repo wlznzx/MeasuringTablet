@@ -65,7 +65,6 @@ public class CodeEditDialog extends Dialog {
     }
 
     public boolean doCodeAdd() {
-
         if (mCodeBean == null) {
             String _name = codeNameEdt.getText().toString().trim();
             String[] strArray = _name.split("-");

@@ -220,9 +220,15 @@ public class PDFUtils {
                     if (Double.valueOf(_value) > _max) {
                         _max = Double.valueOf(_value);
                     }
-                    if (_bean.getResult().equals("NG")) {
-                        _result = "NG";
+                    try{
+                        if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(j))
+                                || Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(j))){
+                            _result = "NG";
+                        }
+                    }catch (Exception e){
+
                     }
+
                 }
                 if (_max == -100000) _max = 0D;
                 if (_min == 1000000) _min = 0D;

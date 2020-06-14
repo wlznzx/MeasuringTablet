@@ -63,11 +63,10 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public void notifyAdapter(List<ResultBean3> myLiveList, boolean isAdd) {
-
         if (!isAdd) {
-            this.datas = myLiveList;
+            datas = myLiveList;
         } else {
-            this.datas.addAll(myLiveList);
+            datas.addAll(myLiveList);
         }
         notifyDataSetChanged();
     }
@@ -102,6 +101,7 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                android.util.Log.d("wlDebug", "datas.size() = " + datas.size());
                 mOnItemClickListener.onItemClickListener(holder.getAdapterPosition(), datas);
             }
         });

@@ -11,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height" />
 
+    <SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"

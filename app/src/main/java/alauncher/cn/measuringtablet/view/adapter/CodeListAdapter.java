@@ -2,6 +2,7 @@ package alauncher.cn.measuringtablet.view.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,12 +35,18 @@ public class CodeListAdapter extends BaseAdapter {
 
     private DataUpdateInterface mDataUpdateInterface;
 
+    private String filterTest;
+
     public CodeListAdapter(List<CodeBean> listText, HashMap<String, Boolean> pstates, DataUpdateInterface pDataUpdateInterface, Context context) {
         this.listText = listText;
         this.states = pstates;
         this.context = context;
         mDataUpdateInterface = pDataUpdateInterface;
         currentCodeID = App.getSetupBean().getCodeID();
+    }
+
+    public void setFilterText(String text){
+        filterTest = text;
     }
 
     public void setList(List<CodeBean> pList) {
@@ -70,6 +77,16 @@ public class CodeListAdapter extends BaseAdapter {
             view = View.inflate(context, R.layout.list_code_item, null);
         } else {
             view = convertView;//复用历史缓存对象
+        }
+
+        if(TextUtils.isEmpty(filterTest)){
+
+        }else{
+            if(listText.get(position).getName().contains(filterTest)){
+                view.setVisibility(View.VISIBLE);
+            }else{
+                view.setVisibility(View.GONE);
+            }
         }
         //单选按钮的文字
         TextView radioText = view.findViewById(R.id.tv_radio_text);

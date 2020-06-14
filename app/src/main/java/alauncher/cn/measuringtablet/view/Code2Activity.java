@@ -2,8 +2,10 @@ package alauncher.cn.measuringtablet.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,9 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
     @BindView(R.id.lv_text_view)
     public ListView listView;
 
+    @BindView(R.id.search_view)
+    public SearchView mSearchView;
+
     public int codeID = 1;
 
     public CodeListAdapter adapter;
@@ -45,7 +50,23 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
 
     @Override
     protected void initView() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText)){
+                    adapter.setFilterText(newText);
+                }else{
+                    adapter.setFilterText("");
+                }
+                adapter.notifyDataSetChanged();
+                return false;
+            }
+        });
     }
 
     @Override
@@ -56,6 +77,7 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
         for (CodeBean bean : codeBeans) {
             android.util.Log.d("wlDebug", "bean = " + bean.toString());
         }
+
         codeID = App.getSetupBean().getCodeID();
         states.put(String.valueOf(codeID - 1), true);
         if(adapter == null){

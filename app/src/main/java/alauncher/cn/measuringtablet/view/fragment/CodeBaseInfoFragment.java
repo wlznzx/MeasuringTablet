@@ -26,8 +26,7 @@ import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.ViewHolder;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
-import alauncher.cn.measuringtablet.view.TemplateActivity;
-import alauncher.cn.measuringtablet.widget.ItemEditDialog;
+import alauncher.cn.measuringtablet.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -71,6 +70,13 @@ public class CodeBaseInfoFragment extends Fragment {
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
+        String _name = codeNameEdt.getText().toString().trim();
+        String[] strArray = _name.split("-");
+        if (strArray.length != 4) {
+            // 命名不正确.
+            DialogUtils.showDialog(getContext(), "无法保存", "程序命名不正确，请参考\"十工位-Block-TRA-100\"");
+            return;
+        }
         CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         if (_bean == null) {
 //            _bean = new CodeBean(App.getSetupBean().getCodeID(), "",
