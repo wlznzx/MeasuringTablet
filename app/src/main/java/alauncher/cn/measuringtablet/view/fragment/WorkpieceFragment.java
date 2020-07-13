@@ -35,9 +35,14 @@ public class WorkpieceFragment extends Fragment {
 
     private Unbinder unbinder;
 
-
     @BindView(R.id.workpiece_iv)
     public ImageView wpIV;
+
+    private long codeID;
+
+    public WorkpieceFragment(long codeID) {
+        this.codeID = codeID;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +72,7 @@ public class WorkpieceFragment extends Fragment {
     }
 
     private void initView() {
-        CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        CodeBean _bean = App.getDaoSession().getCodeBeanDao().load(codeID);
         if (_bean != null && _bean.getWorkpiecePic() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(_bean.getWorkpiecePic(), 0, _bean.getWorkpiecePic().length, null);
             wpIV.setImageBitmap(bitmap);
@@ -99,7 +104,9 @@ public class WorkpieceFragment extends Fragment {
             String _path = UriToPathUtil.getFilePathByUri(getActivity(), uri);
             // _path = getDataColumn(this, uri, null, null);
             android.util.Log.d("wlDebug", "_path = " + _path);
-
+            if (_path == null) {
+                return;
+            }
             File file = new File(_path);
             if (!file.exists()) return;
             BitmapFactory.Options opts = new BitmapFactory.Options();

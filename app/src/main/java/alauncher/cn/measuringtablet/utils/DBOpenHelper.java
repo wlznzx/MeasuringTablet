@@ -37,7 +37,9 @@ public class DBOpenHelper extends DaoMaster.DevOpenHelper {
                 db.execSQL("ALTER TABLE \"RESULT_BEAN3\" ADD \"IS_UPLOADED\" INTEGER");
             } else if (oldVersion == 37 && newVersion == 38) {
                 db.execSQL("ALTER TABLE \"TEMPLATE_RESULT_BEAN\" ADD \"IS_UPLOAD\" INTEGER");
-            } else {
+            } else if (oldVersion == 38 && newVersion == 39) {
+                db.execSQL("ALTER TABLE \"TEMPLATE_RESULT_BEAN\" ADD \"VALUE_TYPES\" TEXT");
+            }else {
                 super.onUpgrade(db, oldVersion, newVersion);
             }
         } catch (ClassCastException e) {

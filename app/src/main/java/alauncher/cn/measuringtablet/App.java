@@ -1,7 +1,10 @@
 package alauncher.cn.measuringtablet;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
@@ -36,7 +39,6 @@ import alauncher.cn.measuringtablet.utils.Constants;
 import alauncher.cn.measuringtablet.utils.DBOpenHelper;
 import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.utils.SPUtils;
-import alauncher.cn.measuringtablet.utils.SystemPropertiesProxy;
 import alauncher.cn.measuringtablet.view.UpgradeActivity;
 
 /**
@@ -100,6 +102,30 @@ public class App extends MultiDexApplication {
         Bugly.init(getApplicationContext(), "be2b337540", true);
 
         // android.util.Log.d("wlDebug", getDatabasePath("..").getAbsolutePath());
+
+        startHeartBeat();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        stopHeartBeat();
+    }
+
+    private void startHeartBeat() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.setAction("repeating");
+        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        am.setWindow(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), AlarmReceiver.HEARTBEAT_SPAN, sender);
+    }
+
+    private void stopHeartBeat() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.setAction("repeating");
+        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
+        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarm.cancel(sender);
     }
 
     public static DaoSession getDaoSession() {

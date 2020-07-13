@@ -155,6 +155,19 @@ public class TemplateActivity extends BaseOActivity {
                 dispatchTakePictureIntent();
             }
         });
+        logoImageButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                DialogUtils.showDialog(TemplateActivity.this, "删除Logo", "确认删除Logo？", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mTemplateBean.setLogoPic(null);
+                        logoImageButton.setImageResource(R.drawable.add_circle);
+                    }
+                });
+                return true;
+            }
+        });
         confirmationFrequencyBtn = views[0].findViewById(R.id.confirmation_frequency_btn);
         confirmationFrequencyBtn.setText(String.valueOf(mTemplateBean.getConfirmationFrequency()));
         confirmationFrequencyBtn.setOnClickListener(new View.OnClickListener() {

@@ -8,7 +8,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -19,9 +18,7 @@ import android.os.Environment;
 import android.provider.Browser;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 
@@ -56,11 +53,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,6 +69,7 @@ import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
 import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.bean.SetupBean;
+import alauncher.cn.measuringtablet.bean.TempResultsBean;
 import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.TemplatePicBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
@@ -81,6 +78,7 @@ import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.TemplatePicBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.TemplateResultBeanDao;
+import alauncher.cn.measuringtablet.utils.Arith;
 import alauncher.cn.measuringtablet.utils.ColorConstants;
 import alauncher.cn.measuringtablet.utils.DateUtils;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
@@ -105,8 +103,6 @@ public class Input2Activity extends BaseOActivity {
     public TemplateBean mTemplateBean;
 
     public TemplateResultBean mTemplateResultBean;
-
-    // private List<Parameter2Bean> mParameterBean2s;
 
     private List<ParameterBean2> mParameterBean2s;
 
@@ -169,7 +165,10 @@ public class Input2Activity extends BaseOActivity {
     private User user;
     private static int dataNumber = 1;
 
-    ImageView imgView;
+    private ImageView imgView;
+
+    // 中间数据，存在内存里面;
+    private static Map<Long, TempResultsBean> tempResultBeans = new HashMap<Long, TempResultsBean>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -609,13 +608,18 @@ public class Input2Activity extends BaseOActivity {
             }
         });
         mainLayout.addView(view, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 1));
+
+        android.util.Log.d("wlDebug", "initViews ---TempResultsBean---" + tempResultBeans.toString() + " mCodeBean.getCodeID() = " + mCodeBean.getCodeID());
+        TempResultsBean _bean = tempResultBeans.get(mCodeBean.getCodeID());
+        if (_bean != null)
+            resumeTemps(_bean);
     }
 
     private String getUpperToleranceValue(ParameterBean2 pBean2) {
         if (pBean2 == null) return "";
         switch (pBean2.getType()) {
             case 0:
-                return String.valueOf(pBean2.getNominalValue() + pBean2.getUpperToleranceValue());
+                return String.valueOf(Arith.add(pBean2.getNominalValue(), pBean2.getUpperToleranceValue()));
             case 1:
                 return String.valueOf(pBean2.getUpperToleranceValue());
             default:
@@ -627,7 +631,7 @@ public class Input2Activity extends BaseOActivity {
         if (pBean2 == null) return "";
         switch (pBean2.getType()) {
             case 0:
-                return String.valueOf(pBean2.getNominalValue() + pBean2.getLowerToleranceValue());
+                return String.valueOf((Arith.add(pBean2.getNominalValue(), pBean2.getLowerToleranceValue())));
             case 2:
                 return String.valueOf(pBean2.getLowerToleranceValue());
             default:
@@ -639,7 +643,7 @@ public class Input2Activity extends BaseOActivity {
         if (pBean2 == null) return "";
         switch (pBean2.getType()) {
             case 0:
-                return String.valueOf(pBean2.getNominalValue());
+                return pBean2.getNominalValue() + "";
             case 3:
                 return pBean2.getName();
             default:
@@ -667,13 +671,13 @@ public class Input2Activity extends BaseOActivity {
                 @Override
                 public boolean onLongClick(View view) {
 
-                        DialogUtils.showDialog(Input2Activity.this, "删除图片", "确认删除此图片?", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                addImgs.remove(path);
-                                updateBottomImageLayout();
-                            }
-                        });
+                    DialogUtils.showDialog(Input2Activity.this, "删除图片", "确认删除此图片?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            addImgs.remove(path);
+                            updateBottomImageLayout();
+                        }
+                    });
                     return true;
                 }
             });
@@ -770,7 +774,7 @@ public class Input2Activity extends BaseOActivity {
         imgTV.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if(imgTV.getTag() == null){
+                if (imgTV.getTag() == null) {
                     return true;
                 }
                 final AlertDialog builder = new AlertDialog.Builder(Input2Activity.this)
@@ -906,6 +910,7 @@ public class Input2Activity extends BaseOActivity {
         et.setGravity(Gravity.CENTER);
         et.setBackground(null);
         et.setMaxLines(1);
+        et.setSingleLine(true);
         et.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         if (numOnly) {
             DigitsKeyListener numericOnlyListener = new DigitsKeyListener(true, true);
@@ -924,7 +929,6 @@ public class Input2Activity extends BaseOActivity {
 
                 @Override
                 public void afterTextChanged(Editable edt) {
-                    android.util.Log.d("wlDebug", "afterTextChanged");
                     String temp = edt.toString();
                     int posDot = temp.indexOf(".");
                     if (temp.startsWith("00")) {
@@ -941,6 +945,7 @@ public class Input2Activity extends BaseOActivity {
             });
             et.setHint(R.string.hint);
         } else {
+            et.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_!@#$%^&*()+."));
             et.setHint(R.string.hint);
         }
         return et;
@@ -1100,7 +1105,7 @@ public class Input2Activity extends BaseOActivity {
         if (index == 0) {
             lists = App.getDaoSession().getCodeBeanDao().loadAll();
         }
-        Set<String> fristSet = new HashSet<>();
+        Set<String> fristSet = new LinkedHashSet<>();
         for (CodeBean _bean : lists) {
             String[] strArray = _bean.getName().split("-");
             fristSet.add(strArray[index]);
@@ -1123,12 +1128,16 @@ public class Input2Activity extends BaseOActivity {
                 String str = tv.getText().toString();
                 dialog.dismiss();
                 if (index < 3) {
-                    for (int i = lists.size() - 1; i >= 0; i--) {
+                    List<CodeBean> _lists = new ArrayList<>();
+                    for (int i = 0; i < lists.size(); i++) {
                         CodeBean item = lists.get(i);
                         if (!item.getName().contains(str)) {
-                            lists.remove(item);
+                            // lists.remove(item);
+                        } else {
+                            _lists.add(item);
                         }
                     }
+                    lists = _lists;
                     showChooseDialog(index + 1);
                 } else {
                     CodeBean _CodeBean = lists.get(j);
@@ -1188,6 +1197,7 @@ public class Input2Activity extends BaseOActivity {
         protected String doInBackground(String... params) {
             //处理耗时操作
             doJudges();
+            saveTemps();
             return "后台任务执行完毕";
         }
 
@@ -1200,14 +1210,15 @@ public class Input2Activity extends BaseOActivity {
         protected void onPostExecute(String result) {
             dialog.dismiss();
             for (int i = 0; i < mParameterBean2s.size(); i++) {
+                ParameterBean2 _bean2 = mParameterBean2s.get(i);
                 if (mTemplateBean.getMaximumEnable())
-                    maxEdts.get(i).setText(String.valueOf(maxs.get(i)));
+                    maxEdts.get(i).setText(_bean2.getType() != 3 ? String.valueOf(maxs.get(i)) : "- -");
                 if (mTemplateBean.getMinimumEnable())
-                    minEdts.get(i).setText(String.valueOf(mins.get(i)));
+                    minEdts.get(i).setText(_bean2.getType() != 3 ? String.valueOf(mins.get(i)) : "- -");
                 if (mTemplateBean.getAverageEnable())
-                    avgEdts.get(i).setText(NumberUtils.notScience(avgs.get(i)));
+                    avgEdts.get(i).setText(_bean2.getType() != 3 ? NumberUtils.notScience(avgs.get(i)) : "- -");
                 if (mTemplateBean.getRangeEnable()) {
-                    rangeEdts.get(i).setText(NumberUtils.notScience(ranges.get(i)));
+                    rangeEdts.get(i).setText(_bean2.getType() != 3 ? NumberUtils.notScience(ranges.get(i)) : "- -");
                 }
                 if (mTemplateBean.getJudgeEnable()) {
                     judgeEdts.get(i).setText(judges.get(i));
@@ -1415,6 +1426,7 @@ public class Input2Activity extends BaseOActivity {
                     mTemplateResultBean.setLogoPic(new byte[mTemplateBean.getLogoPic().length]);
                     System.arraycopy(mTemplateBean.getLogoPic(), 0, mTemplateResultBean.getLogoPic(), 0, mTemplateBean.getLogoPic().length);
                 }
+
                 mTemplateResultBean.setTitle(mTemplateBean.getTitle());
                 mTemplateResultBean.setTitleList(mTemplateBean.getTitleList());
                 mTemplateResultBean.setSignList(mTemplateBean.getSignList());
@@ -1448,6 +1460,7 @@ public class Input2Activity extends BaseOActivity {
                 List<String> upperLists = new ArrayList<>();
                 List<String> lowerLists = new ArrayList<>();
                 List<String> markLists = new ArrayList<>();
+                List<String> typeLists = new ArrayList<>();
                 for (int j = 0; j < mParameterBean2s.size(); j++) {
                     ParameterBean2 _bean = mParameterBean2s.get(j);
                     indexLists.add(String.valueOf(_bean.getSequenceNumber() + 1));
@@ -1455,15 +1468,16 @@ public class Input2Activity extends BaseOActivity {
                     upperLists.add(getUpperToleranceValue(_bean));
                     lowerLists.add(getLowerToleranceValue(_bean));
                     markLists.add(_bean.getDescribe());
+                    typeLists.add(String.valueOf(_bean.getType()));
                 }
                 mTemplateResultBean.setValueIndexs(indexLists);
                 mTemplateResultBean.setNominalValues(nominalValue);
                 mTemplateResultBean.setUpperToleranceValues(upperLists);
                 mTemplateResultBean.setLowerToleranceValues(lowerLists);
                 mTemplateResultBean.setMarkList(markLists);
+                mTemplateResultBean.setValueTypes(typeLists);
                 List<String> titleLists = new ArrayList<>();
                 for (Object obj : titleEdts) {
-                    // titleLists.add(edt.getText().toString().trim());
                     titleLists.add(getTextByInputType(obj));
                 }
                 mTemplateResultBean.setTitleResultList(titleLists);
@@ -1602,6 +1616,20 @@ public class Input2Activity extends BaseOActivity {
             str = ((TextView) obj).getText().toString().trim();
         }
         return str;
+    }
+
+    private void setInputText(String str, Object obj) {
+        if (obj instanceof Spinner) {
+            if (str.equals("OK")) {
+                ((Spinner) obj).setSelection(0);
+            } else if (str.equals("NG")) {
+                ((Spinner) obj).setSelection(1);
+            }
+        } else if (obj instanceof EditText) {
+            ((EditText) obj).setText(str);
+        } else if (obj instanceof TextView) {
+            ((TextView) obj).setText(str);
+        }
     }
 
 
@@ -1755,5 +1783,91 @@ public class Input2Activity extends BaseOActivity {
         }
     }
 
+
+    private void saveTemps() {
+        TemplateResultBean _templateResultBean = new TemplateResultBean();
+        List<String> titleLists = new ArrayList<>();
+        for (Object obj : titleEdts) {
+            titleLists.add(getTextByInputType(obj));
+        }
+        _templateResultBean.setTitleResultList(titleLists);
+        List<String> aqlLists = new ArrayList<>();
+        for (Object obj : aqlObjects) {
+            aqlLists.add(getTextByInputType(obj));
+        }
+        _templateResultBean.setAQLResultList(aqlLists);
+        List<String> roshLists = new ArrayList<>();
+        for (Object obj : roshEdts) {
+            roshLists.add(getTextByInputType(obj));
+        }
+
+        _templateResultBean.setRoHSResultList(roshLists);
+        _templateResultBean.setRemarks(remarkEdt.getText().toString().trim());
+        TempResultsBean _bean = new TempResultsBean();
+        _bean.setTemplateResultBean(_templateResultBean);
+
+        List<ResultBean3> _mResultBean3s = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            ResultBean3 _resultBean3 = new ResultBean3();
+            _resultBean3.setCodeID(App.getSetupBean().getCodeID());
+            ArrayList<String> values = new ArrayList<>();
+            ArrayList<String> picPaths = new ArrayList<>();
+            ArrayList<String> isBools = new ArrayList<>();
+            for (View edt : results.get(i)) {
+                if (edt instanceof EditText) {
+                    values.add(((EditText) edt).getText().toString().trim());
+                    isBools.add("false");
+                } else if (edt instanceof Spinner) {
+                    Spinner sp = (Spinner) edt;
+                    values.add(sp.getSelectedItemPosition() == 0 ? "1" : "0");
+                    isBools.add("true");
+                }
+            }
+            for (int j = 0; j < mParameterBean2s.size(); j++) {
+                picPaths.add((String) resultImgs.get(i).get(j).getTag());
+            }
+            _resultBean3.setMValues(values);
+            _resultBean3.setMPicPaths(picPaths);
+            _resultBean3.setIsBoolList(isBools);
+            _mResultBean3s.add(_resultBean3);
+        }
+        _bean.setResultBean3s(_mResultBean3s);
+        _bean.setAddImgs(addImgs);
+        tempResultBeans.put(mCodeBean.getCodeID(), _bean);
+    }
+
+    private void resumeTemps(TempResultsBean bean) {
+        if (bean != null) {
+            for (int i = 0; i < titleEdts.size(); i++) {
+                setInputText(bean.getTemplateResultBean().getTitleResultList().get(i), titleEdts.get(i));
+            }
+            for (int i = 0; i < aqlObjects.size(); i++) {
+                setInputText(bean.getTemplateResultBean().getAQLResultList().get(i), aqlObjects.get(i));
+            }
+            for (int i = 0; i < roshEdts.size(); i++) {
+                setInputText(bean.getTemplateResultBean().getRoHSResultList().get(i), roshEdts.get(i));
+            }
+
+            for (int i = 0; i < results.size(); i++) {
+                ResultBean3 _resultBean3 = bean.getResultBean3s().get(i);
+                for (int j = 0; j < results.get(i).size(); j++) {
+                    Object obj = results.get(i).get(j);
+                    if (obj instanceof EditText) {
+                        ((EditText) obj).setText(_resultBean3.getMValues().get(j));
+                    } else if (obj instanceof Spinner) {
+                        Spinner sp = (Spinner) obj;
+                        sp.setSelection(_resultBean3.getMValues().get(j).equals("1") ? 0 : 1);
+                    }
+                }
+                for (int j = 0; j < mParameterBean2s.size(); j++) {
+                    resultImgs.get(i).get(j).setTag(_resultBean3.getMPicPaths().get(j));
+                    Glide.with(this).load(_resultBean3.getMPicPaths().get(j)).into(resultImgs.get(i).get(j));
+                }
+            }
+
+            addImgs = bean.getAddImgs();
+            updateBottomImageLayout();
+        }
+    }
 
 }

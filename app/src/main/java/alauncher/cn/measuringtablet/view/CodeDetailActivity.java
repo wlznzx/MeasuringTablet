@@ -39,6 +39,8 @@ public class CodeDetailActivity extends BaseActivity {
     /************Params*******************/
     protected List<Fragment> mFragmentList;
     private List<String> mTitleList;
+    private long codeID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class CodeDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        codeID = getIntent().getIntExtra("CODE_ID", -1);
         CodeBaseInfoFragment codeBaseInfoFragment = null;
         WorkpieceFragment mWorkpieceFragment = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
@@ -63,9 +66,9 @@ public class CodeDetailActivity extends BaseActivity {
             }
         }
         if (codeBaseInfoFragment == null)
-            codeBaseInfoFragment = new CodeBaseInfoFragment();
+            codeBaseInfoFragment = new CodeBaseInfoFragment(codeID);
         if (mWorkpieceFragment == null) {
-            mWorkpieceFragment = new WorkpieceFragment();
+            mWorkpieceFragment = new WorkpieceFragment(codeID);
         }
 
 

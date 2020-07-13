@@ -131,5 +131,15 @@ public class CodeBean {
         this.defaultTitles = defaultTitles;
     }
 
-    
+    @Override
+    public String toString() {
+        return "CodeBean{" +
+                "codeID=" + codeID +
+                ", useTemplateID=" + useTemplateID +
+                ", name='" + name + '\'' +
+                ", machineTool='" + machineTool + '\'' +
+                ", parts='" + parts + '\'' +
+                ", isEnableStep=" + isEnableStep +
+                '}';
+    }
 }

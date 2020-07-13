@@ -5,9 +5,11 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -45,7 +47,7 @@ public class CodeListAdapter extends BaseAdapter {
         currentCodeID = App.getSetupBean().getCodeID();
     }
 
-    public void setFilterText(String text){
+    public void setFilterText(String text) {
         filterTest = text;
     }
 
@@ -79,13 +81,19 @@ public class CodeListAdapter extends BaseAdapter {
             view = convertView;//复用历史缓存对象
         }
 
-        if(TextUtils.isEmpty(filterTest)){
+        View list_item_layout = view.findViewById(R.id.list_item_layout);
+        if (TextUtils.isEmpty(filterTest)) {
 
-        }else{
-            if(listText.get(position).getName().contains(filterTest)){
-                view.setVisibility(View.VISIBLE);
-            }else{
-                view.setVisibility(View.GONE);
+        } else {
+            if (listText.get(position).getName().contains(filterTest) || filterTest.equals("")) {
+                list_item_layout.setVisibility(View.VISIBLE);
+            } else {
+//                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+//                        //设置item的weidth和height都为0
+//                        0,
+//                        0);
+//                list_item_layout.setLayoutParams(params);
+                list_item_layout.setVisibility(View.GONE);
             }
         }
         //单选按钮的文字

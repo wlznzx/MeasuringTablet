@@ -216,8 +216,6 @@ public class SystemManagementActivity extends BaseOActivity {
         }
 
         @Override
-        protected void onCancelled() {
-
-        }
+        protected void onCancelled() {}
     }
 }

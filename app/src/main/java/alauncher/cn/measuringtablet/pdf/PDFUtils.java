@@ -196,6 +196,10 @@ public class PDFUtils {
         double sum = 0;
         for (int i = 0; i < pTemplateResultBean.getValueIndexs().size(); i++) {
             sum = 0;
+            String type = "0";
+            if (pTemplateResultBean.getValueTypes() != null) {
+                type = pTemplateResultBean.getValueTypes().get(i);
+            }
             if (i >= pResultBean3s.get(0).getMValues().size()) {
 
             } else {
@@ -220,12 +224,28 @@ public class PDFUtils {
                     if (Double.valueOf(_value) > _max) {
                         _max = Double.valueOf(_value);
                     }
-                    try{
-                        if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(j))
-                                || Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(j))){
-                            _result = "NG";
+                    try {
+                        switch (type) {
+                            case "0":
+                                if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(j))
+                                        || Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(j))) {
+                                    _result = "NG";
+                                }
+                                break;
+                            case "1":
+                                if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(j))) {
+                                    _result = "NG";
+                                }
+                                break;
+                            case "2":
+                                if (Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(j))) {
+                                    _result = "NG";
+                                }
+                                break;
+                            default:
+                                break;
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
 

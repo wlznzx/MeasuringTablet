@@ -54,6 +54,13 @@ public class CodeBaseInfoFragment extends Fragment {
 
     public List<String> defaultTitles;
 
+    private long codeID;
+
+    public CodeBaseInfoFragment(long codeID) {
+        android.util.Log.d("wlDebug","CodeBaseInfoFragment && codeID = " + codeID);
+        this.codeID = codeID;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,8 +115,8 @@ public class CodeBaseInfoFragment extends Fragment {
     }
 
     private void initView() {
-
-        mCodeBean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        android.util.Log.d("wlDebug", "codeID = " + codeID);
+        mCodeBean = App.getDaoSession().getCodeBeanDao().load(codeID);
         mTemplateBean = App.getDaoSession().getTemplateBeanDao().load(mCodeBean.getUseTemplateID());
         if (mCodeBean != null) {
             machineToolEdt.setText(mCodeBean.getMachineTool());

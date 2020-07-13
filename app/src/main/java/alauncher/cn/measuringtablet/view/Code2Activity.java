@@ -51,17 +51,19 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
     @Override
     protected void initView() {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String s) {
+                android.util.Log.d("wlDebug","onQueryTextSubmit s = " + s);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!TextUtils.isEmpty(newText)){
+                if (!TextUtils.isEmpty(newText)) {
                     adapter.setFilterText(newText);
-                }else{
-                    adapter.setFilterText("");
+                } else {
+                    adapter.setFilterText("-");
                 }
                 adapter.notifyDataSetChanged();
                 return false;
@@ -80,7 +82,7 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
 
         codeID = App.getSetupBean().getCodeID();
         states.put(String.valueOf(codeID - 1), true);
-        if(adapter == null){
+        if (adapter == null) {
             adapter = new CodeListAdapter(codeBeans, states, this, this);
             listView.setAdapter(adapter);
         }
@@ -99,6 +101,8 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
             case R.id.set_btn:
                 Intent intent = new Intent(this, CodeDetailActivity.class);
                 intent.putExtra("Title", R.string.code_set);
+                intent.putExtra("CODE_ID", adapter.currentCodeID);
+                android.util.Log.d("wlDebug", "adapter.currentCodeID = " + adapter.currentCodeID);
                 startActivity(intent);
                 break;
             case R.id.set_as_btn:

@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.App;
@@ -231,8 +232,8 @@ public class JdbcUtil {
         if (conn == null) return -1;
         String sql = "insert into template_result " +
                 "(factory_code,device_code,code_id,logo_pic,title_list,sign_list,aql_list,rohs_List,header_left,header_mid,header_right,footer_left,footer_mid,footer_right,title,data_num,maximum_enable,minimum_enable,average_enable," +
-                "range_enable,judge_enable,all_judge,timestamp,img,remarks,user_name,title_result_list,aql_result_list,rohs_result_list,value_indexs,upper_tolerance_values,lower_tolerance_values,nominal_values,marklist) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                "range_enable,judge_enable,all_judge,timestamp,img,remarks,user_name,title_result_list,aql_result_list,rohs_result_list,value_indexs,upper_tolerance_values,lower_tolerance_values,nominal_values,marklist,value_types) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, _bean.getFactoryCode());
         pstmt.setString(2, _bean.getDeviceCode());
@@ -271,6 +272,7 @@ public class JdbcUtil {
         pstmt.setString(32, StringConverter.convertToDatabaseValueS(_bean.getLowerToleranceValues()));
         pstmt.setString(33, StringConverter.convertToDatabaseValueS(_bean.getNominalValues()));
         pstmt.setString(34, StringConverter.convertToDatabaseValueS(_bean.getMarkList()));
+        pstmt.setString(35, StringConverter.convertToDatabaseValueS(_bean.getValueTypes()));
 
         pstmt.executeUpdate();//执行sql
         ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
@@ -319,7 +321,7 @@ public class JdbcUtil {
         pstmt.setString(5, _bean.getResult());
         pstmt.setString(6, "");
         pstmt.setString(7, _bean.getHandlerAccout());
-        pstmt.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
+        pstmt.setTimestamp(8, new java.sql.Timestamp(_bean.getTimeStamp()));
         pstmt.setLong(9, templateResultID);
         pstmt.setLong(10, _bean.getTemplateID());
         pstmt.executeUpdate();//执行sql
@@ -568,6 +570,24 @@ public class JdbcUtil {
         return 1;
     }
 
+    public static int selectEquipmentID(String factory_code, String machine_code) throws Exception {
+        int id = -1;
+        Connection con = getConnection();
+        if (con == null) return -1;
+        String sql = "select id from ntqc_equipment where factory_code = '" + factory_code + "' and " + "machine_code = '" + machine_code + "'";
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = null;
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
     public static int selectParamConfig(String machine_code, int prog_id, String param_key) throws Exception {
         int count = 0;
         Connection con = getConnection();
@@ -624,6 +644,20 @@ public class JdbcUtil {
             pstmt.close();
         }
         conn.close();
+        return 1;
+    }
+
+    public static int insertDevcieStatus(int deviceid) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        Calendar c = Calendar.getInstance();
+        String sql = "insert into ntqc_equipment_status (equipment_id,status,update_time) VALUES (?,?,?);";
+        PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        pstmt.setInt(1, deviceid);
+        pstmt.setInt(2, 0);
+        pstmt.setTimestamp(3, new java.sql.Timestamp((System.currentTimeMillis() / 1000) * 1000));
+        pstmt.executeUpdate();
+        pstmt.close();
         return 1;
     }
 }

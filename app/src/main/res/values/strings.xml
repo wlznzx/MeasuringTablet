@@ -221,7 +221,7 @@
     <string name="measure_info">参数名\n规格</string>
     <string name="max">MAX</string>
     <string name="min">MIN</string>
-    <string name="judge">判定</string>
+    <string name="judge">判\u3000定</string>
     <string name="picture">图片</string>
     <string name="workspace_1">1号工件</string>
     <string name="workspace_5">5号工件</string>
@@ -348,7 +348,7 @@
     <string name="m_type_str">参数类型</string>
     <string name="add_template">新建模板</string>
     <string name="copy_add_template">复制新建</string>
-    <string name="add_pic_tips">添加图片，最多可添加20张</string>
+    <string name="add_pic_tips">添加图片，最多可添加30张</string>
     <string name="edit_template">编辑模板</string>
     <string name="template_num">模板编号</string>
     <string name="template_title">模板标题</string>

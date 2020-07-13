@@ -98,7 +98,10 @@ public class TemplateResultBean {
     @Convert(columnType = String.class, converter = StringConverter.class)
     public List<String> nominalValues;
 
-    @Generated(hash = 1378650688)
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    public List<String> valueTypes;
+
+    @Generated(hash = 1844604968)
     public TemplateResultBean(Long id, String factoryCode, String deviceCode, int codeID,
             byte[] logoPic, List<String> titleList, List<String> signList,
             List<String> AQLList, List<String> RoHSList, List<String> markList,
@@ -110,7 +113,7 @@ public class TemplateResultBean {
             List<String> titleResultList, List<String> AQLResultList,
             List<String> RoHSResultList, List<String> valueIndexs,
             List<String> upperToleranceValues, List<String> lowerToleranceValues,
-            List<String> nominalValues) {
+            List<String> nominalValues, List<String> valueTypes) {
         this.id = id;
         this.factoryCode = factoryCode;
         this.deviceCode = deviceCode;
@@ -147,6 +150,7 @@ public class TemplateResultBean {
         this.upperToleranceValues = upperToleranceValues;
         this.lowerToleranceValues = lowerToleranceValues;
         this.nominalValues = nominalValues;
+        this.valueTypes = valueTypes;
     }
 
     @Generated(hash = 1091879955)
@@ -439,6 +443,14 @@ public class TemplateResultBean {
 
     public void setNominalValues(List<String> nominalValues) {
         this.nominalValues = nominalValues;
+    }
+
+    public List<String> getValueTypes() {
+        return this.valueTypes;
+    }
+
+    public void setValueTypes(List<String> valueTypes) {
+        this.valueTypes = valueTypes;
     }
 
 

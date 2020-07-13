@@ -34,6 +34,16 @@ public class TemplateManagerActivity extends BaseOActivity implements DataUpdate
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HashMap<String, Boolean> states = new HashMap<String, Boolean>();
+        codeBeans = App.getDaoSession().getTemplateBeanDao().loadAll();
+        for (TemplateBean bean : codeBeans) {
+            android.util.Log.d("wlDebug", "bean = " + bean.toString());
+        }
+        codeID = App.getDaoSession().getCodeBeanDao().load(Long.valueOf(App.getSetupBean().getCodeID())).getUseTemplateID();
+        android.util.Log.d("wlDebug", "codeID = " + codeID);
+        states.put(String.valueOf(codeID - 1), true);
+        adapter = new TemplateListAdapter(codeBeans, states, this, this, (int) codeID);
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -50,16 +60,6 @@ public class TemplateManagerActivity extends BaseOActivity implements DataUpdate
     @Override
     protected void onResume() {
         super.onResume();
-        HashMap<String, Boolean> states = new HashMap<String, Boolean>();
-        codeBeans = App.getDaoSession().getTemplateBeanDao().loadAll();
-        for (TemplateBean bean : codeBeans) {
-            android.util.Log.d("wlDebug", "bean = " + bean.toString());
-        }
-        codeID = App.getDaoSession().getCodeBeanDao().load(Long.valueOf(App.getSetupBean().getCodeID())).getUseTemplateID();
-        android.util.Log.d("wlDebug", "codeID = " + codeID);
-        states.put(String.valueOf(codeID - 1), true);
-        adapter = new TemplateListAdapter(codeBeans, states, this, this, (int) codeID);
-        listView.setAdapter(adapter);
     }
 
     @Override
