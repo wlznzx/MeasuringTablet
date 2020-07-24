@@ -5,11 +5,9 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -74,7 +72,7 @@ public class CodeListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view;
-        if (convertView == null) {
+        if (convertView == null || true) {
             //通过一个打气筒 inflate 可以把一个布局转换成一个view对象
             view = View.inflate(context, R.layout.list_code_item, null);
         } else {
@@ -82,24 +80,30 @@ public class CodeListAdapter extends BaseAdapter {
         }
 
         View list_item_layout = view.findViewById(R.id.list_item_layout);
-        if (TextUtils.isEmpty(filterTest)) {
 
-        } else {
-            if (listText.get(position).getName().contains(filterTest) || filterTest.equals("")) {
-                list_item_layout.setVisibility(View.VISIBLE);
-            } else {
-//                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-//                        //设置item的weidth和height都为0
-//                        0,
-//                        0);
-//                list_item_layout.setLayoutParams(params);
-                list_item_layout.setVisibility(View.GONE);
-            }
-        }
+
         //单选按钮的文字
         TextView radioText = view.findViewById(R.id.tv_radio_text);
         //单选按钮
         RadioButton radioButton = view.findViewById(R.id.rb_radio_button);
+
+
+        /**/
+        if (TextUtils.isEmpty(filterTest)) {
+
+        } else {
+            if (listText.get(position).getName().contains(filterTest) || filterTest.equals("")) {
+//                list_item_layout.setVisibility(View.VISIBLE);
+//                radioButton.setVisibility(View.VISIBLE);
+            } else {
+//                list_item_layout.setVisibility(View.GONE);
+//                radioButton.setVisibility(View.GONE);
+                view = View.inflate(context, R.layout.list_code_item_null, null);
+                return view;
+            }
+        }
+
+
         radioButton.setText(String.valueOf(position + 1));
         radioText.setText(listText.get(position).getName());
         radioButton.setOnClickListener(new View.OnClickListener() {

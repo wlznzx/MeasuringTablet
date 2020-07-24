@@ -218,11 +218,11 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
         @Override
         protected Boolean doInBackground(String... params) {
             try {
-                android.util.Log.d("wlDebug", "mDeviceInfoBean = " + mDeviceInfoBean.toString());
-                int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode());
-                android.util.Log.d("wlDebug", "delete ret = " + ret);
+                // android.util.Log.d("wlDebug", "mDeviceInfoBean = " + mDeviceInfoBean.toString());
+                int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID());
+                // android.util.Log.d("wlDebug", "delete ret = " + ret);
                 ret = JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);
-                android.util.Log.d("wlDebug", "add ret = " + ret);
+                // android.util.Log.d("wlDebug", "add ret = " + ret);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -325,7 +325,7 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
             public void run() {
                 try {
                     android.util.Log.d("wlDebug", "mDeviceInfoBean = " + mDeviceInfoBean.toString());
-                    int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode());
+                    int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID());
                     android.util.Log.d("wlDebug", "delete ret = " + ret);
                     ret = JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);
                     android.util.Log.d("wlDebug", "add ret = " + ret);

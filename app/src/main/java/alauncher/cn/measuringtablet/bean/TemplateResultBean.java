@@ -454,4 +454,44 @@ public class TemplateResultBean {
     }
 
 
+    @Override
+    public String toString() {
+        return "TemplateResultBean{" +
+                "id=" + id +
+                ", factoryCode='" + factoryCode + '\'' +
+                ", deviceCode='" + deviceCode + '\'' +
+                ", codeID=" + codeID +
+                ", titleList=" + titleList +
+                ", signList=" + signList +
+                ", AQLList=" + AQLList +
+                ", RoHSList=" + RoHSList +
+                ", markList=" + markList +
+                ", headerLeft='" + headerLeft + '\'' +
+                ", headerMid='" + headerMid + '\'' +
+                ", headerRight='" + headerRight + '\'' +
+                ", footerLeft='" + footerLeft + '\'' +
+                ", footerMid='" + footerMid + '\'' +
+                ", footerRight='" + footerRight + '\'' +
+                ", title='" + title + '\'' +
+                ", dataNum=" + dataNum +
+                ", maximumEnable=" + maximumEnable +
+                ", minimumEnable=" + minimumEnable +
+                ", averageEnable=" + averageEnable +
+                ", rangeEnable=" + rangeEnable +
+                ", judgeEnable=" + judgeEnable +
+                ", allJudge='" + allJudge + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", remarks='" + remarks + '\'' +
+                ", user='" + user + '\'' +
+                ", isUpload=" + isUpload +
+                ", titleResultList=" + titleResultList +
+                ", AQLResultList=" + AQLResultList +
+                ", RoHSResultList=" + RoHSResultList +
+                ", valueIndexs=" + valueIndexs +
+                ", upperToleranceValues=" + upperToleranceValues +
+                ", lowerToleranceValues=" + lowerToleranceValues +
+                ", nominalValues=" + nominalValues +
+                ", valueTypes=" + valueTypes +
+                '}';
+    }
 }

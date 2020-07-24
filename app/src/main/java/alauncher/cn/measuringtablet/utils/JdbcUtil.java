@@ -606,13 +606,14 @@ public class JdbcUtil {
         return count;
     }
 
-    public static int deleteParam2s(String factory_code, String machine_code) throws Exception {
+    public static int deleteParam2s(String factory_code, String machine_code,int code_id) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
-        String sql = "delete from ntqc_param_config where machine_code=? and factory_code=?";
+        String sql = "delete from ntqc_param_config where machine_code=? and factory_code=? and prog_id=?";
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1, machine_code);
         pstmt.setString(2, factory_code);
+        pstmt.setInt(3, code_id);
         int ret = pstmt.executeUpdate();//执行sql
         pstmt.close();
         conn.close();
@@ -647,14 +648,14 @@ public class JdbcUtil {
         return 1;
     }
 
-    public static int insertDevcieStatus(int deviceid) throws Exception {
+    public static int insertDevcieStatus(int deviceid, int status) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
         Calendar c = Calendar.getInstance();
         String sql = "insert into ntqc_equipment_status (equipment_id,status,update_time) VALUES (?,?,?);";
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         pstmt.setInt(1, deviceid);
-        pstmt.setInt(2, 0);
+        pstmt.setInt(2, status);
         pstmt.setTimestamp(3, new java.sql.Timestamp((System.currentTimeMillis() / 1000) * 1000));
         pstmt.executeUpdate();
         pstmt.close();

@@ -13,7 +13,9 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    public static long HEARTBEAT_SPAN = 5 * 60 * 1000;
+    public final static long HEARTBEAT_SPAN = 5 * 60 * 1000;
+
+    public static boolean isLogin = false;
 
     @Override
     public void onReceive(Context context, Intent i) {
@@ -25,21 +27,22 @@ public class AlarmReceiver extends BroadcastReceiver {
             AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
             am.setWindow(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), AlarmReceiver.HEARTBEAT_SPAN, sender);
             /**/
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        int id = JdbcUtil.selectEquipmentID(App.getDeviceInfo().getFactoryCode(), App.getDeviceInfo().getDeviceCode());
-                        // android.util.Log.d("wlDebug", "id = " + id);
-                        if (id != -1) {
-                            JdbcUtil.insertDevcieStatus(id);
+            if (isLogin) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            int id = JdbcUtil.selectEquipmentID(App.getDeviceInfo().getFactoryCode(), App.getDeviceInfo().getDeviceCode());
+                            // android.util.Log.d("wlDebug", "id = " + id);
+                            if (id != -1) {
+                                JdbcUtil.insertDevcieStatus(id, 0);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
-            }).start();
-
+                }).start();
+            }
         }
     }
 }

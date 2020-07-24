@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import alauncher.cn.measuringtablet.bean.ResultBean;
 import alauncher.cn.measuringtablet.bean.ResultBean3;
 import alauncher.cn.measuringtablet.view.StatisticalActivity;
 import jxl.Workbook;

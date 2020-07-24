@@ -134,7 +134,7 @@ public class TemplateActivity extends BaseOActivity {
                 mTemplateBean.setTemplateID(null);
             }
         }
-        // android.util.Log.d("wlDebug", "bean = " + mTemplateBean.toString());
+        android.util.Log.d("wlDebug", "bean = " + mTemplateBean.getTitleList().size());
         views[0] = LayoutInflater.from(TemplateActivity.this).inflate(R.layout.activity_template_frist, null, false);
         leftHeaderEdt = views[0].findViewById(R.id.left_header_edt);
         rightHeaderEdt = views[0].findViewById(R.id.right_header_edt);
@@ -865,6 +865,7 @@ public class TemplateActivity extends BaseOActivity {
     }
 
     private String getInputType(String index) {
+        if (index.equals("")) return index;
         return getResources().getStringArray(R.array.input_type)[Integer.valueOf(index)];
     }
 

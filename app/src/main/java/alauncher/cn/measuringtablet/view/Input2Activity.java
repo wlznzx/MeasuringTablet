@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +19,9 @@ import android.os.Environment;
 import android.provider.Browser;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 
@@ -40,6 +43,7 @@ import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.core.content.FileProvider;
 
@@ -74,6 +78,7 @@ import alauncher.cn.measuringtablet.bean.TemplateBean;
 import alauncher.cn.measuringtablet.bean.TemplatePicBean;
 import alauncher.cn.measuringtablet.bean.TemplateResultBean;
 import alauncher.cn.measuringtablet.bean.User;
+import alauncher.cn.measuringtablet.database.greenDao.db.CodeBeanDao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ResultBean3Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.TemplatePicBeanDao;
@@ -361,7 +366,6 @@ public class Input2Activity extends BaseOActivity {
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
                 }
 
-
                 if (results.get(j).size() < mParameterBean2s.size()) {
                     View view = (View) getInputViewByType(rol2Bean.getType() == 3 ? "1" : "0", true);
                     dataLayout.addView(view, getItemLayoutParams(2, 1));
@@ -613,6 +617,14 @@ public class Input2Activity extends BaseOActivity {
         TempResultsBean _bean = tempResultBeans.get(mCodeBean.getCodeID());
         if (_bean != null)
             resumeTemps(_bean);
+    }
+
+    private void showWorkpiecePic(){
+        byte[] _pic = mCodeBean.getWorkpiecePic();
+        if (_pic != null) {
+            String path = bytesToImageFile(_pic);
+            if (path != null) openImage(path);
+        }
     }
 
     private String getUpperToleranceValue(ParameterBean2 pBean2) {
@@ -885,8 +897,17 @@ public class Input2Activity extends BaseOActivity {
                                 days = new StringBuffer().append(mYear).append("/").
                                         append(mMonth + 1).append("/").append(mDay).append("").toString();
                             }
-
                         }
+                        new TimePickerDialog(Input2Activity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+                                String sHour = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                                String sMinute = minute < 10 ? "0" + minute : "" + minute;
+                                String days = tv.getText().toString();
+                                days += "/" + sHour + "/" + minute;
+                                tv.setText(days);
+                            }
+                        }, 0, 0, true).show();
                         tv.setText(days);
                     }
                 }, year, month, day).show();
@@ -905,13 +926,13 @@ public class Input2Activity extends BaseOActivity {
 
     public EditText getInputEditView(boolean numOnly) {
         EditText et = new BorderEditView(this);
+        // et.setPadding(2, 2, 2, 2);
         et.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
-        et.setPadding(2, 2, 2, 2);
         et.setGravity(Gravity.CENTER);
         et.setBackground(null);
         et.setMaxLines(1);
         et.setSingleLine(true);
-        et.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        // et.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         if (numOnly) {
             DigitsKeyListener numericOnlyListener = new DigitsKeyListener(true, true);
             et.setKeyListener(numericOnlyListener);
@@ -945,10 +966,24 @@ public class Input2Activity extends BaseOActivity {
             });
             et.setHint(R.string.hint);
         } else {
-            et.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_!@#$%^&*()+."));
+            // et.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_!@#$%^&*()+."));
+            et.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
             et.setHint(R.string.hint);
         }
         return et;
+    }
+
+    public class EmojiExcludeFilter implements InputFilter {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned spanned, int i2, int i3) {
+            for (int i = start; i < end; i++) {
+                int type = Character.getType(source.charAt(i));
+                if (type == Character.SURROGATE || type == Character.OTHER_SYMBOL) {
+                    return "";
+                }
+            }
+            return null;
+        }
     }
 
     public EditText getInputEditView() {
@@ -1040,7 +1075,8 @@ public class Input2Activity extends BaseOActivity {
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                         if (newVal > 0 && oldVal != newVal) {
                             dataNumber = newVal;
-                            clear();
+                            // clear();
+                            recreate();
                         }
                     }
                 },
@@ -1077,6 +1113,7 @@ public class Input2Activity extends BaseOActivity {
     @OnClick(R.id.btn_clear)
     public void clear() {
         // 刷新;
+        tempResultBeans.put(mCodeBean.getCodeID(), null);
         recreate();
     }
 
@@ -1094,6 +1131,11 @@ public class Input2Activity extends BaseOActivity {
         new SyncTask().execute();
     }
 
+    @OnClick({R.id.workpiece_pic_btn})
+    public void showWorkpiecePicClick(View view) {
+        showWorkpiecePic();
+    }
+
     private List<CodeBean> lists;
 
     private void showChooseDialog(int index) {
@@ -1103,7 +1145,7 @@ public class Input2Activity extends BaseOActivity {
         dialog.setContentView(view);
         dialog.show();
         if (index == 0) {
-            lists = App.getDaoSession().getCodeBeanDao().loadAll();
+            lists = App.getDaoSession().getCodeBeanDao().queryBuilder().orderAsc(CodeBeanDao.Properties.Name).list();
         }
         Set<String> fristSet = new LinkedHashSet<>();
         for (CodeBean _bean : lists) {
@@ -1382,7 +1424,6 @@ public class Input2Activity extends BaseOActivity {
         for (int i = 0; i < judges.size(); i++) {
             android.util.Log.d("wlDebug", "string" + i + " = " + judges.get(i));
         }
-
     }
 
     public class ExportedTask extends AsyncTask<String, Integer, String> {
@@ -1490,7 +1531,9 @@ public class Input2Activity extends BaseOActivity {
 
                 List<String> roshLists = new ArrayList<>();
                 for (Object obj : roshEdts) {
-                    roshLists.add(getTextByInputType(obj));
+                    String str = getTextByInputType(obj);
+                    android.util.Log.d("wlDebug", "str = " + str);
+                    roshLists.add(str);
                 }
                 mTemplateResultBean.setRoHSResultList(roshLists);
                 mTemplateResultBean.setAllJudge(allJudge);
@@ -1783,7 +1826,6 @@ public class Input2Activity extends BaseOActivity {
         }
     }
 
-
     private void saveTemps() {
         TemplateResultBean _templateResultBean = new TemplateResultBean();
         List<String> titleLists = new ArrayList<>();
@@ -1848,8 +1890,14 @@ public class Input2Activity extends BaseOActivity {
                 setInputText(bean.getTemplateResultBean().getRoHSResultList().get(i), roshEdts.get(i));
             }
 
+            // android.util.Log.d("wlDebug", "results.size() = " + results.size());
             for (int i = 0; i < results.size(); i++) {
-                ResultBean3 _resultBean3 = bean.getResultBean3s().get(i);
+                ResultBean3 _resultBean3 = null;
+                try {
+                    _resultBean3 = bean.getResultBean3s().get(i);
+                } catch (IndexOutOfBoundsException e) {
+                    break;
+                }
                 for (int j = 0; j < results.get(i).size(); j++) {
                     Object obj = results.get(i).get(j);
                     if (obj instanceof EditText) {
@@ -1861,7 +1909,7 @@ public class Input2Activity extends BaseOActivity {
                 }
                 for (int j = 0; j < mParameterBean2s.size(); j++) {
                     resultImgs.get(i).get(j).setTag(_resultBean3.getMPicPaths().get(j));
-                    Glide.with(this).load(_resultBean3.getMPicPaths().get(j)).into(resultImgs.get(i).get(j));
+                    Glide.with(this).load(_resultBean3.getMPicPaths().get(j) == null ? R.drawable.add_circle : _resultBean3.getMPicPaths().get(j)).into(resultImgs.get(i).get(j));
                 }
             }
 

@@ -18,6 +18,7 @@ import java.util.List;
 
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.base.ViewHolder;
+import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.view.LoginActivity;
 
 import androidx.annotation.NonNull;
@@ -125,6 +126,22 @@ public class MainActivity extends BaseOActivity {
                 builder.dismiss();
                 finish();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                // 登出;
+                AlarmReceiver.isLogin = false;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            int id = JdbcUtil.selectEquipmentID(App.getDeviceInfo().getFactoryCode(), App.getDeviceInfo().getDeviceCode());
+                            // android.util.Log.d("wlDebug", "id = " + id);
+                            if (id != -1) {
+                                JdbcUtil.insertDevcieStatus(id, 1);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         });
     }

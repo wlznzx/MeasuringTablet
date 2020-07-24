@@ -7,6 +7,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -73,7 +74,7 @@ public class PDFUtils {
         Font font = new Font(bf, 8, Font.NORMAL);
         font.setColor(BaseColor.BLACK);
 
-        Document document = new Document();
+        Document document = new Document(PageSize.A4, -12F, -12F, 36F, 0);
         // 创建PdfWriter对象
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(path));
         PDFBuilder builder = new PDFBuilder();
@@ -186,7 +187,7 @@ public class PDFUtils {
         //页数
         int pageSum = (int) Math.ceil((double) pTemplateResultBean.getValueIndexs().size() / (double) pageSize);
 
-
+        android.util.Log.d("wlDebug", "pTemplateResultBean = " + pTemplateResultBean.toString());
         // 计算数据的最大、最小、判定值;
         ArrayList<Double> _maxs = new ArrayList<>();
         ArrayList<Double> _mins = new ArrayList<>();
@@ -209,8 +210,13 @@ public class PDFUtils {
                 for (int j = 0; j < pResultBean3s.size(); j++) {
                     ResultBean3 _bean = pResultBean3s.get(j);
                     String _value = _bean.getMValues().get(i);
+
+                    android.util.Log.d("wlDebug", "_bean = " + _bean.toString());
+                    android.util.Log.d("wlDebug", "_value = " + _value);
+
                     boolean isBool = _bean.getIsBoolList().size() > 0 ? _bean.getIsBoolList().get(i).equals("true") : false;
                     if (_value.equals("")) {
+                        _result = "";
                         continue;
                     }
                     if (isBool) {
@@ -227,18 +233,18 @@ public class PDFUtils {
                     try {
                         switch (type) {
                             case "0":
-                                if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(j))
-                                        || Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getNominalValues().get(j)) + Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(j))) {
+                                if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(i))
+                                        || Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(i))) {
                                     _result = "NG";
                                 }
                                 break;
                             case "1":
-                                if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(j))) {
+                                if (Double.valueOf(_value) > Double.valueOf(pTemplateResultBean.getUpperToleranceValues().get(i))) {
                                     _result = "NG";
                                 }
                                 break;
                             case "2":
-                                if (Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(j))) {
+                                if (Double.valueOf(_value) < Double.valueOf(pTemplateResultBean.getLowerToleranceValues().get(i))) {
                                     _result = "NG";
                                 }
                                 break;
@@ -414,9 +420,9 @@ public class PDFUtils {
                         String.valueOf(_results.get(i * 3 + 1)) : " ";
                 String judge3 = i * 3 + 2 < _results.size() ?
                         String.valueOf(_results.get(i * 3 + 2)) : " ";
-                table.addCell(getDataCell(judge1, 1, 5, judge1.equals("OK") ? dataOKColor : dataNGColor));
-                table.addCell(getDataCell(judge2, 1, 5, judge2.equals("OK") ? dataOKColor : dataNGColor));
-                table.addCell(getDataCell(judge3, 1, 5, judge3.equals("OK") ? dataOKColor : dataNGColor));
+                table.addCell(getDataCell(judge1, 1, 5, judge1.equals("OK") ? dataOKColor : judge1.equals("NG") ? dataNGColor : dataTitleColor));
+                table.addCell(getDataCell(judge2, 1, 5, judge2.equals("OK") ? dataOKColor : judge2.equals("NG") ? dataNGColor : dataTitleColor));
+                table.addCell(getDataCell(judge3, 1, 5, judge3.equals("OK") ? dataOKColor : judge3.equals("NG") ? dataNGColor : dataTitleColor));
             }
         }
         // 底部 6 ，6 ，4；
@@ -441,7 +447,8 @@ public class PDFUtils {
             table.addCell(getBottomCell(pTemplateResultBean.getRoHSResultList().size() > i ? pTemplateResultBean.getRoHSResultList().get(i) : " ", 1, 1, BaseColor.WHITE));
         }
 
-        table.addCell(getBottomCell(pTemplateResultBean.getAllJudge(), 2, 2, pTemplateResultBean.getAllJudge().equals("OK") ? dataOKColor : dataNGColor));
+        table.addCell(getBottomCell(pTemplateResultBean.getAllJudge(), 2, 2,
+                pTemplateResultBean.getAllJudge().equals("OK") ? dataOKColor : pTemplateResultBean.getAllJudge().equals("NG") ? dataNGColor : dataTitleColor));
 
         for (int i = bottomRow - 1; i < bottomRow; i++) {
             android.util.Log.d("wlDebug", "i = " + i + " " + (pTemplateResultBean.getRoHSList().size() > i ? pTemplateResultBean.getRoHSList().get(i) : " "));
@@ -452,7 +459,6 @@ public class PDFUtils {
         }
 
         // 添加备注
-        /**/
         PdfPCell remarkCell = new PdfPCell(new Paragraph(pTemplateResultBean.getRemarks(), font));
         remarkCell.setBorderColor(BaseColor.BLACK);
         remarkCell.setRowspan(3);
@@ -466,7 +472,6 @@ public class PDFUtils {
         // 添加备注图片;
         if (pTemplatePicBeans != null) {
             for (TemplatePicBean _bean : pTemplatePicBeans) {
-                /**/
                 Image _img = Image.getInstance(_bean.getImg());
                 PdfPCell _cell = new PdfPCell(_img, true);
                 _cell.setRowspan(8);

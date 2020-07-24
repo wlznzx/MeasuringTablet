@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
+import alauncher.cn.measuringtablet.AlarmReceiver;
 import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.MainActivity;
 import alauncher.cn.measuringtablet.R;
@@ -146,6 +146,7 @@ public class LoginActivity extends BaseOLandscapeActivity {
             App.getDaoSession().getRememberPasswordBeanDao().insertOrReplace(_bean);
         }
         startActivity(new Intent(this, MainActivity.class));
+        AlarmReceiver.isLogin = true;
         finish();
     }
 

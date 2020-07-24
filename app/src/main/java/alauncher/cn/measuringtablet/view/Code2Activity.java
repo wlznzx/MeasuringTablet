@@ -16,6 +16,7 @@ import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.User;
+import alauncher.cn.measuringtablet.database.greenDao.db.CodeBeanDao;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.view.adapter.CodeListAdapter;
@@ -36,7 +37,7 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
 
     public CodeListAdapter adapter;
 
-    public List<CodeBean> codeBeans;
+    public List<CodeBean> allCodeBeans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +51,12 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
 
     @Override
     protected void initView() {
+        listView.setDividerHeight(0);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String s) {
-                android.util.Log.d("wlDebug","onQueryTextSubmit s = " + s);
+                android.util.Log.d("wlDebug", "onQueryTextSubmit s = " + s);
                 return false;
             }
 
@@ -75,18 +77,18 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
     protected void onResume() {
         super.onResume();
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
-        codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
-        for (CodeBean bean : codeBeans) {
-            android.util.Log.d("wlDebug", "bean = " + bean.toString());
-        }
+        allCodeBeans = App.getDaoSession().getCodeBeanDao().queryBuilder().orderAsc(CodeBeanDao.Properties.Name).list();
+//        for (CodeBean bean : codeBeans) {
+//            android.util.Log.d("wlDebug", "bean = " + bean.toString());
+//        }
 
         codeID = App.getSetupBean().getCodeID();
         states.put(String.valueOf(codeID - 1), true);
         if (adapter == null) {
-            adapter = new CodeListAdapter(codeBeans, states, this, this);
+            adapter = new CodeListAdapter(allCodeBeans, states, this, this);
             listView.setAdapter(adapter);
         }
-        adapter.setList(codeBeans);
+        adapter.setList(allCodeBeans);
         adapter.notifyDataSetChanged();
     }
 
@@ -134,8 +136,8 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
 
     @Override
     public void dataUpdate() {
-        codeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
-        adapter.setList(codeBeans);
+        allCodeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
+        adapter.setList(allCodeBeans);
         adapter.notifyDataSetChanged();
     }
 }
