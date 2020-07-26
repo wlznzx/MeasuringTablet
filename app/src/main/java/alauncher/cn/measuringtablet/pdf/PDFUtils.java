@@ -39,6 +39,7 @@ public class PDFUtils {
 
 
     // E4F2F6
+    /*
     private static BaseColor titleColor = new BaseColor(228, 242, 246);
 
     private static BaseColor dataTitleColor = new BaseColor(92, 167, 188);
@@ -56,6 +57,24 @@ public class PDFUtils {
     private static BaseColor judgeColor = new BaseColor(244, 250, 251);
 
     private static BaseColor dataHeader = new BaseColor(158, 224, 219);
+    */
+    private static BaseColor titleColor = new BaseColor(255, 255, 255);
+
+    private static BaseColor dataTitleColor = new BaseColor(255, 255, 255);
+
+    private static BaseColor dataLineOneColor = new BaseColor(255, 255, 255);
+
+    private static BaseColor dataLineTwoColor = new BaseColor(225, 255, 255);
+
+    private static BaseColor dataOKColor = new BaseColor(255, 255, 255);
+
+    private static BaseColor dataNGColor = new BaseColor(255, 255, 255);
+
+    private static BaseColor bottomColor = new BaseColor(255, 255, 255);
+
+    private static BaseColor judgeColor = new BaseColor(255, 255, 255);
+
+    private static BaseColor dataHeader = new BaseColor(255, 255, 255);
 
     //  0, 153, 102 合格
 
@@ -71,7 +90,7 @@ public class PDFUtils {
     public static void createNTTable(TemplateResultBean pTemplateResultBean, List<ResultBean3> pResultBean3s, List<TemplatePicBean> pTemplatePicBeans, String path) throws IOException, DocumentException {
 
         BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-        Font font = new Font(bf, 8, Font.NORMAL);
+        Font font = new Font(bf, 12, Font.NORMAL);
         font.setColor(BaseColor.BLACK);
 
         Document document = new Document(PageSize.A4, -12F, -12F, 36F, 0);
@@ -165,6 +184,7 @@ public class PDFUtils {
             cell4.setRowspan(10);
             cell4.setColspan(16);
             cell4.setBorderColor(BaseColor.BLACK);
+            cell4.setBackgroundColor(BaseColor.WHITE);
             cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell4.setPaddingLeft(5);
@@ -289,6 +309,7 @@ public class PDFUtils {
 
 
             // 绘制下限值;
+            /**/
             table.addCell(getDataCell("下限值", 1, 1, dataTitleColor));
             table.addCell(getDataCell(pTemplateResultBean.getLowerToleranceValues().size() > i * 3 + 0 ?
                     pTemplateResultBean.getLowerToleranceValues().get(i * 3 + 0) : " ", 1, 5, dataLineTwoColor));
@@ -296,6 +317,7 @@ public class PDFUtils {
                     pTemplateResultBean.getLowerToleranceValues().get(i * 3 + 1) : " ", 1, 5, dataLineTwoColor));
             table.addCell(getDataCell(pTemplateResultBean.getLowerToleranceValues().size() > i * 3 + 2 ?
                     pTemplateResultBean.getLowerToleranceValues().get(i * 3 + 2) : " ", 1, 5, dataLineTwoColor));
+
 
             // 绘制中间值;
             table.addCell(getDataCell("中间值", 1, 1, dataTitleColor));
@@ -509,7 +531,7 @@ public class PDFUtils {
 
 
     private static PdfPCell getTitleCell(String msg, BaseColor backgroundColor) {
-        PdfPCell cell = new PdfPCell(new Paragraph(msg, getFont(8)));
+        PdfPCell cell = new PdfPCell(new Paragraph(msg, getFont(10)));
         cell.setBackgroundColor(backgroundColor);
         cell.setRowspan(1);
         cell.setColspan(2);
@@ -524,9 +546,10 @@ public class PDFUtils {
     }
 
     private static PdfPCell getDataCell(String msg, int row, int col, BaseColor backgroundColor) {
-        PdfPCell cell = new PdfPCell(new Paragraph(msg, getFont(6, BaseColor.BLACK)));
-        cell.setBorderColor(BaseColor.WHITE);
-        cell.setBackgroundColor(backgroundColor);
+        PdfPCell cell = new PdfPCell(new Paragraph(msg, getFont(10, BaseColor.BLACK)));
+        // cell.setBorderColor(BaseColor.WHITE);
+        cell.setBorderColor(BaseColor.BLACK);
+        // cell.setBackgroundColor(backgroundColor);
         cell.setRowspan(row);
         cell.setColspan(col);
         // 设置距左边的距离
@@ -560,7 +583,7 @@ public class PDFUtils {
         try {
             if (_font == null) {
                 BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-                _font = new Font(bf, 8, Font.NORMAL);
+                _font = new Font(bf, 12, Font.NORMAL);
                 _font.setColor(BaseColor.BLACK);
             }
             _font.setSize(size);
@@ -578,7 +601,7 @@ public class PDFUtils {
         try {
             if (font == null) {
                 BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-                font = new Font(bf, 8, Font.NORMAL);
+                font = new Font(bf, 12, Font.NORMAL);
                 font.setColor(BaseColor.BLACK);
             }
             font.setSize(size);

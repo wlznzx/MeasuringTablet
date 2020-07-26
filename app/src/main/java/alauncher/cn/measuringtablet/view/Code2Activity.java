@@ -1,6 +1,8 @@
 package alauncher.cn.measuringtablet.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,10 +16,14 @@ import alauncher.cn.measuringtablet.App;
 import alauncher.cn.measuringtablet.R;
 import alauncher.cn.measuringtablet.base.BaseOActivity;
 import alauncher.cn.measuringtablet.bean.CodeBean;
+import alauncher.cn.measuringtablet.bean.DeviceInfoBean;
+import alauncher.cn.measuringtablet.bean.ParameterBean2;
 import alauncher.cn.measuringtablet.bean.SetupBean;
 import alauncher.cn.measuringtablet.bean.User;
 import alauncher.cn.measuringtablet.database.greenDao.db.CodeBeanDao;
+import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
+import alauncher.cn.measuringtablet.utils.JdbcUtil;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringtablet.view.adapter.CodeListAdapter;
 import alauncher.cn.measuringtablet.widget.CodeEditDialog;
@@ -38,6 +44,8 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
     public CodeListAdapter adapter;
 
     public List<CodeBean> allCodeBeans;
+
+    private DeviceInfoBean mDeviceInfoBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +84,7 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
     @Override
     protected void onResume() {
         super.onResume();
+        mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
         allCodeBeans = App.getDaoSession().getCodeBeanDao().queryBuilder().orderAsc(CodeBeanDao.Properties.Name).list();
 //        for (CodeBean bean : codeBeans) {
@@ -97,7 +106,7 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
         super.onPause();
     }
 
-    @OnClick({R.id.set_btn, R.id.set_as_btn, R.id.add_code_btn})
+    @OnClick({R.id.set_btn, R.id.set_as_btn, R.id.add_code_btn, R.id.upload_server_btn})
     public void onSetBtnClick(View v) {
         switch (v.getId()) {
             case R.id.set_btn:
@@ -131,6 +140,9 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
                 codeEditDialog.setDataUpdateInterface(this);
                 codeEditDialog.show();
                 break;
+            case R.id.upload_server_btn:
+                new uploadTask().execute();
+                break;
         }
     }
 
@@ -139,5 +151,65 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
         allCodeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
         adapter.setList(allCodeBeans);
         adapter.notifyDataSetChanged();
+    }
+
+    public class uploadTask extends AsyncTask<String, Integer, Boolean> {
+
+        private ProgressDialog dialog;
+        private List<ParameterBean2> mDates;
+        private List<CodeBean> mCodeBeans;
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            mCodeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
+            dialog = new ProgressDialog(Code2Activity.this);
+            dialog.setTitle("程序同步");
+            dialog.setMessage("共有" + mCodeBeans.size() + "个程序正在同步服务器，请稍等.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                // 删除该设备所有的Code;
+                int ret = JdbcUtil.deleteAllCodes(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode());
+                /**/
+                for (int i = 0; i < mCodeBeans.size(); i++) {
+                    mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                            .where(ParameterBean2Dao.Properties.CodeID.eq(mCodeBeans.get(i).getCodeID())).list();
+                    JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);
+                    publishProgress(i + 1);
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+            dialog.setMessage("共有" + mCodeBeans.size() + "个程序正在同步服务器," + "已上传" + progresses[0] + "个程序.");
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isSuccess) {
+            dialog.dismiss();
+            if (isSuccess) {
+                DialogUtils.showDialog(Code2Activity.this, "上传成功", "上传服务器成功.");
+            } else {
+                DialogUtils.showDialog(Code2Activity.this, "上传失败", "上传服务器失败，请配置和网络.");
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
     }
 }

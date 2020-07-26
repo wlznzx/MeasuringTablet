@@ -133,7 +133,7 @@ public class MainActivity extends BaseOActivity {
                     public void run() {
                         try {
                             int id = JdbcUtil.selectEquipmentID(App.getDeviceInfo().getFactoryCode(), App.getDeviceInfo().getDeviceCode());
-                            // android.util.Log.d("wlDebug", "id = " + id);
+                            android.util.Log.d("wlDebug", "id = " + id);
                             if (id != -1) {
                                 JdbcUtil.insertDevcieStatus(id, 1);
                             }

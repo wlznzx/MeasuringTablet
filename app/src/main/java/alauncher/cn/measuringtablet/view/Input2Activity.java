@@ -304,55 +304,81 @@ public class Input2Activity extends BaseOActivity {
 
         // 秀的操作来了，真是可怕;
         //每页显示的记录数
-        int pageSize = 3;
+        int pageSize = 5;
         //页数
         int pageSum = (int) Math.ceil((double) mParameterBean2s.size() / (double) pageSize);
 
         for (int i = 0; i < pageSum; i++) {
 
+            List<ParameterBean2> rol1Beans = new ArrayList<>();
+            for (int j = 0; j < pageSize; j++) {
+                rol1Beans.add(i * pageSize + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * pageSize + 0) : null);
+            }
+            /*
             ParameterBean2 rol1Bean = i * 3 + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 0) : null;
             ParameterBean2 rol2Bean = i * 3 + 1 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 1) : null;
             ParameterBean2 rol3Bean = i * 3 + 2 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 2) : null;
+             */
             // 绘制数据列第一行
             LinearLayout __layout = new LinearLayout(this);
-            __layout.addView(getInfoTV("记号", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            __layout.addView(getInfoTV(rol1Bean != null ?
-                    String.valueOf(rol1Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
-            __layout.addView(getInfoTV(rol2Bean != null ?
-                    String.valueOf(rol2Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
-            __layout.addView(getInfoTV(rol3Bean != null ?
-                    String.valueOf(rol3Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+            __layout.addView(getInfoTV("记号", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+            for (int j = 0; j < pageSize; j++) {
+                __layout.addView(getInfoTV(rol1Beans.get(j) != null ?
+                        String.valueOf(rol1Beans.get(j).getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+            }
+//            __layout.addView(getInfoTV(rol2Bean != null ?
+//                    String.valueOf(rol2Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
+//            __layout.addView(getInfoTV(rol3Bean != null ?
+//                    String.valueOf(rol3Bean.getDescribe()) : " ", ColorConstants.dataTitleColor), getItemLayoutParams(5, 1));
             mainLayout.addView(__layout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制上限值;
             LinearLayout upperLayout = new LinearLayout(this);
-            upperLayout.addView(getInfoTV("上限值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            upperLayout.addView(getInfoTV(getUpperToleranceValue(rol1Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            upperLayout.addView(getInfoTV(getUpperToleranceValue(rol2Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            upperLayout.addView(getInfoTV(getUpperToleranceValue(rol3Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            upperLayout.addView(getInfoTV("上限值", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+            for (int j = 0; j < pageSize; j++) {
+                upperLayout.addView(getInfoTV(getUpperToleranceValue(rol1Beans.get(j)), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            }
             mainLayout.addView(upperLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             // 绘制下限值;
             LinearLayout lowerLayout = new LinearLayout(this);
-            lowerLayout.addView(getInfoTV("下限值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            lowerLayout.addView(getInfoTV(getLowerToleranceValue(rol1Bean), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
-            lowerLayout.addView(getInfoTV(getLowerToleranceValue(rol2Bean), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
-            lowerLayout.addView(getInfoTV(getLowerToleranceValue(rol3Bean), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+            lowerLayout.addView(getInfoTV("下限值", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+            for (int j = 0; j < pageSize; j++) {
+                lowerLayout.addView(getInfoTV(getLowerToleranceValue(rol1Beans.get(j)), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+            }
             mainLayout.addView(lowerLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
 
             // 绘制中间值;
             LinearLayout nominalLayout = new LinearLayout(this);
-            nominalLayout.addView(getInfoTV("中间值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-            nominalLayout.addView(getInfoTV(getNominalValue(rol1Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            nominalLayout.addView(getInfoTV(getNominalValue(rol2Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
-            nominalLayout.addView(getInfoTV(getNominalValue(rol3Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            nominalLayout.addView(getInfoTV("中间值", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+            for (int j = 0; j < pageSize; j++) {
+                nominalLayout.addView(getInfoTV(getNominalValue(rol1Beans.get(j)), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+            }
+//            nominalLayout.addView(getInfoTV(getNominalValue(rol1Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+//            nominalLayout.addView(getInfoTV(getNominalValue(rol2Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
+//            nominalLayout.addView(getInfoTV(getNominalValue(rol3Bean), ColorConstants.dataLineOneColor), getItemLayoutParams(5, 1));
             mainLayout.addView(nominalLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
 
             for (int j = 0; j < dataNumber; j++) {
                 LinearLayout dataLayout = new LinearLayout(this);
-                dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(1, 1));
+                dataLayout.addView(getInfoTV(String.valueOf((j + 1)), ColorConstants.dataHeader), getItemLayoutParams(2, 1));
 
+                for (int z = 0; z < pageSize; z++) {
+                    if (results.get(j).size() < mParameterBean2s.size()) {
+                        View view = (View) getInputViewByType(rol1Beans.get(z).getType() == 3 ? "1" : "0", true);
+                        dataLayout.addView(view, getItemLayoutParams(2, 1));
+                        results.get(j).add(view);
+                        // 图片;
+                        ImageView img = getImageView();
+                        dataLayout.addView(img, getItemLayoutParams(3, 1));
+                        resultImgs.get(j).add(img);
+                    } else {
+                        dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
+                        dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
+                    }
+                }
+                /*
                 if (results.get(j).size() < mParameterBean2s.size()) {
                     View view = (View) getInputViewByType(rol1Bean.getType() == 3 ? "1" : "0", true);
                     dataLayout.addView(view, getItemLayoutParams(2, 1));
@@ -378,7 +404,6 @@ public class Input2Activity extends BaseOActivity {
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
                 }
 
-
                 if (results.get(j).size() < mParameterBean2s.size()) {
                     View view = (View) getInputViewByType(rol3Bean.getType() == 3 ? "1" : "0", true);
                     dataLayout.addView(view, getItemLayoutParams(2, 1));
@@ -390,6 +415,7 @@ public class Input2Activity extends BaseOActivity {
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
                     dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
                 }
+                 */
                 mainLayout.addView(dataLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
 
@@ -415,64 +441,81 @@ public class Input2Activity extends BaseOActivity {
             // 最大值;
             if (mTemplateBean.getMaximumEnable()) {
                 LinearLayout maxLayout = new LinearLayout(this);
-                maxLayout.addView(getInfoTV("最大值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-                TextView maxTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
-                maxLayout.addView(maxTV1, getItemLayoutParams(5, 1));
-                TextView maxTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
-                maxLayout.addView(maxTV2, getItemLayoutParams(5, 1));
-                TextView maxTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
-                maxLayout.addView(maxTV3, getItemLayoutParams(5, 1));
-                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV1);
-                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV2);
-                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV3);
+                maxLayout.addView(getInfoTV("最大值", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+                for (int j = 0; j < pageSize; j++) {
+                    // maxLayout.addView(getInfoTV(getLowerToleranceValue(rol1Beans.get(j)), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    TextView maxTV = getInfoTV("", ColorConstants.dataLineOneColor);
+                    maxLayout.addView(maxTV, getItemLayoutParams(5, 1));
+                    if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV);
+                }
+//                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV2);
+//                if (maxEdts.size() < mParameterBean2s.size()) maxEdts.add(maxTV3);
                 mainLayout.addView(maxLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
 
             // 最小值；
             if (mTemplateBean.getMinimumEnable()) {
                 LinearLayout minLayout = new LinearLayout(this);
-                minLayout.addView(getInfoTV("最小值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
-                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
-                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
-                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV1);
-                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV2);
-                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV3);
+                minLayout.addView(getInfoTV("最小值", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+                for (int j = 0; j < pageSize; j++) {
+                    // minLayout.addView(getInfoTV(getLowerToleranceValue(rol1Beans.get(j)), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    TextView maxTV = getInfoTV("", ColorConstants.dataLineOneColor);
+                    minLayout.addView(maxTV, getItemLayoutParams(5, 1));
+                    if (minEdts.size() < mParameterBean2s.size()) minEdts.add(maxTV);
+                }
+//                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
+//                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
+//                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
+//                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV1);
+//                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV2);
+//                if (minEdts.size() < mParameterBean2s.size()) minEdts.add(minTV3);
                 mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
 
             // 平均值；
             if (mTemplateBean.getAverageEnable()) {
                 LinearLayout minLayout = new LinearLayout(this);
-                minLayout.addView(getInfoTV("平均值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
-                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
-                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
-                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV1);
-                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV2);
-                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV3);
+                minLayout.addView(getInfoTV("平均值", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+                for (int j = 0; j < pageSize; j++) {
+                    // minLayout.addView(getInfoTV(getLowerToleranceValue(rol1Beans.get(j)), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    TextView maxTV = getInfoTV("", ColorConstants.dataLineOneColor);
+                    minLayout.addView(maxTV, getItemLayoutParams(5, 1));
+                    if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(maxTV);
+                }
+//                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
+//                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
+//                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
+//                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV1);
+//                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV2);
+//                if (avgEdts.size() < mParameterBean2s.size()) avgEdts.add(minTV3);
                 mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
 
             // 极差值；
             if (mTemplateBean.getRangeEnable()) {
                 LinearLayout minLayout = new LinearLayout(this);
-                minLayout.addView(getInfoTV("极差值", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
-                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
-                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
-                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
-                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV1);
-                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV2);
-                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV3);
+                minLayout.addView(getInfoTV("极差值", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+                for (int j = 0; j < pageSize; j++) {
+                    // minLayout.addView(getInfoTV(getLowerToleranceValue(rol1Beans.get(j)), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    TextView maxTV = getInfoTV("", ColorConstants.dataLineTwoColor);
+                    minLayout.addView(maxTV, getItemLayoutParams(5, 1));
+                    if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(maxTV);
+                }
+//                TextView minTV1 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV1, getItemLayoutParams(5, 1));
+//                TextView minTV2 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV2, getItemLayoutParams(5, 1));
+//                TextView minTV3 = getInfoTV("", ColorConstants.dataLineTwoColor);
+//                minLayout.addView(minTV3, getItemLayoutParams(5, 1));
+//                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV1);
+//                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV2);
+//                if (rangeEdts.size() < mParameterBean2s.size()) rangeEdts.add(minTV3);
                 mainLayout.addView(minLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
 
@@ -489,16 +532,22 @@ public class Input2Activity extends BaseOActivity {
             // 判定;
             if (mTemplateBean.getJudgeEnable()) {
                 LinearLayout judgeLayout = new LinearLayout(this);
-                judgeLayout.addView(getInfoTV("判定", ColorConstants.dataTitleColor), getItemLayoutParams(1, 1));
-                TextView judgeTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
-                judgeLayout.addView(judgeTV1, getItemLayoutParams(5, 1));
-                TextView judgeTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
-                judgeLayout.addView(judgeTV2, getItemLayoutParams(5, 1));
-                TextView judgeTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
-                judgeLayout.addView(judgeTV3, getItemLayoutParams(5, 1));
-                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV1);
-                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV2);
-                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV3);
+                judgeLayout.addView(getInfoTV("判定", ColorConstants.dataTitleColor), getItemLayoutParams(2, 1));
+                for (int j = 0; j < pageSize; j++) {
+                    // judgeLayout.addView(getInfoTV(getLowerToleranceValue(rol1Beans.get(j)), ColorConstants.dataLineTwoColor), getItemLayoutParams(5, 1));
+                    TextView maxTV = getInfoTV("", ColorConstants.dataLineOneColor);
+                    judgeLayout.addView(maxTV, getItemLayoutParams(5, 1));
+                    if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(maxTV);
+                }
+//                TextView judgeTV1 = getInfoTV("", ColorConstants.dataLineOneColor);
+//                judgeLayout.addView(judgeTV1, getItemLayoutParams(5, 1));
+//                TextView judgeTV2 = getInfoTV("", ColorConstants.dataLineOneColor);
+//                judgeLayout.addView(judgeTV2, getItemLayoutParams(5, 1));
+//                TextView judgeTV3 = getInfoTV("", ColorConstants.dataLineOneColor);
+//                judgeLayout.addView(judgeTV3, getItemLayoutParams(5, 1));
+//                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV1);
+//                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV2);
+//                if (judgeEdts.size() < mParameterBean2s.size()) judgeEdts.add(judgeTV3);
                 mainLayout.addView(judgeLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1, 1));
             }
         }
@@ -619,7 +668,7 @@ public class Input2Activity extends BaseOActivity {
             resumeTemps(_bean);
     }
 
-    private void showWorkpiecePic(){
+    private void showWorkpiecePic() {
         byte[] _pic = mCodeBean.getWorkpiecePic();
         if (_pic != null) {
             String path = bytesToImageFile(_pic);

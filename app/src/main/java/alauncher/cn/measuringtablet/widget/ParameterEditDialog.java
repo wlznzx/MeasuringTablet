@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -26,6 +28,7 @@ import alauncher.cn.measuringtablet.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringtablet.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringtablet.utils.Arith;
 import alauncher.cn.measuringtablet.utils.DialogUtils;
+import alauncher.cn.measuringtablet.view.Input2Activity;
 import alauncher.cn.measuringtablet.view.MGroup2Activity;
 import alauncher.cn.measuringtablet.view.activity_view.DataUpdateInterface;
 import butterknife.BindView;
@@ -158,6 +161,7 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             showItemSP.setSelection(_bean.getSequenceNumber());
             resolutionSP.setSelection(_bean.getResolution());
             describeEdt.setText(_bean.getDescribe());
+
             mTypeSP.setSelection(_bean.getType());
             nominalValueEdt.setText(Arith.double2Str(_bean.getNominalValue()));
             upperToleranceValueEdt.setText(Arith.double2Str(_bean.getUpperToleranceValue()));
@@ -168,6 +172,8 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             parameterNameEdt.setText(_bean.getName());
             isEnableSwitch.setChecked(_bean.getEnable());
         }
+        describeEdt.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
+        parameterNameEdt.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         // 每次进入参数设置,删除添加的数组;
         App.getDaoSession().getGroupBean2Dao().queryBuilder().where(GroupBean2Dao.Properties.PID.eq(-1)).buildDelete().executeDeleteWithoutDetachingEntities();
     }
@@ -268,5 +274,18 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
         imm.hideSoftInputFromWindow(upperToleranceValueEdt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(lowerToleranceValueEdt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(deviationEdt.getWindowToken(), 0);
+    }
+
+    public class EmojiExcludeFilter implements InputFilter {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned spanned, int i2, int i3) {
+            for (int i = start; i < end; i++) {
+                int type = Character.getType(source.charAt(i));
+                if (type == Character.SURROGATE || type == Character.OTHER_SYMBOL) {
+                    return "";
+                }
+            }
+            return null;
+        }
     }
 }

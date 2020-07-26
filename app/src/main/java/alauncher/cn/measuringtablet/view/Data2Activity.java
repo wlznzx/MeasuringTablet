@@ -592,6 +592,18 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         }
     }
 
+    public void openExcelInNative(Context context, String FILE_NAME) {
+        File file = new File(context.getExternalCacheDir(), FILE_NAME);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = FileProvider.getUriForFile(this, "alauncher.cn.measuringtablet.fileProvider", file);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(uri, "application/vnd.ms-excel");
+        try {
+            context.startActivity(intent);
+        } catch (Exception e) {
+        }
+    }
+
 
     /*
      *
@@ -660,6 +672,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             dialog.dismiss();
             updataEditMode();
             Toast.makeText(Data2Activity.this, "导出至 : " + path, Toast.LENGTH_LONG).show();
+            openExcelInNative(Data2Activity.this, path);
         }
 
         //onCancelled方法用于在取消执行中的任务时更改UI

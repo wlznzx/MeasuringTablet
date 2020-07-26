@@ -574,7 +574,8 @@ public class JdbcUtil {
         int id = -1;
         Connection con = getConnection();
         if (con == null) return -1;
-        String sql = "select id from ntqc_equipment where factory_code = '" + factory_code + "' and " + "machine_code = '" + machine_code + "'";
+        // String sql = "select id from ntqc_equipment where factory_code = '" + factory_code + "' and " + "machine_code = '" + machine_code + "'";
+        String sql = "select id from ntqc_equipment where machine_code = '" + machine_code + "'";
         try {
             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = null;
@@ -606,7 +607,20 @@ public class JdbcUtil {
         return count;
     }
 
-    public static int deleteParam2s(String factory_code, String machine_code,int code_id) throws Exception {
+    public static int deleteAllCodes(String factory_code, String machine_code) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "delete from ntqc_param_config where machine_code=? and factory_code=?";
+        PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        pstmt.setString(1, machine_code);
+        pstmt.setString(2, factory_code);
+        int ret = pstmt.executeUpdate();//执行sql
+        pstmt.close();
+        conn.close();
+        return ret;
+    }
+
+    public static int deleteParam2s(String factory_code, String machine_code, int code_id) throws Exception {
         Connection conn = getConnection();
         if (conn == null) return -1;
         String sql = "delete from ntqc_param_config where machine_code=? and factory_code=? and prog_id=?";
