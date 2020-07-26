@@ -594,7 +594,7 @@ public class StatisticalActivity extends BaseOActivity {
 
             if (excelData.size() > 0) {
                 path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
-                ExcelUtil.initExcel(path, "data", title);
+                // ExcelUtil.initExcel(path, "data", title);
                 ExcelUtil.writeStatisticalToExcel(excelData, path, StatisticalActivity.this);
                 return path;
             } else {

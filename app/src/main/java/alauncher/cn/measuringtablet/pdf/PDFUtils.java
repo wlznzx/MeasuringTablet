@@ -466,7 +466,13 @@ public class PDFUtils {
             table.addCell(getBottomCell(pTemplateResultBean.getAQLList().size() > i ? pTemplateResultBean.getAQLList().get(i) : " ", 1, 4, titleColor));
             table.addCell(getBottomCell(pTemplateResultBean.getAQLResultList().size() > i ? pTemplateResultBean.getAQLResultList().get(i) : " ", 1, 1, BaseColor.WHITE));
             table.addCell(getBottomCell(pTemplateResultBean.getRoHSList().size() > i ? pTemplateResultBean.getRoHSList().get(i) : " ", 1, 4, titleColor));
-            table.addCell(getBottomCell(pTemplateResultBean.getRoHSResultList().size() > i ? pTemplateResultBean.getRoHSResultList().get(i) : " ", 1, 1, BaseColor.WHITE));
+            String _str = pTemplateResultBean.getRoHSResultList().size() > i ? pTemplateResultBean.getRoHSResultList().get(i) : " ";
+            if (_str.length() > 5) {
+                table.addCell(getRoHSBottomCell(_str, 1, 1, BaseColor.WHITE));
+            } else {
+                table.addCell(getBottomCell(_str, 1, 1, BaseColor.WHITE));
+            }
+
         }
 
         table.addCell(getBottomCell(pTemplateResultBean.getAllJudge(), 2, 2,
@@ -477,7 +483,12 @@ public class PDFUtils {
             table.addCell(getBottomCell(pTemplateResultBean.getAQLList().size() > i ? pTemplateResultBean.getAQLList().get(i) : " ", 1, 4, titleColor));
             table.addCell(getBottomCell(pTemplateResultBean.getAQLResultList().size() > i ? pTemplateResultBean.getAQLResultList().get(i) : " ", 1, 1, BaseColor.WHITE));
             table.addCell(getBottomCell(pTemplateResultBean.getRoHSList().size() > i ? pTemplateResultBean.getRoHSList().get(i) : " ", 1, 4, titleColor));
-            table.addCell(getBottomCell(pTemplateResultBean.getRoHSResultList().size() > i ? pTemplateResultBean.getRoHSResultList().get(i) : " ", 1, 1, BaseColor.WHITE));
+            String _str = pTemplateResultBean.getRoHSResultList().size() > i ? pTemplateResultBean.getRoHSResultList().get(i) : " ";
+            if (_str.length() > 5) {
+                table.addCell(getRoHSBottomCell(_str, 1, 1, BaseColor.WHITE));
+            } else {
+                table.addCell(getBottomCell(_str, 1, 1, BaseColor.WHITE));
+            }
         }
 
         // 添加备注
@@ -564,6 +575,32 @@ public class PDFUtils {
 
     private static PdfPCell getBottomCell(String msg, int row, int col, BaseColor backgroundColor) {
         PdfPCell cell = new PdfPCell(new Paragraph(msg, getBlackFont(4)));
+        cell.setBorderColor(BaseColor.BLACK);
+        cell.setBackgroundColor(backgroundColor);
+        cell.setRowspan(row);
+        cell.setColspan(col);
+        // 设置距左边的距离
+        // 设置高度
+        cell.setFixedHeight(10);
+        // 设置内容水平居中显示
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        // 设置垂直居中
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        return cell;
+    }
+
+    private static PdfPCell getRoHSBottomCell(String msg, int row, int col, BaseColor backgroundColor) {
+        BaseFont bf = null;
+        try {
+            bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Font _font = new Font(bf, 3, Font.NORMAL);
+        _font.setColor(BaseColor.BLACK);
+        PdfPCell cell = new PdfPCell(new Paragraph(msg, _font));
         cell.setBorderColor(BaseColor.BLACK);
         cell.setBackgroundColor(backgroundColor);
         cell.setRowspan(row);

@@ -312,7 +312,7 @@ public class Input2Activity extends BaseOActivity {
 
             List<ParameterBean2> rol1Beans = new ArrayList<>();
             for (int j = 0; j < pageSize; j++) {
-                rol1Beans.add(i * pageSize + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * pageSize + 0) : null);
+                rol1Beans.add(j * pageSize + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(j * pageSize + 0) : null);
             }
             /*
             ParameterBean2 rol1Bean = i * 3 + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 0) : null;

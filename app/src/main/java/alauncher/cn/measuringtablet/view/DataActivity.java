@@ -450,7 +450,7 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
             }
 
             path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
-            ExcelUtil.initExcel(path, "data", title);
+            // ExcelUtil.initExcel(path, "data", title);
             ExcelUtil.writeObjListToExcel(selectedList, path, DataActivity.this);
             return "后台任务执行完毕";
         }

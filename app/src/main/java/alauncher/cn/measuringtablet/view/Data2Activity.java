@@ -102,11 +102,13 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     private DeviceInfoBean mDeviceInfoBean;
 
-    private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M(测量值)"};
+    private String[] title = {"操作员", "时间", "工件号", "事件", "结果"};
 
     private LinearLayout titleLinearLayout;
 
     private CodeBean mCodeBean;
+
+    private List<ParameterBean2> mParameterBean2s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +131,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         // List<Parameter2Bean> _datas = App.getDaoSession().getParameter2BeanDao().queryBuilder().where(Parameter2BeanDao.Properties.Code_id.eq((long) App.getSetupBean().getCodeID())).list();
 
-        List<ParameterBean2> mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+        mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()))
                 .where(ParameterBean2Dao.Properties.Enable.eq(true))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
@@ -645,7 +647,14 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 }
             }
             path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
-            ExcelUtil.initExcel(path, "data", title);
+            List<String> titles = new ArrayList<>();
+            for (int i = 0; i < title.length; i++) {
+                titles.add(title[i]);
+            }
+            for (int i = 0; i < mParameterBean2s.size(); i++) {
+                titles.add("M" + (mParameterBean2s.get(i).getSequenceNumber() + 1) + "(" + mParameterBean2s.get(i).getDescribe() + ")");
+            }
+            ExcelUtil.initExcel(path, "data", titles);
             ExcelUtil.writeObjListToExcel(selectedList, path, Data2Activity.this);
             return "后台任务执行完毕";
         }
