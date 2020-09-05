@@ -87,6 +87,7 @@ public class ParameterManagement2Activity extends BaseOLandscapeActivity impleme
         }
 
         mAdapter.notifyDataSetChanged();
+        Input2Activity.tempResultBeans.clear();
         // syncToServer();
         new uploadTask().execute();
     }

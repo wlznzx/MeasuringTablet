@@ -173,7 +173,7 @@ public class Input2Activity extends BaseOActivity {
     private ImageView imgView;
 
     // 中间数据，存在内存里面;
-    private static Map<Long, TempResultsBean> tempResultBeans = new HashMap<Long, TempResultsBean>();
+    public static Map<Long, TempResultsBean> tempResultBeans = new HashMap<Long, TempResultsBean>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -312,7 +312,7 @@ public class Input2Activity extends BaseOActivity {
 
             List<ParameterBean2> rol1Beans = new ArrayList<>();
             for (int j = 0; j < pageSize; j++) {
-                rol1Beans.add(j * pageSize + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(j * pageSize + 0) : null);
+                rol1Beans.add(i * pageSize + j <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * pageSize + j) : null);
             }
             /*
             ParameterBean2 rol1Bean = i * 3 + 0 <= mParameterBean2s.size() - 1 ? mParameterBean2s.get(i * 3 + 0) : null;
@@ -366,13 +366,23 @@ public class Input2Activity extends BaseOActivity {
 
                 for (int z = 0; z < pageSize; z++) {
                     if (results.get(j).size() < mParameterBean2s.size()) {
-                        View view = (View) getInputViewByType(rol1Beans.get(z).getType() == 3 ? "1" : "0", true);
+                        View view = null;
+                        if (rol1Beans.get(z) != null) {
+                            view = (View) getInputViewByType(rol1Beans.get(z).getType() == 3 ? "1" : "0", true);
+                            results.get(j).add(view);
+                        } else {
+                            view = (View) getInputViewByType("", false);
+                        }
                         dataLayout.addView(view, getItemLayoutParams(2, 1));
-                        results.get(j).add(view);
                         // 图片;
-                        ImageView img = getImageView();
-                        dataLayout.addView(img, getItemLayoutParams(3, 1));
-                        resultImgs.get(j).add(img);
+                        if (rol1Beans.get(z) != null) {
+                            ImageView img = getImageView();
+                            dataLayout.addView(img, getItemLayoutParams(3, 1));
+                            resultImgs.get(j).add(img);
+                        } else {
+                            view = (View) getInputViewByType("", false);
+                            dataLayout.addView(view, getItemLayoutParams(3, 1));
+                        }
                     } else {
                         dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(2, 1));
                         dataLayout.addView(getInfoTV("", Color.WHITE), getItemLayoutParams(3, 1));
@@ -1335,6 +1345,8 @@ public class Input2Activity extends BaseOActivity {
             mins.set(i, Double.valueOf(1000000));
             judges.set(i, "OK");
         }
+
+
         android.util.Log.d("wlDebug", "judges.size = " + judges.size());
         for (int i = 0; i < dataNumber; i++) {
             dataJudges.set(i, "OK");

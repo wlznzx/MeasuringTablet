@@ -5,10 +5,10 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "alauncher.cn.measuringtablet"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 26
-        versionCode 53
-        versionName "v3.7.8_Bate"
+        versionCode 56
+        versionName "v3.8.2_Bate"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
