@@ -53,9 +53,9 @@ public class ResultBean3 {
 
     @Generated(hash = 1397366814)
     public ResultBean3(Long id, long codeID, long templateID, String handlerAccout, long timeStamp,
-            String workid, String workid_extra, String eventid, String event, String result,
-            boolean isUploaded, List<String> mValues, List<String> mPicPaths, List<String> mItems,
-            List<String> isBoolList) {
+                       String workid, String workid_extra, String eventid, String event, String result,
+                       boolean isUploaded, List<String> mValues, List<String> mPicPaths, List<String> mItems,
+                       List<String> isBoolList) {
         this.id = id;
         this.codeID = codeID;
         this.templateID = templateID;

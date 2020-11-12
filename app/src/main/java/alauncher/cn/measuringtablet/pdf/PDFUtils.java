@@ -178,22 +178,24 @@ public class PDFUtils {
         }
 
         // Image cellIMG = Image.getInstance(FOX);
-        try {
-            Image cellIMG = Image.getInstance(pTemplateResultBean.getImg());
-            PdfPCell cell4 = new PdfPCell(cellIMG, true);
-            cell4.setRowspan(10);
-            cell4.setColspan(16);
-            cell4.setBorderColor(BaseColor.BLACK);
-            cell4.setBackgroundColor(BaseColor.WHITE);
-            cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell4.setPaddingLeft(5);
-            cell4.setPaddingRight(5);
-            cell4.setPaddingTop(5);
-            cell4.setPaddingBottom(5);
-            table.addCell(cell4);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (pTemplateResultBean.getImg() != null) {
+            try {
+                Image cellIMG = Image.getInstance(pTemplateResultBean.getImg());
+                PdfPCell cell4 = new PdfPCell(cellIMG, true);
+                cell4.setRowspan(10);
+                cell4.setColspan(16);
+                cell4.setBorderColor(BaseColor.BLACK);
+                cell4.setBackgroundColor(BaseColor.WHITE);
+                cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell4.setPaddingLeft(5);
+                cell4.setPaddingRight(5);
+                cell4.setPaddingTop(5);
+                cell4.setPaddingBottom(5);
+                table.addCell(cell4);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         /*
         for (int i = 0; i < titles.size(); i++) {
@@ -451,11 +453,25 @@ public class PDFUtils {
         int bottomRow = Math.max(Math.max(pTemplateResultBean.getAQLList().size(), pTemplateResultBean.getRoHSList().size()), 5);
 
 //        android.util.Log.d("wlDebug", "bottomRow = " + bottomRow);
-
-        table.addCell(getBottomCell("外观检查一般I级\nAQL=0.15", bottomRow, 2, bottomColor));
+        boolean hasAQL = false;
+        for (String str : pTemplateResultBean.getAQLList()) {
+            if (!str.equals("")) {
+                hasAQL = true;
+                break;
+            }
+        }
+        table.addCell(getBottomCell(hasAQL ? "外观检查一般I级\nAQL=0.15" : "", bottomRow, 2, bottomColor));
         table.addCell(getBottomCell(pTemplateResultBean.getAQLList().size() > 0 ? pTemplateResultBean.getAQLList().get(0) : " ", 1, 4, titleColor));
         table.addCell(getBottomCell(pTemplateResultBean.getAQLResultList().size() > 0 ? pTemplateResultBean.getAQLResultList().get(0) : " ", 1, 1, BaseColor.WHITE));
-        table.addCell(getBottomCell("RoHS相关: ", bottomRow, 2, bottomColor));
+
+        boolean hasRoSH = false;
+        for (String str : pTemplateResultBean.getRoHSList()) {
+            if (!str.equals("")) {
+                hasRoSH = true;
+                break;
+            }
+        }
+        table.addCell(getBottomCell(hasRoSH ? "RoHS相关: " : "", bottomRow, 2, bottomColor));
         table.addCell(getBottomCell(pTemplateResultBean.getRoHSList().size() > 0 ? pTemplateResultBean.getRoHSList().get(0) : " ", 1, 4, titleColor));
         table.addCell(getBottomCell(pTemplateResultBean.getRoHSResultList().size() > 0 ? pTemplateResultBean.getRoHSResultList().get(0) : " ", 1, 1, BaseColor.WHITE));
         table.addCell(getBottomCell("综合判断", bottomRow - 2, 2, titleColor));
@@ -492,14 +508,17 @@ public class PDFUtils {
         }
 
         // 添加备注
-        PdfPCell remarkCell = new PdfPCell(new Paragraph(pTemplateResultBean.getRemarks(), font));
+        Font _font = new Font(bf, 6, Font.NORMAL);
+        _font.setColor(BaseColor.BLACK);
+        PdfPCell remarkCell = new PdfPCell(new Paragraph(pTemplateResultBean.getRemarks(), _font));
+        android.util.Log.d("wlDebug", "remark length = " + pTemplateResultBean.getRemarks().length());
         remarkCell.setBorderColor(BaseColor.BLACK);
-        remarkCell.setRowspan(3);
+        remarkCell.setRowspan(6);
         remarkCell.setColspan(16);
-        remarkCell.setPaddingLeft(10);
-        remarkCell.setFixedHeight(20);
-        remarkCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        remarkCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        remarkCell.setPaddingLeft(4);
+        remarkCell.setFixedHeight(40);
+        remarkCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        remarkCell.setVerticalAlignment(Element.ALIGN_TOP);
         table.addCell(remarkCell);
 
         // 添加备注图片;

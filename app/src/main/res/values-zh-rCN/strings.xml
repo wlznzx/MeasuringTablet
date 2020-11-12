@@ -148,7 +148,7 @@
     <string name="no_select_msg">必须有选中数据才能导出.</string>
     <string name="tips">提示</string>
     <string name="id_not_same">数据批次必须一致才能导出PDF模板.</string>
-    <string name="remarks">备注</string>
+    <string name="remarks">备注:</string>
     <string name="logo_add">添加Logo:</string>
     <string name="confirmation_frequency">确认频率:</string>
     <string name="day">天</string>

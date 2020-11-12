@@ -152,7 +152,11 @@ public class ExcelUtil {
                     for (int i = 0; i < demoBean.getMValues().size(); i++) {
 //                        list.add("M" + demoBean.getMItems().get(i)
 //                                + "(" + demoBean.getMValues().get(i) + ")");
-                        list.add(demoBean.getMValues().get(i));
+                        if (demoBean.getIsBoolList().get(i).equals("true")) {
+                            list.add(demoBean.getMValues().get(i).equals("1") ? "OK" : "NG");
+                        } else {
+                            list.add(demoBean.getMValues().get(i));
+                        }
                     }
                     for (int i = 0; i < list.size(); i++) {
                         sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));

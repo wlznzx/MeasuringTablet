@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import alauncher.cn.measuringtablet.R;
@@ -141,6 +142,7 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
                 .into((ImageView) holder.getConvertView().findViewById(R.id.data_m2_pic));
         */
 
+        // android.util.Log.d("wlDebug","mvalues = " + Arrays.asList(datas.get(0).getMValues()));
 
         for (int i = 0; i < datas.get(0).getMValues().size(); i++) {
 //            if (mParameterBean.get(i).getEnable()) {
@@ -154,7 +156,11 @@ public class DataAdapter2 extends RecyclerView.Adapter<ViewHolder> {
                 }
             } else {
                 try {
-                    holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
+                    if(datas.get(position).getIsBoolList().get(i) == null || datas.get(position).getIsBoolList().get(i).equals("false")){
+                        holder.setText(mValueIDs.get(i), (datas.get(position).getMValues().get(i) == null || datas.get(position).getMValues().get(i).equals("null")) ? "- -" : datas.get(position).getMValues().get(i));
+                    } else {
+                        holder.setText(mValueIDs.get(i),(datas.get(position).getMValues().get(i).equals("1")) ? "OK" : "NG");
+                    }
                 } catch (Exception e) {
 
                 }

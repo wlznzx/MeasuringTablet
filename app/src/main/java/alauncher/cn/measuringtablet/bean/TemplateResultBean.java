@@ -103,17 +103,17 @@ public class TemplateResultBean {
 
     @Generated(hash = 1844604968)
     public TemplateResultBean(Long id, String factoryCode, String deviceCode, int codeID,
-            byte[] logoPic, List<String> titleList, List<String> signList,
-            List<String> AQLList, List<String> RoHSList, List<String> markList,
-            String headerLeft, String headerMid, String headerRight, String footerLeft,
-            String footerMid, String footerRight, String title, int dataNum,
-            boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
-            boolean rangeEnable, boolean judgeEnable, String allJudge, long timeStamp,
-            byte[] img, String remarks, String user, boolean isUpload,
-            List<String> titleResultList, List<String> AQLResultList,
-            List<String> RoHSResultList, List<String> valueIndexs,
-            List<String> upperToleranceValues, List<String> lowerToleranceValues,
-            List<String> nominalValues, List<String> valueTypes) {
+                              byte[] logoPic, List<String> titleList, List<String> signList,
+                              List<String> AQLList, List<String> RoHSList, List<String> markList,
+                              String headerLeft, String headerMid, String headerRight, String footerLeft,
+                              String footerMid, String footerRight, String title, int dataNum,
+                              boolean maximumEnable, boolean minimumEnable, boolean averageEnable,
+                              boolean rangeEnable, boolean judgeEnable, String allJudge, long timeStamp,
+                              byte[] img, String remarks, String user, boolean isUpload,
+                              List<String> titleResultList, List<String> AQLResultList,
+                              List<String> RoHSResultList, List<String> valueIndexs,
+                              List<String> upperToleranceValues, List<String> lowerToleranceValues,
+                              List<String> nominalValues, List<String> valueTypes) {
         this.id = id;
         this.factoryCode = factoryCode;
         this.deviceCode = deviceCode;

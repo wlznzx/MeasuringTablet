@@ -282,15 +282,16 @@ public class Input2Activity extends BaseOActivity {
 
         // 添加工件图;
         imgView = new ImageView(this);
-        mainLayout.addView(imgView, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 15));
-        imgView.setImageResource(R.drawable.workspice);
+        // mainLayout.addView(imgView, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 15));
+        // imgView.setImageResource(R.drawable.workspice);
         // byte[] _pic = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID()).getWorkpiecePic();
         byte[] _pic = mCodeBean.getWorkpiecePic();
         if (_pic != null) {
             Bitmap map = BitmapFactory.decodeByteArray(_pic, 0, _pic.length);
             imgView.setImageBitmap(map);
+            mainLayout.addView(imgView, getItemVLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 15));
         } else {
-            imgView.setImageResource(R.drawable.workspice);
+            // imgView.setImageResource(R.drawable.workspice);
         }
         imgView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -589,7 +590,7 @@ public class Input2Activity extends BaseOActivity {
         aqlResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (aqlObjects.size() < mTemplateBean.getAQLList().size()) {
-                View view = (View) getInputViewByType(mTemplateBean.getAqlEnable() ? mTemplateBean.getAQLTypeList().get(j) : "4", false);
+                View view = (View) getInputViewByType(mTemplateBean.getAqlEnable() ? mTemplateBean.getAQLTypeList().get(j) : "5", false);
                 aqlResultLayout.addView(view, getItemVLayoutParams(1, 1));
                 aqlObjects.add(view);
             } else {
@@ -621,7 +622,7 @@ public class Input2Activity extends BaseOActivity {
         roshResultLayout.setOrientation(LinearLayout.VERTICAL);
         for (int j = 0; j < bottomRow; j++) {
             if (roshEdts.size() < mTemplateBean.getRoHSList().size()) {
-                View view = (View) getInputViewByType(mTemplateBean.getRoshEnable() ? mTemplateBean.getRoHSTypeList().get(j) : "4", false);
+                View view = (View) getInputViewByType(mTemplateBean.getRoshEnable() ? mTemplateBean.getRoHSTypeList().get(j) : "5", false);
                 roshResultLayout.addView(view, getItemVLayoutParams(1, 1));
                 roshEdts.add(view);
                 if (mTemplateBean.getRoshEnable()) {
@@ -656,7 +657,7 @@ public class Input2Activity extends BaseOActivity {
 
         mainLayout.addView(bottomLayout, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1 * bottomRow, 1));
         remarkEdt = getInputEditView();
-        mainLayout.addView(remarkEdt, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2, 1));
+        mainLayout.addView(remarkEdt, getLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 3, 1));
 
         // 添加底部添加图片按钮;
         View view = getLayoutInflater().inflate(R.layout.add_pic_item, null);
@@ -814,6 +815,9 @@ public class Input2Activity extends BaseOActivity {
                 view = getInputSpinner2();
                 break;
             case "4":
+                view = getTimeTV("", Color.WHITE);
+                break;
+            case "5":
                 view = getInfoTV("", -1);
                 break;
             default:
@@ -983,6 +987,31 @@ public class Input2Activity extends BaseOActivity {
         return tv;
     }
 
+    public TextView getTimeTV(String msg, int color) {
+        TextView tv = new BorderTextView(this);
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new TimePickerDialog(Input2Activity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        tv.setText(hourOfDay + ":" + minute);
+                    }
+                }, hour, minute, true).show();
+            }
+        });
+        tv.setText(hour + ":" + minute);
+        tv.setMaxLines(1);
+        tv.setTextSize(18);
+        tv.setGravity(Gravity.CENTER);
+        tv.setBackgroundColor(color);
+        return tv;
+    }
+
+
     public EditText getInputEditView(boolean numOnly) {
         EditText et = new BorderEditView(this);
         // et.setPadding(2, 2, 2, 2);
@@ -1047,10 +1076,10 @@ public class Input2Activity extends BaseOActivity {
 
     public EditText getInputEditView() {
         EditText et = new BorderEditView(this);
-
+        et.setGravity(Gravity.LEFT | Gravity.TOP);
         // et.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
         et.setBackground(null);
-        et.setMaxLines(1);
+//        et.setMaxLines(3);
         et.setHint(R.string.remarks);
         return et;
     }
@@ -1514,10 +1543,10 @@ public class Input2Activity extends BaseOActivity {
             try {
                 byte[] img = null;
                 if (mCodeBean.getWorkpiecePic() == null) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(Input2Activity.this.getResources(), R.drawable.workspice);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    img = baos.toByteArray();
+//                    Bitmap bitmap = BitmapFactory.decodeResource(Input2Activity.this.getResources(), R.drawable.workspice);
+//                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                    img = baos.toByteArray();
                 } else {
                     img = mCodeBean.getWorkpiecePic();
                 }
@@ -1532,8 +1561,24 @@ public class Input2Activity extends BaseOActivity {
                 mTemplateResultBean.setTitle(mTemplateBean.getTitle());
                 mTemplateResultBean.setTitleList(mTemplateBean.getTitleList());
                 mTemplateResultBean.setSignList(mTemplateBean.getSignList());
-                mTemplateResultBean.setAQLList(mTemplateBean.getAQLList());
-                mTemplateResultBean.setRoHSList(mTemplateBean.getRoHSList());
+                if (mTemplateBean.getAqlEnable()) {
+                    mTemplateResultBean.setAQLList(mTemplateBean.getAQLList());
+                } else {
+                    ArrayList<String> aql = new ArrayList<>();
+                    for (int i = 0; i < mTemplateBean.getAQLList().size(); i++) {
+                        aql.add("");
+                    }
+                    mTemplateResultBean.setAQLList(aql);
+                }
+                if (mTemplateBean.getRoshEnable()) {
+                    mTemplateResultBean.setRoHSList(mTemplateBean.getRoHSList());
+                } else {
+                    ArrayList<String> rohs = new ArrayList<>();
+                    for (int i = 0; i < mTemplateBean.getRoHSList().size(); i++) {
+                        rohs.add("");
+                    }
+                    mTemplateResultBean.setRoHSList(rohs);
+                }
                 mTemplateResultBean.setHeaderLeft(mTemplateBean.getHeaderLeft());
                 mTemplateResultBean.setHeaderMid(mTemplateBean.getHeaderMid());
                 mTemplateResultBean.setHeaderRight(mTemplateBean.getHeaderRight());
@@ -1586,7 +1631,11 @@ public class Input2Activity extends BaseOActivity {
 
                 List<String> aqlLists = new ArrayList<>();
                 for (Object obj : aqlObjects) {
-                    aqlLists.add(getTextByInputType(obj));
+                    if (mTemplateBean.getAqlEnable()) {
+                        aqlLists.add(getTextByInputType(obj));
+                    } else {
+                        aqlLists.add("");
+                    }
                 }
                 mTemplateResultBean.setAQLResultList(aqlLists);
 
@@ -1594,7 +1643,11 @@ public class Input2Activity extends BaseOActivity {
                 for (Object obj : roshEdts) {
                     String str = getTextByInputType(obj);
                     android.util.Log.d("wlDebug", "str = " + str);
-                    roshLists.add(str);
+                    if (mTemplateBean.getRoshEnable()) {
+                        roshLists.add(str);
+                    } else {
+                        roshLists.add("");
+                    }
                 }
                 mTemplateResultBean.setRoHSResultList(roshLists);
                 mTemplateResultBean.setAllJudge(allJudge);
@@ -1641,7 +1694,7 @@ public class Input2Activity extends BaseOActivity {
                     _bean.setMValues(values);
                     _bean.setMPicPaths(picPaths);
                     _bean.setIsBoolList(isBools);
-                    _bean.setHandlerAccout(App.handlerAccout);
+                    _bean.setHandlerAccout(user.getName());
                     _bean.setResult(dataJudges.get(i));
                     _bean.setWorkid_extra("");
                     _bean.setTimeStamp(System.currentTimeMillis());
